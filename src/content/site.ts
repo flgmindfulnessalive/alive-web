@@ -53,7 +53,7 @@ export type Project = {
   kind: 'exploration' | 'case'
   title: string
   discipline: string
-  visual: 'flow' | 'flow-devices' | 'web' | 'identity' | 'wewebinars-stationery' | 'glus-web' | 'vitara-home'
+  visual: 'flow' | 'flow-devices' | 'web' | 'identity' | 'wewebinars-stationery' | 'glus-web' | 'vitara-home' | 'activa-landing'
   // Ocupa todo el ancho de la sección.
   featured?: boolean
   alt: string
@@ -69,6 +69,7 @@ export type Project = {
       | 'vitara-config'
       | 'vitara-gallery'
       | 'vitara-tablet'
+      | 'activa-simulator'
     alt: string
   }[]
   summary: string
@@ -171,6 +172,24 @@ export const work = {
       ],
       summary:
         'Sitio de campaña para el lanzamiento del Suzuki Vitara: historia de la campaña, galería, equipamiento, tecnología, configurador 360° y cotización.',
+      details: [],
+    },
+    {
+      id: 'activa-tu-vida-x39',
+      kind: 'case',
+      featured: true,
+      title: 'Activa tu Vida X39',
+      discipline: 'Landing y simulador interactivo del Plan 10-10-20',
+      visual: 'activa-landing',
+      alt: 'Landing de Activa tu Vida X39 en monitor, tableta y móvil: titular «La luz también es información.», el «Sistema de Rendimiento Celular» con tres opciones y los cuatro pasos para usar el parche.',
+      gallery: [
+        {
+          visual: 'activa-simulator',
+          alt: 'Simulador interactivo del Plan 10-10-20 en monitor, tableta y móvil: «Calcula tus ganancias» con controles para socios, directos y clientes, el total mensual estimado y el desglose por tipo de bono.',
+        },
+      ],
+      summary:
+        'Landing de producto y simulador interactivo que permite calcular, con controles sencillos, cómo se mueve cada forma de ganancia del Plan 10-10-20.',
       details: [],
     },
     {

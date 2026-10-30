@@ -26,6 +26,10 @@ import vitaraGallery480 from '../assets/visual/project-vitara-galeria-480.webp'
 import vitaraGallery850 from '../assets/visual/project-vitara-galeria-850.webp'
 import vitaraTablet480 from '../assets/visual/project-vitara-tableta-480.webp'
 import vitaraTablet850 from '../assets/visual/project-vitara-tableta-850.webp'
+import activaLanding800 from '../assets/visual/project-activa-landing-800.webp'
+import activaLanding1536 from '../assets/visual/project-activa-landing-1536.webp'
+import activaSim800 from '../assets/visual/project-activa-simulador-800.webp'
+import activaSim1536 from '../assets/visual/project-activa-simulador-1536.webp'
 import wwCampaign600 from '../assets/visual/project-wewebinars-campana-600.webp'
 import wwCampaign1000 from '../assets/visual/project-wewebinars-campana-1000.webp'
 
@@ -43,5 +47,7 @@ export const explorationImages = {
   'vitara-config': { src: vitaraConfig480, srcSet: `${vitaraConfig480} 480w, ${vitaraConfig850} 850w`, width: 850, height: 850 },
   'vitara-gallery': { src: vitaraGallery480, srcSet: `${vitaraGallery480} 480w, ${vitaraGallery850} 850w`, width: 850, height: 850 },
   'vitara-tablet': { src: vitaraTablet480, srcSet: `${vitaraTablet480} 480w, ${vitaraTablet850} 850w`, width: 850, height: 850 },
+  'activa-landing': { src: activaLanding800, srcSet: `${activaLanding800} 800w, ${activaLanding1536} 1536w`, width: 1536, height: 1024 },
+  'activa-simulator': { src: activaSim800, srcSet: `${activaSim800} 800w, ${activaSim1536} 1536w`, width: 1536, height: 1024 },
   identity: { src: identity1200, srcSet: `${identity1200} 1200w, ${identity2400} 2400w`, width: 1600, height: 1120 },
 } as const
