@@ -3,21 +3,11 @@
   overflow: clip;
 }
 
-.contact__sculpture {
+.contact__orb {
   position: absolute;
-  top: 0;
-  right: -18%;
-  width: 150%;
-  max-width: 1200px;
-  /* La imagen nace cortada arriba: se funde arriba, abajo y a la izquierda. */
-  -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 22%),
-    linear-gradient(to bottom, transparent, #000 40%, #000 72%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to right, transparent, #000 22%),
-    linear-gradient(to bottom, transparent, #000 40%, #000 72%, transparent);
-  mask-composite: intersect;
+  top: var(--space-2);
+  right: -6%;
+  width: min(78vw, 26rem);
 }
 
 .contact__inner {
@@ -27,7 +17,7 @@
 }
 
 .contact__head {
-  padding-top: 58vw;
+  padding-top: min(74vw, 24rem);
 }
 
 .contact__heading {
@@ -177,13 +167,13 @@
 }
 
 @media (min-width: 768px) {
-  .contact__sculpture {
-    width: 110%;
-    right: -14%;
+  .contact__orb {
+    right: 4%;
+    width: min(44vw, 24rem);
   }
 
   .contact__head {
-    padding-top: 32vw;
+    padding-top: min(40vw, 22rem);
   }
 
   .contact__fields {
@@ -197,10 +187,10 @@
 }
 
 @media (min-width: 1024px) {
-  .contact__sculpture {
-    top: 0;
-    right: -6%;
-    width: 60%;
+  .contact__orb {
+    top: var(--space-4);
+    right: 7%;
+    width: min(32vw, 30rem);
   }
 
   .contact__inner {

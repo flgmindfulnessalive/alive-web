@@ -2,7 +2,7 @@ import { useId, useRef, useState, type FormEvent } from 'react'
 import { contact } from '../content/site'
 import { activeAdapter, type ContactSubmission } from '../lib/contactAdapter'
 import { useReveal } from '../lib/useReveal'
-import { Sculpture } from './Sculpture'
+import { Orb } from './Orb'
 import { TURNSTILE_SITE_KEY, Turnstile, type TurnstileHandle } from './Turnstile'
 import { WHATSAPP, WHATSAPP_ICON, whatsappUrl } from '../content/whatsapp'
 import './ContactForm.css'
@@ -97,7 +97,7 @@ export function ContactForm() {
 
   return (
     <section id="contacto" className="section contact" aria-labelledby="contact-title">
-      <Sculpture variant="closing" className="contact__sculpture" />
+      <Orb className="contact__orb" />
 
       <div className="container contact__inner">
         <div ref={headRef} className="contact__head reveal">
