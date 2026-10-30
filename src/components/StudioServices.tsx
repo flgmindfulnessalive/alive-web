@@ -1,7 +1,30 @@
 import type { CSSProperties } from 'react'
 import { studio } from '../content/site'
 import { useReveal } from '../lib/useReveal'
+import { useScrollProgress } from '../lib/useScrollProgress'
 import './StudioServices.css'
+
+type Service = (typeof studio.services)[number]
+
+// 0 → 1 mientras el servicio sube del 85 % al 35 % de la pantalla.
+const entering = (rect: DOMRect, vh: number) => (vh * 0.85 - rect.top) / (vh * 0.5)
+
+function ServiceItem({ service, index }: { service: Service; index: number }) {
+  const ref = useScrollProgress<HTMLLIElement>(entering)
+  return (
+    <li ref={ref} className="studio__item" style={{ '--i': index } as CSSProperties}>
+      <span className="studio__number ink-number" data-n={service.number}>
+        {service.number}
+      </span>
+      <h4 className="studio__name">{service.name}</h4>
+      <p className="studio__desc">{service.text}</p>
+      <p className="studio__scope">
+        <span className="studio__scope-label">Alcance</span>
+        {service.scope}
+      </p>
+    </li>
+  )
+}
 
 export function StudioServices() {
   const headRef = useReveal<HTMLDivElement>()
@@ -42,15 +65,7 @@ export function StudioServices() {
           <h3 className="visually-hidden">Servicios</h3>
           <ol ref={listRef} className="studio__list reveal-stagger">
             {studio.services.map((service, i) => (
-              <li key={service.number} className="studio__item" style={{ '--i': i } as CSSProperties}>
-                <span className="studio__number">{service.number}</span>
-                <h4 className="studio__name">{service.name}</h4>
-                <p className="studio__desc">{service.text}</p>
-                <p className="studio__scope">
-                  <span className="studio__scope-label">Alcance</span>
-                  {service.scope}
-                </p>
-              </li>
+              <ServiceItem key={service.number} service={service} index={i} />
             ))}
           </ol>
         </div>

@@ -254,6 +254,25 @@ button {
   transform: translateX(3px);
 }
 
+/* Número que se «entinta» de izquierda a derecha con el degradado de la marca.
+   El avance lo marca --fill (0 → 1), ligado al scroll en cada componente. */
+.ink-number {
+  position: relative;
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+}
+
+.ink-number::after {
+  content: attr(data-n);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #2563eb, var(--color-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  clip-path: inset(0 calc((1 - var(--fill, 1)) * 100%) 0 0);
+}
+
 /* Entradas suaves: solo los bloques fuera de pantalla al cargar esperan (is-pending). */
 .reveal,
 .reveal-stagger > * {

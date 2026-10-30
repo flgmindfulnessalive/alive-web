@@ -66,6 +66,10 @@
 }
 
 .process__index {
+  --fill: var(--lit);
+  justify-self: start;
+  align-self: start;
+  font-weight: 600;
   font-size: var(--fs-small);
   font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
@@ -124,4 +128,9 @@
   .process__text {
     font-size: var(--fs-lead);
   }
+}
+
+/* Sobre fondo oscuro, el degradado del número va más luminoso. */
+.process__index.ink-number::after {
+  background-image: linear-gradient(90deg, var(--color-blue), #a78bfa);
 }

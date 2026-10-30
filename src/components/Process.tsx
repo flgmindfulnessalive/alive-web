@@ -23,7 +23,7 @@ export function Process() {
         <ol ref={ref} className="process__steps" style={{ '--n': n } as CSSProperties}>
           {process.steps.map((step, i) => (
             <li key={step.name} className="process__step" style={{ '--i': i } as CSSProperties}>
-              <span className="process__index" aria-hidden="true">
+              <span className="process__index ink-number" data-n={String(i + 1).padStart(2, '0')} aria-hidden="true">
                 {String(i + 1).padStart(2, '0')}
               </span>
               <h3 className="process__name">{step.name}</h3>
