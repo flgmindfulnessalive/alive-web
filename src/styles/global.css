@@ -310,3 +310,84 @@ button {
     transform: none;
   }
 }
+
+/* Botón flotante de WhatsApp (insertado en cada página por vite.config.ts). */
+.wa-float {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  background: #25d366;
+  color: #062b16;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  box-shadow:
+    0 10px 28px rgb(0 0 0 / 0.35),
+    0 0 0 1px rgb(255 255 255 / 0.12) inset;
+  transition:
+    transform var(--dur-hover) var(--ease-out),
+    box-shadow var(--dur-hover) var(--ease-out),
+    opacity var(--dur-hover) var(--ease-out);
+}
+
+.wa-float svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+  flex: none;
+}
+
+.wa-float:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 34px rgb(0 0 0 / 0.4),
+    0 0 0 1px rgb(255 255 255 / 0.16) inset;
+}
+
+.wa-float:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+/* Con el menú móvil abierto, no compite con él. */
+.menu-open .wa-float {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Móvil: solo el icono, en círculo. */
+@media (max-width: 599px) {
+  .wa-float {
+    width: 56px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .wa-float__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wa-float {
+    animation: wa-in 500ms var(--ease-out) 900ms both;
+  }
+}
+
+@keyframes wa-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.92);
+  }
+}

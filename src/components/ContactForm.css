@@ -217,3 +217,32 @@
     padding-top: clamp(12rem, 22vw, 20rem);
   }
 }
+
+.contact__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--space-3);
+  padding: 12px 18px 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+  transition: border-color var(--dur-hover) var(--ease-out);
+}
+
+.contact__whatsapp strong {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.contact__whatsapp svg {
+  width: 22px;
+  height: 22px;
+  fill: #25d366;
+  flex: none;
+}
+
+.contact__whatsapp:hover {
+  border-color: #25d366;
+}

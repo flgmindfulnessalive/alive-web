@@ -4,6 +4,7 @@ import { activeAdapter, type ContactSubmission } from '../lib/contactAdapter'
 import { useReveal } from '../lib/useReveal'
 import { Sculpture } from './Sculpture'
 import { TURNSTILE_SITE_KEY, Turnstile, type TurnstileHandle } from './Turnstile'
+import { WHATSAPP, WHATSAPP_ICON, whatsappUrl } from '../content/whatsapp'
 import './ContactForm.css'
 
 type Field = 'name' | 'email' | 'company' | 'message'
@@ -105,6 +106,14 @@ export function ContactForm() {
             {contact.title}
           </h2>
           <p className="lead contact__text">{contact.text}</p>
+          <a className="contact__whatsapp" href={whatsappUrl()} target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={WHATSAPP_ICON} />
+            </svg>
+            <span>
+              ¿Prefieres WhatsApp? <strong>{WHATSAPP.display}</strong>
+            </span>
+          </a>
         </div>
 
         <form ref={formRef} className="contact__form" noValidate onSubmit={onSubmit}>

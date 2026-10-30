@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react'
 import { existsSync, readdirSync } from 'node:fs'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
+import { whatsappFloatHtml } from './src/content/whatsapp.ts'
 
 // Con VITE_SITE_URL (p. ej. https://alivedigital.agency) la home recibe
 // canonical, og:url, imágenes con URL absoluta y datos estructurados JSON-LD.
@@ -67,6 +68,17 @@ function siteUrl(url: string | undefined): Plugin {
 
 // Cabecera de las páginas secundarias (blog, prensa, privacidad): misma
 // navegación que la home, con menú hamburguesa en móvil (src/secondary.ts).
+// Botón flotante de WhatsApp en todas las páginas, menos el brief y el panel.
+function whatsappButton(): Plugin {
+  return {
+    name: 'alive-whatsapp',
+    transformIndexHtml(html, ctx) {
+      if (/\/(brief-form|panel)\//.test(ctx.path) || html.includes('class="wa-float"')) return html
+      return html.replace('</body>', `${whatsappFloatHtml()}\n  </body>`)
+    },
+  }
+}
+
 function secondaryHeader(): Plugin {
   return {
     name: 'alive-secondary-header',
@@ -121,7 +133,7 @@ function blogPages() {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   return {
-    plugins: [react(), secondaryHeader(), siteUrl(env.VITE_SITE_URL)],
+    plugins: [react(), secondaryHeader(), whatsappButton(), siteUrl(env.VITE_SITE_URL)],
     build: {
       rollupOptions: {
         input: {
