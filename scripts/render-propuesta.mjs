@@ -98,23 +98,23 @@ const html = `<!doctype html>
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-body { font-family: Inter, sans-serif; font-feature-settings: 'ss01', 'cv11'; color: var(--ink); font-size: 9.5pt; line-height: 1.55; }
+body { font-family: Inter, sans-serif; font-feature-settings: 'ss01', 'cv11'; color: var(--ink); font-size: 12pt; line-height: 1.55; }
 .page { position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always; background: var(--ivory); padding: 18mm 18mm 22mm; }
 .page:last-child { page-break-after: auto; }
 .dark { background: var(--bg); color: var(--text); }
-.wordmark { height: 11px; width: auto; fill: currentColor; vertical-align: middle; }
+.wordmark { height: 12px; width: auto; fill: currentColor; vertical-align: middle; }
 mark { background: #ffe58f; color: var(--ink); padding: 0 3px; border-radius: 2px; }
 .grad { display: inline; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.eyebrow { font-size: 7pt; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+.eyebrow { font-size: 9pt; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
 .eyebrow::after { content: ''; width: 34px; height: 1.5px; background: var(--grad); }
 .dark .eyebrow { color: var(--text-muted); }
-h2 { font-size: 22pt; font-weight: 450; letter-spacing: -0.025em; line-height: 1.12; margin: 10px 0 14px; }
-h3 { font-size: 11.5pt; font-weight: 550; letter-spacing: -0.01em; }
+h2 { font-size: 27.5pt; font-weight: 450; letter-spacing: -0.025em; line-height: 1.12; margin: 10px 0 14px; }
+h3 { font-size: 14.5pt; font-weight: 550; letter-spacing: -0.01em; }
 p + p { margin-top: 8px; }
-.lead { font-size: 11pt; line-height: 1.55; color: var(--muted); max-width: 150mm; }
-.pie { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid var(--line); font-size: 7pt; color: var(--muted); }
+.lead { font-size: 14pt; line-height: 1.55; color: var(--muted); max-width: 150mm; }
+.pie { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid var(--line); font-size: 9pt; color: var(--muted); }
 .pie > span:first-child { display: flex; align-items: center; gap: 10px; }
-.pie .wordmark { height: 8px; color: var(--ink); }
+.pie .wordmark { height: 9px; color: var(--ink); }
 .card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -122,39 +122,39 @@ p + p { margin-top: 8px; }
 .check li { position: relative; padding-left: 16px; }
 .check li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 7px; height: 7px; border-radius: 50%; background: var(--grad); }
 .cross li::before { background: none; border: 1.2px solid var(--muted); width: 6px; height: 6px; }
-.nota { margin-top: 14px; padding: 11px 14px; border-left: 2px solid var(--blue); background: rgb(47 107 255 / 0.06); border-radius: 0 8px 8px 0; font-size: 8.8pt; }
+.nota { margin-top: 14px; padding: 11px 14px; border-left: 2px solid var(--blue); background: rgb(47 107 255 / 0.06); border-radius: 0 8px 8px 0; font-size: 11pt; }
 
 /* Portada y cierre */
 .cover { padding: 16mm 18mm; display: flex; flex-direction: column; }
 .cover .top { display: flex; justify-content: space-between; align-items: center; }
 .cover .top .wordmark { height: 16px; }
-.cover .tag { font-size: 6.8pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--line-dark); padding: 4px 9px; border-radius: 99px; }
-.sculpture { position: absolute; right: -40mm; top: 40mm; width: 190mm; opacity: 0.95; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 70%, transparent), linear-gradient(to right, transparent, #000 30%); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.cover .tag { position: relative; z-index: 1; background: var(--bg); font-size: 8.5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--line-dark); padding: 4px 9px; border-radius: 99px; }
+.sculpture { position: absolute; right: -60mm; top: 30mm; width: 240mm; opacity: 0.95; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 70%, transparent), linear-gradient(to right, transparent, #000 28%); -webkit-mask-composite: source-in; mask-composite: intersect; }
 .cover .body { margin-top: auto; position: relative; z-index: 1; }
-.cover h1 { font-size: 34pt; font-weight: 450; letter-spacing: -0.035em; line-height: 1.06; margin: 14px 0 16px; max-width: 160mm; }
+.cover h1 { font-size: 35pt; font-weight: 450; letter-spacing: -0.035em; line-height: 1.08; margin: 14px 0 16px; }
 .cover h1 span:first-child::after { content: ''; display: block; }
-.cover .bajada { font-size: 11pt; color: var(--text-muted); max-width: 120mm; }
+.cover .bajada { font-size: 14pt; color: var(--text-muted); max-width: 120mm; }
 .meta { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 26px; margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
-.meta dt { font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-.meta dd { font-size: 9pt; font-weight: 550; }
-.meta dd small { display: block; font-weight: 400; color: var(--text-muted); font-size: 7.8pt; }
+.meta dt { font-size: 8.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.meta dd { font-size: 11pt; font-weight: 550; }
+.meta dd small { display: block; font-weight: 400; color: var(--text-muted); font-size: 10pt; }
 
 /* Resumen */
-.pilar h3 { font-size: 14pt; font-weight: 500; margin-bottom: 6px; }
-.pilar p { color: var(--muted); font-size: 8.8pt; }
+.pilar h3 { font-size: 15pt; font-weight: 500; margin-bottom: 6px; }
+.pilar p { color: var(--muted); font-size: 11pt; }
 
 /* Qué incluye */
 .servicio { display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; align-items: start; }
-.servicio .num { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--ivory); display: inline-grid; place-items: center; font-size: 8pt; margin-right: 10px; vertical-align: middle; }
-.servicio .tipo { color: var(--muted); font-size: 8pt; margin: 2px 0 12px 32px; }
-.servicio .precio { font-size: 16pt; font-weight: 550; letter-spacing: -0.02em; }
+.servicio .num { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--ivory); display: inline-grid; place-items: center; font-size: 10pt; margin-right: 10px; vertical-align: middle; }
+.servicio .tipo { color: var(--muted); font-size: 10pt; margin: 2px 0 12px 32px; }
+.servicio .precio { font-size: 20pt; font-weight: 550; letter-spacing: -0.02em; }
 .servicio .check { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 6px 22px; }
 
 /* Fases */
 .fase { display: grid; grid-template-columns: 34mm 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); }
 .fase:last-of-type { border-bottom: 1px solid var(--line); }
-.fase .cuando { font-size: 7pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-.fase .n { font-size: 26pt; font-weight: 300; line-height: 1; letter-spacing: -0.03em; margin-bottom: 4px; }
+.fase .cuando { font-size: 9pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.fase .n { font-size: 32.5pt; font-weight: 300; line-height: 1; letter-spacing: -0.03em; margin-bottom: 4px; }
 .fase h3 { margin-bottom: 4px; }
 .fase p { color: var(--muted); }
 
@@ -162,17 +162,17 @@ p + p { margin-top: 8px; }
 .tabla { background: var(--bg); color: var(--text); border-radius: 12px; padding: 6px 18px; }
 .fila { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line-dark); }
 .fila:last-child { border-bottom: 0; }
-.fila small { display: block; color: var(--text-muted); font-size: 7.8pt; margin-top: 2px; }
-.fila .importe { font-size: 12pt; font-weight: 550; white-space: nowrap; }
-.fila .etiqueta { font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--turq); padding-top: 12px; border: 0; }
+.fila small { display: block; color: var(--text-muted); font-size: 10pt; margin-top: 2px; }
+.fila .importe { font-size: 15pt; font-weight: 550; white-space: nowrap; }
+.fila .etiqueta { font-size: 8.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--turq); padding-top: 12px; border: 0; }
 .total { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.total .card b { display: block; font-size: 22pt; font-weight: 550; letter-spacing: -0.02em; margin: 4px 0 2px; }
-.total .card span { font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-.total .card small { color: var(--muted); font-size: 7.8pt; }
+.total .card b { display: block; font-size: 27.5pt; font-weight: 550; letter-spacing: -0.02em; margin: 4px 0 2px; }
+.total .card span { font-size: 8.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.total .card small { color: var(--muted); font-size: 10pt; }
 .total .card.destacada { border: 1.5px solid transparent; background: linear-gradient(var(--paper), var(--paper)) padding-box, var(--grad) border-box; }
 .condiciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 26px; margin-top: 12px; }
-.condiciones h3 { font-size: 8.8pt; margin-bottom: 2px; }
-.condiciones p { color: var(--muted); font-size: 8.4pt; }
+.condiciones h3 { font-size: 11pt; margin-bottom: 2px; }
+.condiciones p { color: var(--muted); font-size: 10.5pt; }
 
 /* Quién lo hace */
 .firma { display: flex; gap: 14px; align-items: center; }
@@ -181,14 +181,14 @@ p + p { margin-top: 8px; }
 .firma p { color: var(--muted); }
 .trabajos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
 .trabajo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 8px; display: block; }
-.trabajo span { display: block; font-size: 6.5pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 7px; }
-.trabajo b { font-weight: 550; font-size: 10pt; }
+.trabajo span { display: block; font-size: 8.5pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 7px; }
+.trabajo b { font-weight: 550; font-size: 12.5pt; }
 
 /* Próximos pasos */
 .paso { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-.paso .n { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--ivory); display: grid; place-items: center; font-size: 9pt; }
+.paso .n { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--ivory); display: grid; place-items: center; font-size: 11pt; }
 .paso p { color: var(--muted); }
-.cierre h2 { font-size: 34pt; letter-spacing: -0.035em; line-height: 1.06; }
+.cierre h2 { font-size: 42.5pt; letter-spacing: -0.035em; line-height: 1.06; }
 .cierre .contacto { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 30px; margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
 </style>
 </head>
@@ -334,49 +334,44 @@ writeFileSync(htmlPath, html)
 const require = createRequire(`${execSync('npm root -g').toString().trim()}/`)
 const { chromium } = require('playwright')
 const browser = await chromium.launch()
-const page = await browser.newPage()
+const page = await browser.newPage({ deviceScaleFactor: 4 })
 await page.goto(pathToFileURL(htmlPath).href)
 await page.evaluate(() => document.fonts.ready)
-// El texto con degradado no se exporta bien a PDF (filetes o rectángulos según el visor).
-// Cada .grad se dibuja en un canvas a 4× y se sustituye por una imagen alineada a la línea base;
-// el texto original queda como texto alternativo.
-await page.evaluate(() => {
-  const SCALE = 4
-  document.querySelectorAll('.grad').forEach((el) => {
-    const cs = getComputedStyle(el)
-    const probe = document.createElement('span')
-    probe.style.cssText = 'display:inline-block;width:0;height:0'
-    el.prepend(probe)
-    const baseline = probe.getBoundingClientRect().bottom
-    probe.remove()
-    const r = el.getBoundingClientRect()
-    const range = document.createRange()
-    range.selectNodeContents(el)
-    const w = Math.ceil(range.getBoundingClientRect().width) + 2
-    const h = Math.ceil(r.height)
-    const canvas = document.createElement('canvas')
-    canvas.width = w * SCALE
-    canvas.height = h * SCALE
-    const ctx = canvas.getContext('2d')
-    ctx.scale(SCALE, SCALE)
-    ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`
-    ctx.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing
-    const g = ctx.createLinearGradient(0, 0, w, 0)
-    g.addColorStop(0, '#7c3aed')
-    g.addColorStop(0.52, '#2f6bff')
-    g.addColorStop(1, '#00e0d0')
-    ctx.fillStyle = g
-    ctx.fillText(el.textContent, 0, baseline - r.top)
-    const img = new Image()
-    img.src = canvas.toDataURL('image/png')
-    img.alt = el.textContent
-    img.width = w
-    img.height = h
-    img.style.cssText = `display:inline-block;vertical-align:${-(r.bottom - baseline)}px`
-    el.replaceWith(img)
-  })
+// El texto con degradado (background-clip: text) se ve bien en pantalla pero no al exportar a PDF
+// (filetes o rectángulos según el visor). Cada .grad se captura tal como se ve, con fondo
+// transparente y a 4×, y su contenido se sustituye por esa imagen (el texto queda como alternativo).
+await page.addStyleTag({
+  content: `.captura, .captura * { background-color: transparent !important; }
+    .captura .page { background-image: none !important; }
+    .captura img, .captura .sculpture { visibility: hidden !important; }`,
 })
+await page.evaluate(() => document.body.classList.add('captura'))
+const grads = page.locator('.grad')
+const capturas = []
+for (let n = 0; n < (await grads.count()); n++) {
+  capturas.push((await grads.nth(n).screenshot({ omitBackground: true })).toString('base64'))
+}
+await page.evaluate((capturas) => {
+  document.querySelectorAll('.grad').forEach((el, n) => {
+    const r = el.getBoundingClientRect()
+    const img = new Image()
+    img.src = `data:image/png;base64,${capturas[n]}`
+    img.alt = el.textContent
+    img.style.cssText = `display:block;width:${r.width}px;height:${r.height}px`
+    el.replaceChildren(img)
+  })
+  document.body.classList.remove('captura')
+}, capturas)
 await page.waitForFunction(() => [...document.images].every((i) => i.complete))
+const desbordes = await page.evaluate(() =>
+  [...document.querySelectorAll('.page')].flatMap((pg, i) => {
+    const pie = pg.querySelector('.pie')
+    const limite = (pie ? pie.getBoundingClientRect().top : pg.getBoundingClientRect().bottom) - 4
+    const fuera = [...pg.querySelectorAll('h2, h3, p, li, .card, .fila, .fase, .paso, .trabajo, dl')].some((el) => el.getBoundingClientRect().bottom > limite)
+    return fuera ? [i + 1] : []
+  }),
+)
+if (desbordes.length) console.warn(`Aviso: contenido desbordado en la página ${desbordes.join(', ')}`)
 const pdfPath = resolve(outDir, `${d.slug}.pdf`)
 await page.pdf({ path: pdfPath, format: 'A4', printBackground: true, preferCSSPageSize: true })
 await browser.close()
