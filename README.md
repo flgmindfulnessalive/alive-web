@@ -69,6 +69,12 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 
 El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo publicado. Cada artículo lleva botones para compartir (WhatsApp, LinkedIn, X, Facebook, copiar enlace y, en móvil, el menú nativo) bajo el autor y al final; son enlaces directos, sin scripts de terceros. Cada artículo genera su página estática con canonical, Open Graph y JSON-LD `BlogPosting`, y entra en el sitemap. Para ver borradores en local: `BLOG_DRAFTS=1 npm run dev`.
 
+## Brief de proyecto (`/brief-form/`)
+
+Formulario por pasos para clientes (no se indexa ni aparece en el menú: se comparte por enlace). Las preguntas están en `src/brief/questions.ts`, que usan tanto el formulario como el correo. Los archivos se suben desde el navegador directamente a un **Blob Store privado de Vercel**; las respuestas y los enlaces firmados a los archivos llegan por correo con Resend, y el cliente recibe una confirmación.
+
+Funciones: `api/brief-session.ts` (verifica Turnstile y abre una sesión firmada de 48 h), `api/brief-upload.ts` (autoriza subidas solo en la carpeta de esa sesión, con tipos y tamaños permitidos), `api/brief.ts` (envía el brief) y `api/brief-file.ts` (abre o borra archivos con firma). Variables: las del formulario de contacto, más `BLOB_READ_WRITE_TOKEN` (la crea Vercel al conectar el Blob Store) y, recomendado, `BRIEF_SECRET` (firma de sesiones y enlaces; si falta, se usa el token de Blob).
+
 ## Propuestas comerciales
 
 Cada propuesta es un archivo de datos en `propuestas/datos/` (copia `ejemplo-web-esencial.json`): cliente, fecha, validez, moneda (`USD`, `PEN` o `EUR`), precio, porcentajes de adelanto y saldo, plazo, rondas de ajustes, acompañamiento y alojamiento. `npm run propuesta -- propuestas/datos/<archivo>.json` genera `propuestas/salida/<slug>.pdf` (A4, 7 páginas) con la identidad de ALIVE. Lo que falte (por ejemplo, `precio: null`) sale marcado en amarillo para que no se envíe incompleto. Los PDF generados no se suben al repositorio.

@@ -128,6 +128,7 @@ export default defineConfig(({ mode }) => {
           main: 'index.html',
           privacidad: 'privacidad/index.html',
           prensa: 'prensa/index.html',
+          brief: 'brief-form/index.html',
           ...blogPages(),
         },
       },
