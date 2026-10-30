@@ -252,6 +252,11 @@
   overflow: hidden;
 }
 
+/* Con el menú abierto, cabecera opaca: no se trasluce el texto de detrás. */
+.menu-open .site-header {
+  background: var(--color-bg);
+}
+
 @media (max-width: 899px) {
   .site-header__nav,
   .site-header__cta {
