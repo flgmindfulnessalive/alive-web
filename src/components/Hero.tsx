@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 import { hero } from '../content/site'
 import { useScrollProgress } from '../lib/useScrollProgress'
 import { HeroMark } from './HeroMark'
@@ -8,38 +8,7 @@ import './Hero.css'
 // Progreso 0 → 1 mientras el hero sale de pantalla por arriba.
 const leaving = (rect: DOMRect) => -rect.top / rect.height
 
-// Cada letra muestra su tramo de un único degradado del ancho de la palabra
-// (--w y --x se miden), así los colores se ven continuos aunque respiren por separado.
-function AliveWord({ word }: { word: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-
-  useLayoutEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const measure = () => {
-      el.style.setProperty('--w', `${el.offsetWidth}px`)
-      for (const letter of el.children as HTMLCollectionOf<HTMLElement>) {
-        letter.style.setProperty('--x', `${letter.offsetLeft}px`)
-      }
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
-  return (
-    <span ref={ref} className="hero-alive">
-      {[...word].map((ch, i) => (
-        <span key={i} style={{ '--i': i } as CSSProperties}>
-          {ch}
-        </span>
-      ))}
-    </span>
-  )
-}
-
-// «vida» letra a letra para que respire de izquierda a derecha; el punto final pasa a HeroMark.
+// «vida» lleva un barrido de color de marca; el punto final pasa a HeroMark.
 function renderLine(line: string, run: number): ReactNode {
   const at = line.lastIndexOf(hero.titleAccent)
   if (at < 0 || !line.endsWith('.')) return line
@@ -47,7 +16,9 @@ function renderLine(line: string, run: number): ReactNode {
   return (
     <>
       {line.slice(0, at)}
-      <AliveWord key={`w${run}`} word={word} />
+      <span key={`w${run}`} className="hero-alive">
+        {word}
+      </span>
       {line.slice(at + word.length, -1)}
       <HeroMark key={`m${run}`} />
     </>
