@@ -39,7 +39,7 @@ export function ProjectModal({ project, onClose }: Props) {
           />
           <div className="project-modal__top">
             <p className="eyebrow">
-              {project.kind === 'exploration' ? 'Exploración visual · Concepto del estudio' : project.client}
+              {project.kind === 'exploration' ? 'Concepto del estudio' : project.client}
             </p>
             <button type="button" className="project-modal__close" onClick={onClose} aria-label="Cerrar">
               <span aria-hidden="true">×</span>

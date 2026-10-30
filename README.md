@@ -49,7 +49,7 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 ## Editar contenido
 
 - Textos, servicios y pasos: `src/content/site.ts`.
-- Proyectos: añade elementos a `work.projects`. Usa `kind: 'case'` y `client` solo con casos autorizados; las piezas `exploration` muestran siempre «Exploración visual».
+- Proyectos: añade elementos a `work.projects`. Usa `kind: 'case'` y `client` solo con casos autorizados; las piezas `exploration` no llevan etiqueta.
 - Aviso de privacidad: define `contact.privacyHref` y aparecerá junto al botón de envío.
 - Enlaces legales y redes: añádelos a `footerLinks` cuando existan destinos reales.
 

@@ -9,7 +9,8 @@ type CardProps = { project: Project; index: number; onOpen: (el: HTMLButtonEleme
 
 function ProjectCard({ project, index, onOpen }: CardProps) {
   const image = explorationImages[project.visual]
-  const label = project.kind === 'exploration' ? 'Exploración visual' : project.client
+  // Solo los casos con cliente llevan etiqueta sobre la imagen.
+  const label = project.kind === 'case' ? project.client : undefined
   // Con enlace: abre el sitio real. Sin enlace: abre el detalle solo si está activado.
   const action = project.url ? 'link' : work.showDetails ? 'modal' : 'static'
 
@@ -26,7 +27,7 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
           loading="lazy"
           decoding="async"
         />
-        <span className="work__badge">{label}</span>
+        {label && <span className="work__badge">{label}</span>}
       </span>
       {action !== 'static' && (
         <span id={`${project.id}-desc`} className="visually-hidden">
@@ -58,7 +59,7 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
           href={project.url}
           target="_blank"
           rel="noopener"
-          aria-label={`${project.title}. ${label}. Abrir sitio en una pestaña nueva`}
+          aria-label={`${[project.title, label].filter(Boolean).join('. ')}. Abrir sitio en una pestaña nueva`}
           aria-describedby={`${project.id}-desc`}
         >
           {body}
@@ -68,7 +69,7 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
           type="button"
           className="work__card"
           aria-haspopup="dialog"
-          aria-label={`${project.title}. ${label}. Ver concepto`}
+          aria-label={`${[project.title, label].filter(Boolean).join('. ')}. Ver detalle`}
           aria-describedby={`${project.id}-desc`}
           onClick={(e) => onOpen(e.currentTarget)}
         >
@@ -92,7 +93,7 @@ export function WorkGallery() {
       <div className="container">
         <div ref={headRef} className="work__head reveal">
           <div>
-            <p className="eyebrow eyebrow--rule">Exploración visual</p>
+            <p className="eyebrow eyebrow--rule">Proyectos</p>
             <h2 id="work-title" className="h2 work__heading">
               {work.title}
             </h2>

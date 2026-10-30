@@ -55,7 +55,7 @@ function siteDesktop() {
       <span style="margin-left:auto;border:1px solid rgba(245,247,250,.45);border-radius:99px;padding:8px 16px;color:#F5F7FA">Hablemos →</span>
     </div>
     <div style="position:absolute;left:56px;top:150px;color:#F5F7FA">
-      <div style="font-size:10px;letter-spacing:.18em;color:#a1a1aa">EXPLORACIÓN 01 · EXPERIENCIA DIGITAL</div>
+      <div style="font-size:10px;letter-spacing:.18em;color:#a1a1aa">ESTUDIO DE INTELIGENCIA CREATIVA</div>
       <div style="width:28px;height:2px;margin:14px 0 26px;background:linear-gradient(90deg,#3B82F6,#8B5CF6)"></div>
       <div style="font-size:66px;line-height:1;letter-spacing:-.035em;font-weight:450;max-width:520px">Experiencias que se sienten vivas.</div>
       <div style="margin-top:22px;font-size:15px;line-height:1.5;color:#a1a1aa;max-width:380px">Estrategia, diseño y tecnología en una misma conversación, de la primera idea al lanzamiento.</div>
@@ -79,7 +79,7 @@ function siteMobile() {
       <div style="margin-left:auto;width:18px;height:8px;border-top:1.5px solid #F5F7FA;border-bottom:1.5px solid #F5F7FA"></div>
     </div>
     <div style="position:absolute;z-index:1;left:22px;right:22px;top:118px">
-      <div style="font-size:8px;letter-spacing:.18em;color:#a1a1aa">EXPLORACIÓN 01</div>
+      <div style="font-size:8px;letter-spacing:.18em;color:#a1a1aa">ESTUDIO CREATIVO</div>
       <div style="margin-top:14px;font-size:34px;line-height:1.02;letter-spacing:-.035em;font-weight:450">Experiencias que se sienten vivas.</div>
       <div style="margin-top:18px;display:inline-block;background:#2563EB;border-radius:99px;padding:10px 16px;font-size:11px">Empezar un proyecto →</div>
     </div>

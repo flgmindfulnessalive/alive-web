@@ -26,3 +26,4 @@ dist-ssr
 # Entregables locales
 alive-web-source.zip
 .env
+shots/
