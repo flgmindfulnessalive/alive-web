@@ -79,7 +79,7 @@ Funciones: `api/brief-session.ts` (verifica Turnstile y abre una sesión firmada
 
 Gestión de clientes con Supabase: tablero por etapas (Nuevo, En conversación, Propuesta enviada, Ganado, Perdido) con arrastrar y soltar, lista con búsqueda, ficha con las respuestas del brief, archivos, valor y notas internas, y alta manual. Los briefs y las consultas del formulario entran solos (`api/_db.ts`); si Supabase falla, el correo se envía igual.
 
-Acceso con enlace mágico al correo, solo para cuentas creadas en Supabase y listadas en `panel_admins`. El esquema y las reglas de seguridad por filas están en `supabase/schema.sql`. Variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (clave publishable), `SUPABASE_URL` y `SUPABASE_SECRET_KEY`.
+Acceso con correo y contraseña (o enlace al correo si se olvida), solo para cuentas creadas en Supabase → Authentication y listadas en `panel_admins`. El esquema y las reglas de seguridad por filas están en `supabase/schema.sql`. Variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (clave publishable), `SUPABASE_URL` y `SUPABASE_SECRET_KEY`.
 
 ## Propuestas comerciales
 
