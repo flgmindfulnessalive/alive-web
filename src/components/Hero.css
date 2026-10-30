@@ -214,11 +214,12 @@
 
 .hero-mark__icons {
   position: absolute;
-  left: 0.02em;
+  /* Del tamaño del punto: apoyados en la línea base, poco más altos que él. */
+  left: 0;
   bottom: 0.14em;
-  width: 0.52em;
+  width: 0.3em;
   max-width: none;
-  height: 0.52em;
+  height: 0.3em;
   overflow: visible;
   pointer-events: none;
 }
@@ -226,7 +227,8 @@
 .hero-mark__icon {
   opacity: 0;
   stroke: url(#hero-mark-gradient);
-  stroke-width: 1.8;
+  stroke-width: 1.2px;
+  vector-effect: non-scaling-stroke;
   stroke-linecap: round;
   stroke-linejoin: round;
   transform-box: fill-box;
@@ -236,6 +238,12 @@
 .hero-mark__icon--heart {
   fill: url(#hero-mark-gradient);
   stroke: none;
+}
+
+@media (min-width: 1024px) {
+  .hero-mark__icon {
+    stroke-width: 1.5px;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
