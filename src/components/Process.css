@@ -81,6 +81,13 @@
   transition: opacity 240ms var(--ease-out);
 }
 
+/* Pantallas muy estrechas (Galaxy Fold): «Evolucionamos» cabe en una línea. */
+@media (max-width: 359px) {
+  .process__name {
+    font-size: 1.625rem;
+  }
+}
+
 .process__text {
   color: var(--color-text-muted);
 }
