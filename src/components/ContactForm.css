@@ -131,6 +131,10 @@
   overflow: hidden;
 }
 
+.contact__turnstile:empty {
+  display: none;
+}
+
 .contact__actions {
   display: flex;
   flex-wrap: wrap;

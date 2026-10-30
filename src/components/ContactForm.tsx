@@ -3,6 +3,7 @@ import { contact } from '../content/site'
 import { activeAdapter, type ContactSubmission } from '../lib/contactAdapter'
 import { useReveal } from '../lib/useReveal'
 import { Sculpture } from './Sculpture'
+import { TURNSTILE_SITE_KEY, Turnstile, type TurnstileHandle } from './Turnstile'
 import './ContactForm.css'
 
 type Field = 'name' | 'email' | 'company' | 'message'
@@ -24,6 +25,7 @@ export function ContactForm() {
   const id = useId()
   const formRef = useRef<HTMLFormElement>(null)
   const statusRef = useRef<HTMLParagraphElement>(null)
+  const turnstileRef = useRef<TurnstileHandle>(null)
   const [errors, setErrors] = useState<Errors>({})
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -48,8 +50,19 @@ export function ContactForm() {
       return
     }
 
+    if (!activeAdapter.isDemo && TURNSTILE_SITE_KEY) {
+      data.spamToken = turnstileRef.current?.token() ?? undefined
+      if (!data.spamToken) {
+        setErrorMessage('Estamos comprobando que el envío es seguro. Inténtalo de nuevo en unos segundos.')
+        setStatus('error')
+        statusRef.current?.focus()
+        return
+      }
+    }
+
     setStatus('submitting')
     const result = await activeAdapter.submit(data)
+    if (!activeAdapter.isDemo) turnstileRef.current?.reset()
     if (result.status === 'error') {
       setErrorMessage(result.message)
       setStatus('error')
@@ -140,6 +153,8 @@ export function ContactForm() {
               <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
             </div>
           </div>
+
+          {!activeAdapter.isDemo && <Turnstile ref={turnstileRef} />}
 
           <div className="contact__actions">
             <button type="submit" className="btn btn-primary" disabled={status === 'submitting'}>

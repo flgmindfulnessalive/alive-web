@@ -6,8 +6,8 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 function siteUrl(url: string | undefined): Plugin {
   return {
     name: 'alive-site-url',
-    transformIndexHtml(html) {
-      if (!url) return html
+    transformIndexHtml(html, ctx) {
+      if (!url || !ctx.path.endsWith('/index.html') || ctx.path.includes('privacidad')) return html
       const base = url.replace(/\/$/, '')
       return html
         .replace('content="/og-image.jpg"', `content="${base}/og-image.jpg"`)
@@ -24,5 +24,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   return {
     plugins: [react(), siteUrl(env.VITE_SITE_URL)],
+    build: {
+      rollupOptions: {
+        input: { main: 'index.html', privacidad: 'privacidad/index.html' },
+      },
+    },
   }
 })

@@ -1,7 +1,7 @@
 // Adaptador de envío del formulario de contacto.
 // Sin VITE_CONTACT_ENDPOINT se usa `demoAdapter`, que no envía ni guarda nada.
-// Con VITE_CONTACT_ENDPOINT (p. ej. https://formspree.io/f/xxxxxxx) se envía
-// por POST JSON a ese endpoint. Para otro servicio, implementa `ContactAdapter`.
+// Con VITE_CONTACT_ENDPOINT=/api/contact se envía por POST JSON a la Vercel
+// Function de api/contact.ts (Resend + Turnstile).
 
 export type ContactSubmission = {
   name: string
@@ -10,7 +10,7 @@ export type ContactSubmission = {
   message: string
   // Campo trampa: los humanos lo dejan vacío.
   honeypot?: string
-  // Token de verificación antispam (Turnstile, reCAPTCHA, hCaptcha…).
+  // Token de Cloudflare Turnstile, verificado en el servidor.
   spamToken?: string
 }
 
@@ -47,14 +47,12 @@ export function createFetchAdapter(endpoint: string): ContactAdapter {
             email: data.email,
             company: data.company ?? '',
             message: data.message,
-            _replyto: data.email,
-            _subject: `Nuevo proyecto desde la web: ${data.name}`,
-            ...(data.spamToken ? { 'cf-turnstile-response': data.spamToken } : {}),
+            turnstileToken: data.spamToken,
           }),
         })
-        return res.ok
-          ? { status: 'sent' }
-          : { status: 'error', message: 'No hemos podido enviar tu mensaje. Inténtalo de nuevo.' }
+        if (res.ok) return { status: 'sent' }
+        const body = (await res.json().catch(() => null)) as { error?: string } | null
+        return { status: 'error', message: body?.error ?? 'No hemos podido enviar tu mensaje. Inténtalo de nuevo.' }
       } catch {
         return { status: 'error', message: 'No hemos podido enviar tu mensaje. Revisa tu conexión.' }
       }

@@ -34,6 +34,9 @@ src/
     Process.tsx             Cuatro pasos con raíl ligado al scroll
     ContactForm.tsx         Formulario con validación y aviso de demo
     Footer.tsx
+    Turnstile.tsx           Widget antispam de Cloudflare (solo si hay site key)
+api/contact.ts              Vercel Function: valida, verifica Turnstile y envía con Resend
+privacidad/index.html       Aviso de privacidad (borrador)
     Wordmark.tsx            Wordmark ALIVE (trazado en assets/brand/paths.ts)
     Sculpture.tsx           Escultura fluida de la marca
 brand-source/               Originales de marca entregados
@@ -60,18 +63,45 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 
 Capturas en `docs/screenshots/`. Recursos y pendientes en `ASSETS.md`.
 
-## Despliegue (GitHub Pages)
+## Despliegue (Vercel)
 
-El workflow `.github/workflows/deploy.yml` compila y publica en cada push a `main`.
+Vercel detecta Vite (`vercel.json`) y publica la carpeta `dist/`. La función `api/contact.ts` se despliega sola como Vercel Function.
 
-1. En el repositorio: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. En **Settings → Secrets and variables → Actions → Variables**, define:
-   - `SITE_URL`: URL final sin barra (p. ej. `https://dominio.com`).
-   - `CONTACT_ENDPOINT`: endpoint del formulario (p. ej. `https://formspree.io/f/xxxxxxx`). Si falta, la web queda en modo demo.
-   - `PRIVACY_URL`: enlace al aviso de privacidad.
-3. Dominio propio: `public/CNAME` con el dominio, y en el DNS:
-   - Dominio raíz: registros `A` a `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (y `AAAA` a `2606:50c0:8000::153` … `8003::153`).
-   - Subdominio `www`: `CNAME` a `<usuario>.github.io`.
-   - Después, en Settings → Pages, marca **Enforce HTTPS**.
+### 1. Importar el proyecto
+vercel.com → Add New → Project → importa el repositorio de GitHub. No hace falta cambiar ajustes de build.
+
+### 2. Variables de entorno (Settings → Environment Variables)
+
+| Variable | Dónde se usa | Valor |
+|---|---|---|
+| `VITE_SITE_URL` | Build | URL principal sin barra final, p. ej. `https://dominio.com` |
+| `VITE_CONTACT_ENDPOINT` | Build | `/api/contact` (vacío = modo demo) |
+| `VITE_TURNSTILE_SITE_KEY` | Build | Site key de Cloudflare Turnstile |
+| `RESEND_API_KEY` | Función | Clave de API de Resend |
+| `CONTACT_TO` | Función | Buzón que recibe las consultas (varios separados por comas) |
+| `CONTACT_FROM` | Función | `ALIVE Web <web@dominio.com>`, en un dominio verificado en Resend |
+| `TURNSTILE_SECRET_KEY` | Función | Secret key de Turnstile |
+
+Las `VITE_*` se incrustan en el build: tras cambiarlas, vuelve a desplegar.
+
+### 3. Resend
+Resend → Domains → añade el dominio y crea los registros DNS que indique (SPF/DKIM). Hasta verificarlo solo puede enviar desde `onboarding@resend.dev` al correo de la propia cuenta.
+
+### 4. Cloudflare Turnstile
+Cloudflare → Turnstile → Add widget → modo **Managed**, dominios: el dominio con y sin `www` (y `*.vercel.app` para las previews si quieres probar ahí).
+
+### 5. Dominio con y sin www
+Vercel → Settings → Domains → añade `dominio.com` y `www.dominio.com`. Elige uno como principal y el otro redirige con 308. Registros DNS habituales (usa los que muestre Vercel):
+
+- `dominio.com`: `A` → `76.76.21.21`
+- `www.dominio.com`: `CNAME` → `cname.vercel-dns.com`
+
+HTTPS se activa automáticamente.
+
+### Seguridad
+`vercel.json` añade CSP (permite solo recursos propios y Turnstile), HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy` y bloqueo de iframes, y caché inmutable para `/assets`.
+
+### Aviso de privacidad
+`privacidad/index.html` es un **borrador** con `noindex`: completa los textos entre corchetes, haz que lo revise un profesional y quita el `noindex` y el aviso de borrador.
 
 Variables locales de ejemplo en `.env.example`.

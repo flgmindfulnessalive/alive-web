@@ -24,11 +24,8 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 
 # Conexiones pendientes para producción
 
-- **Envío del formulario**: implementa `ContactAdapter` en `src/lib/contactAdapter.ts` (hay un ejemplo `createFetchAdapter(endpoint)`) y asígnalo a `activeAdapter`. El aviso de demo desaparece automáticamente cuando `isDemo` es `false`.
-- **Antispam**: el campo trampa `website` ya está incluido. Añade Turnstile, hCaptcha o reCAPTCHA y pasa el token en `spamToken`; verifícalo en el servidor.
-- **Aviso de privacidad**: define `contact.privacyHref` en `src/content/site.ts` con la URL real.
-- **Dominio**: cuando exista, añade `<link rel="canonical">` y `og:url`, y convierte `og:image` en una URL absoluta en `index.html`.
-- **Datos de empresa, legales y redes**: añádelos a `footerLinks` y, si procede, como datos estructurados `Organization`. No se ha inventado ninguno.
-- **Analítica**: no hay ninguna instalada. Si se añade, que sea con consentimiento.
+- **Formulario**: listo en `api/contact.ts` (Resend + Turnstile). Falta definir las variables de entorno en Vercel y verificar el dominio en Resend. Ver README.
+- **Aviso de privacidad**: borrador en `privacidad/index.html`. Completar los datos entre corchetes, revisión legal, quitar `noindex` y el aviso de borrador.
+- **Dominio**: añadir en Vercel con y sin `www` y definir `VITE_SITE_URL`.
+- **Analítica**: no hay ninguna. Si se añade, requiere aviso y, en su caso, consentimiento.
 - **Casos reales**: cambia las piezas a `kind: 'case'` solo con autorización y datos verificados.
-- **Despliegue**: `npm run build` genera `dist/`, un sitio estático que se puede servir en cualquier hosting. No se ha publicado nada.

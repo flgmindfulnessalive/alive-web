@@ -129,9 +129,9 @@ export const contact = {
   submitLabel: 'Enviar proyecto',
   demoNotice: 'Formulario de demostración. Los datos no se enviarán.',
   demoSuccess: 'Validación completada. Conecta el servicio de envío para recibir consultas.',
-  // Enlace real al aviso de privacidad. Mientras sea null no se muestra.
-  privacyHref: (import.meta.env.VITE_PRIVACY_URL as string | undefined) || null,
+  // Enlace al aviso de privacidad (privacidad/index.html). null lo oculta.
+  privacyHref: '/privacidad/' as string | null,
 }
 
 // Destinos reales de legales y redes. Vacío hasta que existan.
-export const footerLinks: NavItem[] = []
+export const footerLinks: NavItem[] = [{ label: 'Privacidad', href: '/privacidad/' }]
