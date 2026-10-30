@@ -115,11 +115,12 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: var(--space-4);
+    bottom: var(--space-2); /* «Nuestro expertise» cerca de la línea de la banda */
   }
 
   .hero__signature {
     padding-bottom: 0;
+    font-size: 1.125rem;
   }
 }
 

@@ -65,3 +65,10 @@
     border-bottom: 1px solid var(--line-strong);
   }
 }
+
+/* Escritorio: rótulos de capacidades un poco más grandes. */
+@media (min-width: 1024px) {
+  .capabilities__list {
+    font-size: 0.875rem;
+  }
+}
