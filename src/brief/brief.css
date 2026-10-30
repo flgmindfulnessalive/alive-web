@@ -229,6 +229,7 @@
 .brief .field textarea {
   min-height: 120px;
   resize: vertical;
+  max-height: 22rem; /* se puede agrandar, pero con tope */
   line-height: 1.55;
 }
 

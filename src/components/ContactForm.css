@@ -100,6 +100,7 @@
 
 .field textarea {
   resize: vertical;
+  max-height: 20rem; /* se puede agrandar, pero con tope */
   min-height: 112px;
 }
 

@@ -569,6 +569,7 @@
 
 .detail__note-form textarea {
   resize: vertical;
+  max-height: 24rem; /* se puede agrandar, pero con tope */
 }
 
 .detail__note-form .btn {
