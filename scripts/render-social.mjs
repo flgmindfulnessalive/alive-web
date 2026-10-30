@@ -3,7 +3,6 @@
 //   docs/social/alive-post-1080.jpg 1080×1080 (publicación cuadrada para Instagram / estados)
 // La cinta real atraviesa el titular: una copia va detrás del texto y otra,
 // recortada en diagonal, pasa por delante.
-//   public/apple-touch-icon.png, public/icon-192.png, public/icon-512.png
 // Uso: npm run social   (requiere Playwright con Chromium)
 import { createRequire } from 'node:module'
 import { execSync } from 'node:child_process'
@@ -115,19 +114,6 @@ for (const [name, html, W, H, out] of [
   const jpg = await page.screenshot({ type: 'jpeg', quality: 88 })
   writeFileSync(new URL(out, root), jpg)
   console.log(out, Math.round(jpg.length / 1024) + ' KB')
-  await page.close()
-}
-// Iconos de app a partir del favicon (anillo degradado + A).
-const favicon = readFileSync(new URL('public/favicon.svg', root), 'utf8').replace(/<!--[\s\S]*?-->/g, '')
-for (const size of [180, 192, 512]) {
-  const page = await browser.newPage({ viewport: { width: size, height: size } })
-  // El icono de iOS no lleva esquinas redondeadas propias: el sistema aplica su máscara.
-  const svg = size === 180 ? favicon.replace('rx="14"', 'rx="0"') : favicon
-  await page.setContent(`<style>*{margin:0}svg{display:block;width:${size}px;height:${size}px}</style>${svg}`)
-  const png = await page.screenshot({ type: 'png', omitBackground: true })
-  const out = size === 180 ? 'public/apple-touch-icon.png' : `public/icon-${size}.png`
-  writeFileSync(new URL(out, root), png)
-  console.log(out, Math.round(png.length / 1024) + ' KB')
   await page.close()
 }
 await browser.close()

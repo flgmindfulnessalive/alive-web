@@ -12,7 +12,8 @@ npm run preview    # sirve dist/ en http://localhost:4173
 npm run lint       # oxlint
 npm run brand          # regenera escultura y OG desde brand-source/ (Python 3 + Pillow + NumPy)
 npm run explorations   # regenera los renders de las exploraciones (Playwright + Chromium)
-npm run social         # regenera miniatura OG, publicación cuadrada e iconos (Playwright + Chromium)
+npm run social         # regenera miniatura OG y publicación cuadrada (Playwright + Chromium)
+npm run icons          # regenera favicon (SVG + ICO) e iconos de app desde la A del logo
 ```
 
 ## Estructura
