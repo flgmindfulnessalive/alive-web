@@ -75,7 +75,7 @@ function secondaryHeader(): Plugin {
       handler(html, ctx) {
         if (!html.includes('<!--alive:header-->')) return html
         const items = [
-          { label: 'Estudio', href: '/#estudio' },
+          { label: 'Nosotros', href: '/#nosotros' },
           { label: 'Servicios', href: '/#servicios' },
           { label: 'Proyectos', href: '/#proyectos' },
           ...(existsSync('blog/index.html') ? [{ label: 'Blog', href: '/blog/' }] : []),

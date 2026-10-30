@@ -10,7 +10,7 @@ export const hasBlog = blogIndex.length > 0
 const blogLink: NavItem[] = hasBlog ? [{ label: 'Blog', href: '/blog/' }] : []
 
 export const nav: NavItem[] = [
-  { label: 'Estudio', href: '#estudio' },
+  { label: 'Nosotros', href: '#nosotros' },
   { label: 'Servicios', href: '#servicios' },
   { label: 'Proyectos', href: '#proyectos' },
   ...blogLink,

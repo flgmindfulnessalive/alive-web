@@ -25,6 +25,7 @@ export function Manifesto() {
   return (
     <section
       ref={ref}
+      id="nosotros"
       className="section manifesto"
       aria-label="Posicionamiento"
       style={{ '--n': total } as CSSProperties}
