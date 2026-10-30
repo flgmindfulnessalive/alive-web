@@ -13,6 +13,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 | Publicación cuadrada | `docs/social/alive-post-1080.jpg` 1080×1080 | Igual que la anterior | Lista |
 | Proyecto FLOW Talent HUB | `src/assets/visual/project-flow-{1000,1497}.webp` y `project-flow-{dispositivos,papeleria}-*.webp` (originales en `brand-source/proyectos/`) | Mockups entregados por ALIVE: plataforma, plataforma en dispositivos y papelería | Listo; destacado en mosaico (plataforma grande + dos piezas), sin enlace |
 | Proyecto WeWebinars | `src/assets/visual/project-wewebinars-{web,campana,papeleria}-*.webp` (originales en `brand-source/proyectos/wewebinars/`) | Mockups entregados por ALIVE: papelería, web y campaña | Listo; destacado en mosaico (papelería grande + web y campaña), sin enlace |
+| Proyecto GLUS Asociados Comerciales | `src/assets/visual/project-glus-{web,campana}-*.webp` (originales en `brand-source/proyectos/glus/`) | Mockups entregados por ALIVE: web en dispositivos y campaña | Listo; destacado en pareja (dos piezas enteras), sin enlace |
 | Exploración «Concepto de experiencia web» | `src/assets/visual/concept-web-{1200,2400}.webp` | Render de escena HTML/CSS (monitor y móvil en perspectiva) con marca, escultura e Inter reales: `npm run explorations` | Listo para demo; sustituir por render o mockup del estudio si existe |
 | Exploración «Concepto de identidad» | `src/assets/visual/concept-identity-{1200,2400}.webp` | Render de papelería ALIVE sobre marfil (cuaderno con A en relieve, tarjetas, sobre) | Listo para demo; la fotografía real de papelería impresa lo superaría |
 | Recortes de prensa | `public/prensa/*.webp` (originales en `brand-source/prensa/`) | Entregados por ALIVE: Correo 24/10/2015 y artículo sobre realidad virtual (Grupo Epensa) | Listos; falta confirmar medio y fecha del segundo |
@@ -32,4 +33,5 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 - **Aviso de privacidad**: borrador en `privacidad/index.html`. Completar los datos entre corchetes, revisión legal, quitar `noindex` y el aviso de borrador.
 - **Dominio**: añadir en Vercel con y sin `www` y definir `VITE_SITE_URL`.
 - **Analítica**: no hay ninguna. Si se añade, requiere aviso y, en su caso, consentimiento.
-- **Casos reales**: cambia las piezas a `kind: 'case'` solo con autorización y datos verificados.
+- **Casos reales**: falta WeFunnels.
+- **Casos con autorización**: cambia las piezas a `kind: 'case'` solo con autorización y datos verificados.

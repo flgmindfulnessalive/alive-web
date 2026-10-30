@@ -53,12 +53,15 @@ export type Project = {
   kind: 'exploration' | 'case'
   title: string
   discipline: string
-  visual: 'flow' | 'flow-devices' | 'web' | 'identity' | 'wewebinars-stationery'
+  visual: 'flow' | 'flow-devices' | 'web' | 'identity' | 'wewebinars-stationery' | 'glus-web'
   // Ocupa todo el ancho de la sección.
   featured?: boolean
   alt: string
-  // Piezas adicionales: con ellas la tarjeta muestra un mosaico (principal + dos).
-  gallery?: { visual: 'flow' | 'flow-stationery' | 'wewebinars-web' | 'wewebinars-campaign'; alt: string }[]
+  // Piezas adicionales: con dos, mosaico (principal + dos); con una, pareja lado a lado.
+  gallery?: {
+    visual: 'flow' | 'flow-stationery' | 'wewebinars-web' | 'wewebinars-campaign' | 'glus-campaign'
+    alt: string
+  }[]
   summary: string
   details: string[]
   client?: string
@@ -115,6 +118,24 @@ export const work = {
       ],
       summary:
         'Identidad, sitio web y campaña para una plataforma que convierte una presentación grabada en un evento automatizado que vende 24/7.',
+      details: [],
+    },
+    {
+      id: 'glus',
+      kind: 'case',
+      featured: true,
+      title: 'GLUS Asociados Comerciales',
+      discipline: 'Web y campaña · Programa de asociados comerciales',
+      visual: 'glus-web',
+      alt: 'Sitio web de GLUS Asociados Comerciales en monitor, tableta y móvil: titular «Tus conexiones pueden abrir nuevas oportunidades.», el modelo de colaboración con un Director Comercial y los pasos para participar.',
+      gallery: [
+        {
+          visual: 'glus-campaign',
+          alt: 'Campaña de GLUS en dos pantallas y un móvil: «Tus conexiones pueden abrir nuevas oportunidades.», «Conecta. Colabora. Abre nuevas puertas.» y «Tú identificas la oportunidad. Juntos la desarrollamos.».',
+        },
+      ],
+      summary:
+        'Sitio web y campaña para el programa de asociados comerciales de GLUS, que invita a conectar empresas con soluciones y desarrollar oportunidades junto a un Director Comercial.',
       details: [],
     },
     {

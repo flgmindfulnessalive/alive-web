@@ -16,11 +16,13 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
 
   const body = (
     <>
-      <span className={`work__media${project.gallery ? ' work__media--mosaic' : ''}`}>
+      <span
+        className={`work__media${project.gallery ? ` work__media--mosaic${project.gallery.length === 1 ? ' work__media--pair' : ''}` : ''}`}
+      >
         <img
           src={image.src}
           srcSet={image.srcSet}
-          sizes={project.gallery ? '(min-width: 768px) 66vw, 100vw' : project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
+          sizes={project.gallery ? `(min-width: 768px) ${project.gallery.length === 1 ? 50 : 66}vw, 100vw` : project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
           alt={action === 'static' ? project.alt : ''}
           width={image.width}
           height={image.height}
@@ -34,7 +36,7 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
               key={piece.visual}
               src={img.src}
               srcSet={img.srcSet}
-              sizes="(min-width: 768px) 33vw, 50vw"
+              sizes={project.gallery?.length === 1 ? '(min-width: 768px) 50vw, 100vw' : '(min-width: 768px) 33vw, 50vw'}
               alt={action === 'static' ? piece.alt : ''}
               width={img.width}
               height={img.height}

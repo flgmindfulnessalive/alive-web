@@ -14,6 +14,10 @@ import wwStationery800 from '../assets/visual/project-wewebinars-papeleria-800.w
 import wwStationery1499 from '../assets/visual/project-wewebinars-papeleria-1499.webp'
 import wwWeb600 from '../assets/visual/project-wewebinars-web-600.webp'
 import wwWeb1000 from '../assets/visual/project-wewebinars-web-1000.webp'
+import glusWeb800 from '../assets/visual/project-glus-web-800.webp'
+import glusWeb1536 from '../assets/visual/project-glus-web-1536.webp'
+import glusCampaign800 from '../assets/visual/project-glus-campana-800.webp'
+import glusCampaign1536 from '../assets/visual/project-glus-campana-1536.webp'
 import wwCampaign600 from '../assets/visual/project-wewebinars-campana-600.webp'
 import wwCampaign1000 from '../assets/visual/project-wewebinars-campana-1000.webp'
 
@@ -25,5 +29,7 @@ export const explorationImages = {
   'wewebinars-stationery': { src: wwStationery800, srcSet: `${wwStationery800} 800w, ${wwStationery1499} 1499w`, width: 1499, height: 1049 },
   'wewebinars-web': { src: wwWeb600, srcSet: `${wwWeb600} 600w, ${wwWeb1000} 1000w`, width: 1499, height: 1049 },
   'wewebinars-campaign': { src: wwCampaign600, srcSet: `${wwCampaign600} 600w, ${wwCampaign1000} 1000w`, width: 1499, height: 1049 },
+  'glus-web': { src: glusWeb800, srcSet: `${glusWeb800} 800w, ${glusWeb1536} 1536w`, width: 1536, height: 1024 },
+  'glus-campaign': { src: glusCampaign800, srcSet: `${glusCampaign800} 800w, ${glusCampaign1536} 1536w`, width: 1536, height: 1024 },
   identity: { src: identity1200, srcSet: `${identity1200} 1200w, ${identity2400} 2400w`, width: 1600, height: 1120 },
 } as const

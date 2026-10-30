@@ -126,6 +126,12 @@
   grid-column: 1 / -1;
 }
 
+/* Pareja: dos piezas enteras (3:2); apiladas en móvil, lado a lado en escritorio. */
+.work__media--pair img {
+  grid-column: 1 / -1;
+  aspect-ratio: 3 / 2;
+}
+
 @media (min-width: 768px) {
   .work__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -161,6 +167,22 @@
   .work__item--featured .work__media--mosaic img:first-child {
     grid-column: 1;
     grid-row: 1 / -1;
+  }
+
+  .work__item--featured .work__media--pair {
+    grid-template-rows: none;
+    aspect-ratio: auto;
+  }
+
+  .work__item--featured .work__media--pair img,
+  .work__item--featured .work__media--pair img:first-child {
+    grid-column: auto;
+    grid-row: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  .work__item--featured .work__media--pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .work__item--featured .work__title {
