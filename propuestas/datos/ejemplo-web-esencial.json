@@ -1,0 +1,24 @@
+{
+  "slug": "ejemplo-web-esencial",
+  "cliente": {
+    "nombre": "Nombre del cliente",
+    "detalle": "Sector o tipo de negocio"
+  },
+  "fecha": "2026-10-30",
+  "validezDias": 30,
+  "moneda": "USD",
+  "servicio": {
+    "nombre": "Web Esencial con panel propio",
+    "tipo": "Diseño y desarrollo · pago único",
+    "precio": null
+  },
+  "pago": { "adelanto": 50, "saldo": 50 },
+  "plazo": "10 a 15 días hábiles",
+  "rondasDeAjustes": 2,
+  "acompanamientoDias": 30,
+  "alojamiento": "Primer año incluido",
+  "portada": {
+    "titulo": ["Tu web, con diseño propio", "y un panel para cambiarla tú."],
+    "bajada": "Una web a medida, rápida y lista para Google, que actualizas desde el móvil sin depender de nadie."
+  }
+}

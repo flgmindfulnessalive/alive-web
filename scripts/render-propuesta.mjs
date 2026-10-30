@@ -1,0 +1,383 @@
+// Genera una propuesta comercial de ALIVE en PDF (A4) a partir de un archivo de datos.
+//   node scripts/render-propuesta.mjs propuestas/datos/ejemplo-web-esencial.json
+// Salida: propuestas/salida/<slug>.pdf (y el .html intermedio, para revisarlo en el navegador).
+// Los campos sin definir (precio null, por ejemplo) se marcan en el PDF para que no salga incompleto sin querer.
+import { createRequire } from 'node:module'
+import { execSync } from 'node:child_process'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const dataPath = process.argv[2]
+if (!dataPath) {
+  console.error('Uso: node scripts/render-propuesta.mjs propuestas/datos/<archivo>.json')
+  process.exit(1)
+}
+const d = JSON.parse(readFileSync(resolve(root, dataPath), 'utf8'))
+const asset = (p) => pathToFileURL(resolve(root, p)).href
+
+// ——— Formatos ———
+const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic']
+const MESES_LARGOS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+const fecha = new Date(`${d.fecha}T12:00:00`)
+const vence = new Date(fecha.getTime() + d.validezDias * 86400000)
+const corta = (f) => `${f.getDate()} ${MESES[f.getMonth()]} ${f.getFullYear()}`
+const larga = (f) => `${f.getDate()} de ${MESES_LARGOS[f.getMonth()]} de ${f.getFullYear()}`
+const SIMBOLO = { USD: 'US$', PEN: 'S/', EUR: '€' }
+const dinero = (n) => {
+  if (n == null) return '<mark>[precio]</mark>'
+  const v = n.toLocaleString('es-PE', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 })
+  return d.moneda === 'EUR' ? `${v} €` : `${SIMBOLO[d.moneda] ?? d.moneda} ${v}`
+}
+const parte = (pct) => (d.servicio.precio == null ? null : Math.round(d.servicio.precio * pct) / 100)
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const cliente = esc(d.cliente.nombre)
+
+const wordmark = readFileSync(resolve(root, 'src/assets/brand/alive-wordmark.svg'), 'utf8')
+  .replace(/<\?xml[^>]*>/, '')
+  .replace('<svg', '<svg class="wordmark" aria-label="ALIVE"')
+  .replaceAll('fill="#F5F7FA"', 'fill="currentColor"')
+
+// ——— Contenido ———
+const incluye = [
+  'Dirección visual propia: color, tipografía, composición y tono',
+  'Hasta 5 secciones a medida de tu negocio',
+  'Panel propio para editar textos, fotos y secciones desde el móvil, sin WordPress ni plugins',
+  'Diseño adaptado a móvil, tableta y escritorio',
+  'Formulario de contacto funcionando y WhatsApp conectado',
+  'SEO técnico de base: títulos, descripciones, datos estructurados y sitemap',
+  'Imágenes optimizadas para que la web cargue rápido',
+  'Seguridad con HTTPS y aviso de privacidad adaptado',
+]
+const noIncluye = [
+  'Redacción de textos largos y sesión de fotos profesional',
+  'Tienda online, reservas o pagos dentro de la web',
+  'Campañas de publicidad y gestión de redes sociales',
+  'El dominio, que se paga aparte y queda a tu nombre',
+]
+const necesitamos = [
+  'Logotipo en un archivo utilizable',
+  'Textos base y fotos de tu negocio, o referencias',
+  'Datos de contacto: teléfono, WhatsApp, correo y dirección',
+  'Acceso al dominio, o lo registramos contigo',
+]
+const fases = [
+  ['Día 1', 'Descubrimiento', 'Una reunión para entender tu negocio, a quién le hablas y qué tiene que conseguir la web. Te pedimos el material de la página anterior.'],
+  ['Días 2 a 4', 'Dirección visual', 'Te mostramos cómo se va a ver tu web: color, tipografía y la portada diseñada. La apruebas antes de construir nada.'],
+  ['Días 5 a 12', 'Diseño y desarrollo', `Construimos las secciones, el panel y las conexiones. Incluye ${d.rondasDeAjustes} rondas de ajustes sobre la web en un enlace de prueba.`],
+  ['Entrega', 'Publicación', 'Publicamos en tu dominio, revisamos que todo funcione y te enseñamos a usar el panel en una sesión breve.'],
+]
+const trabajos = [
+  ['src/assets/visual/project-flow-dispositivos-800.webp', 'Producto digital y marca', 'FLOW Talent HUB'],
+  ['src/assets/visual/project-wewebinars-papeleria-800.webp', 'Marca, web y campaña', 'WeWebinars'],
+  ['src/assets/visual/project-glus-web-800.webp', 'Web y campaña', 'GLUS Asociados Comerciales'],
+  ['src/assets/visual/project-activa-landing-800.webp', 'Landing y simulador', 'Activa tu Vida X39'],
+]
+
+const li = (items) => items.map((t) => `<li>${t}</li>`).join('')
+const pie = (n) => `
+  <footer class="pie">
+    <span>${wordmark}<span>Propuesta para ${cliente}</span></span>
+    <span>${String(n).padStart(2, '0')}</span>
+  </footer>`
+
+const html = `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Propuesta ${cliente} · ALIVE</title>
+<style>
+@font-face { font-family: Inter; src: url('${asset('node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')}') format('woff2'); font-weight: 100 900; }
+@page { size: A4; margin: 0; }
+:root {
+  --bg: #080f14; --ink: #0b1218; --muted: #4a4f57; --ivory: #f5f3ee; --paper: #fbfaf7;
+  --text: #f5f7fa; --text-muted: #a1a1aa; --line: rgb(11 18 24 / 0.12); --line-dark: rgb(245 247 250 / 0.14);
+  --violet: #7c3aed; --blue: #2f6bff; --turq: #00e0d0;
+  --grad: linear-gradient(90deg, var(--violet), var(--blue) 52%, var(--turq));
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: Inter, sans-serif; font-feature-settings: 'ss01', 'cv11'; color: var(--ink); font-size: 9.5pt; line-height: 1.55; }
+.page { position: relative; width: 210mm; height: 297mm; overflow: hidden; page-break-after: always; background: var(--ivory); padding: 18mm 18mm 22mm; }
+.page:last-child { page-break-after: auto; }
+.dark { background: var(--bg); color: var(--text); }
+.wordmark { height: 11px; width: auto; fill: currentColor; vertical-align: middle; }
+mark { background: #ffe58f; color: var(--ink); padding: 0 3px; border-radius: 2px; }
+.grad { display: inline; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.eyebrow { font-size: 7pt; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+.eyebrow::after { content: ''; width: 34px; height: 1.5px; background: var(--grad); }
+.dark .eyebrow { color: var(--text-muted); }
+h2 { font-size: 22pt; font-weight: 450; letter-spacing: -0.025em; line-height: 1.12; margin: 10px 0 14px; }
+h3 { font-size: 11.5pt; font-weight: 550; letter-spacing: -0.01em; }
+p + p { margin-top: 8px; }
+.lead { font-size: 11pt; line-height: 1.55; color: var(--muted); max-width: 150mm; }
+.pie { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid var(--line); font-size: 7pt; color: var(--muted); }
+.pie > span:first-child { display: flex; align-items: center; gap: 10px; }
+.pie .wordmark { height: 8px; color: var(--ink); }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.check { list-style: none; display: grid; gap: 5px; }
+.check li { position: relative; padding-left: 16px; }
+.check li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 7px; height: 7px; border-radius: 50%; background: var(--grad); }
+.cross li::before { background: none; border: 1.2px solid var(--muted); width: 6px; height: 6px; }
+.nota { margin-top: 14px; padding: 11px 14px; border-left: 2px solid var(--blue); background: rgb(47 107 255 / 0.06); border-radius: 0 8px 8px 0; font-size: 8.8pt; }
+
+/* Portada y cierre */
+.cover { padding: 16mm 18mm; display: flex; flex-direction: column; }
+.cover .top { display: flex; justify-content: space-between; align-items: center; }
+.cover .top .wordmark { height: 16px; }
+.cover .tag { font-size: 6.8pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--line-dark); padding: 4px 9px; border-radius: 99px; }
+.sculpture { position: absolute; right: -40mm; top: 40mm; width: 190mm; opacity: 0.95; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 70%, transparent), linear-gradient(to right, transparent, #000 30%); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.cover .body { margin-top: auto; position: relative; z-index: 1; }
+.cover h1 { font-size: 34pt; font-weight: 450; letter-spacing: -0.035em; line-height: 1.06; margin: 14px 0 16px; max-width: 160mm; }
+.cover h1 span:first-child::after { content: ''; display: block; }
+.cover .bajada { font-size: 11pt; color: var(--text-muted); max-width: 120mm; }
+.meta { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 26px; margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
+.meta dt { font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.meta dd { font-size: 9pt; font-weight: 550; }
+.meta dd small { display: block; font-weight: 400; color: var(--text-muted); font-size: 7.8pt; }
+
+/* Resumen */
+.pilar h3 { font-size: 14pt; font-weight: 500; margin-bottom: 6px; }
+.pilar p { color: var(--muted); font-size: 8.8pt; }
+
+/* Qué incluye */
+.servicio { display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; align-items: start; }
+.servicio .num { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--ivory); display: inline-grid; place-items: center; font-size: 8pt; margin-right: 10px; vertical-align: middle; }
+.servicio .tipo { color: var(--muted); font-size: 8pt; margin: 2px 0 12px 32px; }
+.servicio .precio { font-size: 16pt; font-weight: 550; letter-spacing: -0.02em; }
+.servicio .check { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; gap: 6px 22px; }
+
+/* Fases */
+.fase { display: grid; grid-template-columns: 34mm 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--line); }
+.fase:last-of-type { border-bottom: 1px solid var(--line); }
+.fase .cuando { font-size: 7pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.fase .n { font-size: 26pt; font-weight: 300; line-height: 1; letter-spacing: -0.03em; margin-bottom: 4px; }
+.fase h3 { margin-bottom: 4px; }
+.fase p { color: var(--muted); }
+
+/* Inversión */
+.tabla { background: var(--bg); color: var(--text); border-radius: 12px; padding: 6px 18px; }
+.fila { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line-dark); }
+.fila:last-child { border-bottom: 0; }
+.fila small { display: block; color: var(--text-muted); font-size: 7.8pt; margin-top: 2px; }
+.fila .importe { font-size: 12pt; font-weight: 550; white-space: nowrap; }
+.fila .etiqueta { font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--turq); padding-top: 12px; border: 0; }
+.total { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.total .card b { display: block; font-size: 22pt; font-weight: 550; letter-spacing: -0.02em; margin: 4px 0 2px; }
+.total .card span { font-size: 6.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.total .card small { color: var(--muted); font-size: 7.8pt; }
+.total .card.destacada { border: 1.5px solid transparent; background: linear-gradient(var(--paper), var(--paper)) padding-box, var(--grad) border-box; }
+.condiciones { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 26px; margin-top: 12px; }
+.condiciones h3 { font-size: 8.8pt; margin-bottom: 2px; }
+.condiciones p { color: var(--muted); font-size: 8.4pt; }
+
+/* Quién lo hace */
+.firma { display: flex; gap: 14px; align-items: center; }
+.firma .sello { width: 46px; height: 46px; border-radius: 12px; background: var(--bg); display: grid; place-items: center; flex: none; }
+.firma .sello img { width: 22px; }
+.firma p { color: var(--muted); }
+.trabajos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.trabajo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 8px; display: block; }
+.trabajo span { display: block; font-size: 6.5pt; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 7px; }
+.trabajo b { font-weight: 550; font-size: 10pt; }
+
+/* Próximos pasos */
+.paso { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.paso .n { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--ivory); display: grid; place-items: center; font-size: 9pt; }
+.paso p { color: var(--muted); }
+.cierre h2 { font-size: 34pt; letter-spacing: -0.035em; line-height: 1.06; }
+.cierre .contacto { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 30px; margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
+</style>
+</head>
+<body>
+
+<!-- 1 · Portada -->
+<section class="page dark cover">
+  <img class="sculpture" src="${asset('src/assets/visual/sculpture-closing.webp')}" alt="" />
+  <div class="top">${wordmark}<span class="tag">Confidencial</span></div>
+  <div class="body">
+    <p class="eyebrow">Propuesta de servicios</p>
+    <h1><span>${esc(d.portada.titulo[0])}</span><span class="grad">${esc(d.portada.titulo[1])}</span></h1>
+    <p class="bajada">${esc(d.portada.bajada)}</p>
+    <dl class="meta">
+      <div><dt>Preparada para</dt><dd>${cliente}<small>${esc(d.cliente.detalle)}</small></dd></div>
+      <div><dt>Preparada por</dt><dd>Francesco Lulli<small>ALIVE</small></dd></div>
+      <div><dt>Fecha</dt><dd>${corta(fecha)}</dd></div>
+      <div><dt>Válida hasta</dt><dd>${corta(vence)}</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 2 · Resumen -->
+<section class="page">
+  <p class="eyebrow">01 · Resumen</p>
+  <h2>Tu web es lo primero que ven.<br />Tiene que estar a tu altura.</h2>
+  <p class="lead">Antes de escribirte, la gente busca tu nombre, entra en tu web y decide en segundos si confía en ti. Esta propuesta es para que esa primera impresión trabaje a tu favor: una web con diseño propio, que puedes actualizar tú y que Google entiende desde el primer día.</p>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card pilar"><h3 class="grad">Diseño propio</h3><p>Una dirección visual pensada para ${cliente}, no una plantilla. La apruebas antes de construir.</p></div>
+    <div class="card pilar"><h3 class="grad">Panel propio</h3><p>Cambias textos, fotos y secciones desde el móvil, sin WordPress y sin pedir ayuda.</p></div>
+    <div class="card pilar"><h3 class="grad">Lista para Google</h3><p>Rápida, adaptada a móvil y con el SEO técnico de base hecho desde el primer día.</p></div>
+  </div>
+  <h3 style="margin-top:22px">Cómo empezamos</h3>
+  <p style="margin-top:6px; max-width:160mm">Una reunión para entender tu negocio y, en pocos días, una dirección visual que apruebas antes de construir nada. Después, la web completa con su panel, publicada en tu dominio en ${esc(d.plazo)} desde que tenemos el material.</p>
+  <p class="nota"><strong>En una frase:</strong> una web propia, que se paga una vez, se publica en ${esc(d.plazo)} y que actualizas tú.</p>
+  ${pie(2)}
+</section>
+
+<!-- 3 · Qué incluye -->
+<section class="page">
+  <p class="eyebrow">02 · Qué incluye</p>
+  <h2>${esc(d.servicio.nombre)}</h2>
+  <div class="card servicio">
+    <div><h3><span class="num">1</span>${esc(d.servicio.nombre)}</h3><p class="tipo">${esc(d.servicio.tipo)}</p></div>
+    <div class="precio">${dinero(d.servicio.precio)}</div>
+    <ul class="check">${li(incluye)}</ul>
+  </div>
+  <div class="grid2" style="margin-top:12px">
+    <div class="card"><h3 style="margin-bottom:8px">Lo que no incluye</h3><ul class="check cross">${li(noIncluye)}</ul></div>
+    <div class="card"><h3 style="margin-bottom:8px">Lo que necesitamos de ti</h3><ul class="check">${li(necesitamos)}</ul></div>
+  </div>
+  <p class="nota">Si más adelante necesitas más secciones, varios idiomas o funciones a medida, lo cotizamos aparte, sobre la misma base.</p>
+  ${pie(3)}
+</section>
+
+<!-- 4 · Cómo trabajamos -->
+<section class="page">
+  <p class="eyebrow">03 · Cómo trabajamos</p>
+  <h2>De la primera reunión<br />a tu web publicada</h2>
+  <p class="lead" style="margin-bottom:16px">${esc(d.plazo)} en total, contados desde que tenemos el material y los accesos.</p>
+  ${fases.map(([cuando, titulo, texto], i) => `
+  <div class="fase">
+    <div><div class="n">0${i + 1}</div><div class="cuando">${cuando}</div></div>
+    <div><h3>${titulo}</h3><p>${texto}</p></div>
+  </div>`).join('')}
+  <p class="nota">Trabajamos con apoyo de inteligencia artificial para ir más rápido en lo repetitivo. Las decisiones de diseño y todo lo que se publica lo revisa una persona.</p>
+  ${pie(4)}
+</section>
+
+<!-- 5 · Inversión -->
+<section class="page">
+  <p class="eyebrow">04 · Inversión</p>
+  <h2>Lo que cuesta, sin letra pequeña</h2>
+  <div class="tabla">
+    <div class="fila etiqueta">Una vez</div>
+    <div class="fila"><div>${esc(d.servicio.nombre)}<small>Diseño, desarrollo, panel y puesta en marcha</small></div><div class="importe">${dinero(d.servicio.precio)}</div></div>
+    <div class="fila"><div>Alojamiento y SSL<small>Servidor y certificado de seguridad</small></div><div class="importe">${esc(d.alojamiento)}</div></div>
+    <div class="fila"><div>Acompañamiento tras la publicación<small>Dudas y pequeños ajustes</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
+  </div>
+  <div class="total">
+    <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>Adelanto para reservar el inicio del proyecto.</small></div>
+    <div class="card"><span>Al publicar · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>Saldo, con la web lista para salir.</small></div>
+  </div>
+  <p class="nota">Pagos seguros con Whop, con tarjeta u otros medios disponibles. No vemos ni guardamos los datos de tu tarjeta.</p>
+  <h3 style="margin-top:20px">Condiciones</h3>
+  <div class="condiciones">
+    <div><h3>Plazos</h3><p>${esc(d.plazo)}. El reloj empieza cuando tenemos el material y los accesos, no el día que se contrata.</p></div>
+    <div><h3>Ajustes</h3><p>${d.rondasDeAjustes} rondas de ajustes sobre la web. Los cambios de alcance se cotizan aparte.</p></div>
+    <div><h3>Dominio</h3><p>Se paga aparte y queda siempre a tu nombre.</p></div>
+    <div><h3>Propiedad</h3><p>Con el pago completo, la web y sus contenidos son tuyos.</p></div>
+    <div><h3>Validez</h3><p>Esta propuesta es válida hasta el ${larga(vence)}.</p></div>
+    <div><h3>Contratas con</h3><p>Francesco Lulli Guzmán (ALIVE), Lima, Perú.</p></div>
+  </div>
+  ${pie(5)}
+</section>
+
+<!-- 6 · Quién lo hace -->
+<section class="page">
+  <p class="eyebrow">05 · Quién lo hace</p>
+  <h2>Un estudio con oficio,<br />desde 2012</h2>
+  <div class="card firma">
+    <div class="sello"><img src="${asset('src/assets/brand/alive-symbol.svg')}" alt="" /></div>
+    <div><h3>Francesco Lulli</h3><p>Fundador y director de ALIVE. Lleva tu proyecto de principio a fin, con un solo interlocutor desde la primera reunión hasta la publicación.</p></div>
+  </div>
+  <h3 style="margin-top:20px">Algunos trabajos</h3>
+  <div class="trabajos">
+    ${trabajos.map(([img, tipo, nombre]) => `<div class="trabajo"><img src="${asset(img)}" alt="" /><span>${tipo}</span><b>${nombre}</b></div>`).join('')}
+  </div>
+  <p class="nota">Más proyectos en <strong>alivedigital.agency</strong>.</p>
+  ${pie(6)}
+</section>
+
+<!-- 7 · Próximos pasos -->
+<section class="page dark cover cierre">
+  <img class="sculpture" src="${asset('src/assets/visual/sculpture-closing.webp')}" alt="" />
+  <div class="top">${wordmark}<span class="tag">Próximos pasos</span></div>
+  <div class="body">
+    <p class="eyebrow">06 · Empezamos</p>
+    <h2>Demos vida<br /><span class="grad">a tu próximo proyecto.</span></h2>
+    <div style="margin-top:18px; max-width:125mm">
+      ${[
+        ['Confirmas la propuesta', `Antes del ${larga(vence)}.`],
+        ['Adelanto y reunión de arranque', `${d.pago.adelanto} % con Whop y te pedimos el material.`],
+        ['Dirección visual', 'La apruebas antes de construir.'],
+        ['Web publicada', `En ${esc(d.plazo)} desde que tenemos el material.`],
+      ].map(([t, p], i) => `<div class="paso" style="border-color:var(--line-dark)"><div class="n" style="background:var(--text);color:var(--bg)">${i + 1}</div><div><h3>${t}</h3><p style="color:var(--text-muted)">${p}</p></div></div>`).join('')}
+    </div>
+    <div class="contacto meta" style="grid-template-columns:repeat(2,auto)">
+      <div><dt>Web</dt><dd>alivedigital.agency</dd></div>
+      <div><dt>Propuesta válida hasta</dt><dd>${corta(vence)}</dd></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>`
+
+const outDir = resolve(root, 'propuestas/salida')
+mkdirSync(outDir, { recursive: true })
+const htmlPath = resolve(outDir, `${d.slug}.html`)
+writeFileSync(htmlPath, html)
+
+const require = createRequire(`${execSync('npm root -g').toString().trim()}/`)
+const { chromium } = require('playwright')
+const browser = await chromium.launch()
+const page = await browser.newPage()
+await page.goto(pathToFileURL(htmlPath).href)
+await page.evaluate(() => document.fonts.ready)
+// El texto con degradado no se exporta bien a PDF (filetes o rectángulos según el visor).
+// Cada .grad se dibuja en un canvas a 4× y se sustituye por una imagen alineada a la línea base;
+// el texto original queda como texto alternativo.
+await page.evaluate(() => {
+  const SCALE = 4
+  document.querySelectorAll('.grad').forEach((el) => {
+    const cs = getComputedStyle(el)
+    const probe = document.createElement('span')
+    probe.style.cssText = 'display:inline-block;width:0;height:0'
+    el.prepend(probe)
+    const baseline = probe.getBoundingClientRect().bottom
+    probe.remove()
+    const r = el.getBoundingClientRect()
+    const range = document.createRange()
+    range.selectNodeContents(el)
+    const w = Math.ceil(range.getBoundingClientRect().width) + 2
+    const h = Math.ceil(r.height)
+    const canvas = document.createElement('canvas')
+    canvas.width = w * SCALE
+    canvas.height = h * SCALE
+    const ctx = canvas.getContext('2d')
+    ctx.scale(SCALE, SCALE)
+    ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`
+    ctx.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing
+    const g = ctx.createLinearGradient(0, 0, w, 0)
+    g.addColorStop(0, '#7c3aed')
+    g.addColorStop(0.52, '#2f6bff')
+    g.addColorStop(1, '#00e0d0')
+    ctx.fillStyle = g
+    ctx.fillText(el.textContent, 0, baseline - r.top)
+    const img = new Image()
+    img.src = canvas.toDataURL('image/png')
+    img.alt = el.textContent
+    img.width = w
+    img.height = h
+    img.style.cssText = `display:inline-block;vertical-align:${-(r.bottom - baseline)}px`
+    el.replaceWith(img)
+  })
+})
+await page.waitForFunction(() => [...document.images].every((i) => i.complete))
+const pdfPath = resolve(outDir, `${d.slug}.pdf`)
+await page.pdf({ path: pdfPath, format: 'A4', printBackground: true, preferCSSPageSize: true })
+await browser.close()
+console.log(`PDF: ${pdfPath}`)

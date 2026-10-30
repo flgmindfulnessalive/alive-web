@@ -31,3 +31,4 @@ shots/
 # Generados por scripts/build-blog.mjs
 /blog/
 src/content/blog-index.json
+propuestas/salida/

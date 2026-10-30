@@ -16,6 +16,7 @@ npm run social         # regenera miniatura OG y publicación cuadrada (Playwrig
 npm run icons          # regenera favicon (SVG + ICO) e iconos de app desde la A del logo
 npm run blog           # genera el blog desde content/blog/ (lo hacen solos dev y build)
 npm run blog-covers    # imágenes para compartir de cada artículo (public/blog/<slug>.jpg)
+npm run propuesta -- propuestas/datos/<archivo>.json   # propuesta comercial en PDF
 ```
 
 ## Estructura
@@ -67,6 +68,10 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 3. Escribe en Markdown y sube el cambio a `main`.
 
 El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo publicado. Cada artículo lleva botones para compartir (WhatsApp, LinkedIn, X, Facebook, copiar enlace y, en móvil, el menú nativo) bajo el autor y al final; son enlaces directos, sin scripts de terceros. Cada artículo genera su página estática con canonical, Open Graph y JSON-LD `BlogPosting`, y entra en el sitemap. Para ver borradores en local: `BLOG_DRAFTS=1 npm run dev`.
+
+## Propuestas comerciales
+
+Cada propuesta es un archivo de datos en `propuestas/datos/` (copia `ejemplo-web-esencial.json`): cliente, fecha, validez, moneda (`USD`, `PEN` o `EUR`), precio, porcentajes de adelanto y saldo, plazo, rondas de ajustes, acompañamiento y alojamiento. `npm run propuesta -- propuestas/datos/<archivo>.json` genera `propuestas/salida/<slug>.pdf` (A4, 7 páginas) con la identidad de ALIVE. Lo que falte (por ejemplo, `precio: null`) sale marcado en amarillo para que no se envíe incompleto. Los PDF generados no se suben al repositorio.
 
 ## Verificación realizada
 

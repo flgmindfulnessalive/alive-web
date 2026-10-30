@@ -13,7 +13,8 @@
     "social": "node scripts/render-social.mjs",
     "icons": "node scripts/render-icons.mjs",
     "blog": "node scripts/build-blog.mjs",
-    "blog-covers": "node scripts/render-blog-covers.mjs"
+    "blog-covers": "node scripts/render-blog-covers.mjs",
+    "propuesta": "node scripts/render-propuesta.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
