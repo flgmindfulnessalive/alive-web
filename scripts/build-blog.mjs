@@ -2,7 +2,7 @@
 //   blog/index.html                 listado
 //   blog/<slug>/index.html          un artículo por archivo
 //   src/content/blog-index.json     resumen para la home (enlace «Blog» solo si hay artículos)
-//   public/sitemap.xml              home, prensa, blog y artículos
+//   public/sitemap.xml              home, prensa, privacidad, blog y artículos
 // Los artículos con `draft: true` solo se incluyen con BLOG_DRAFTS=1.
 // Se ejecuta antes de `vite` y `vite build` (ver package.json).
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, existsSync } from 'node:fs'
@@ -250,13 +250,14 @@ const today = new Date().toISOString().slice(0, 10)
 const urls = [
   ['/', today],
   ['/prensa/', today],
+  ['/privacidad/', today],
   ...(posts.length ? [['/blog/', posts[0].date]] : []),
   ...posts.map((p) => [`/blog/${p.slug}/`, p.date]),
 ]
 writeFileSync(
   new URL('public/sitemap.xml', root),
   `<?xml version="1.0" encoding="UTF-8"?>
-<!-- Generado por scripts/build-blog.mjs. Añadir /privacidad/ cuando deje de ser borrador. -->
+<!-- Generado por scripts/build-blog.mjs. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(([loc, mod]) => `  <url>\n    <loc>${SITE}${loc}</loc>\n    <lastmod>${mod}</lastmod>\n  </url>`).join('\n')}
 </urlset>

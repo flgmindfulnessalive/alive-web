@@ -163,7 +163,8 @@ export function ContactForm() {
             </button>
             {contact.privacyHref && (
               <p className="contact__privacy">
-                Al enviar aceptas el <a href={contact.privacyHref}>aviso de privacidad</a>.
+                Usaremos tus datos solo para responder tu consulta. Más información en el{' '}
+                <a href={contact.privacyHref}>aviso de privacidad</a>.
               </p>
             )}
           </div>

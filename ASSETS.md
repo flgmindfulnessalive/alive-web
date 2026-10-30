@@ -32,7 +32,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 # Conexiones pendientes para producción
 
 - **Formulario**: en producción desde el 30/10/2026 (`api/contact.ts` con Resend + Turnstile; dominio verificado en Resend, región São Paulo; variables en Vercel → Production). Probado de extremo a extremo: el correo llega y la respuesta va al remitente.
-- **Aviso de privacidad**: borrador en `privacidad/index.html`. Completar los datos entre corchetes, revisión legal, quitar `noindex` y el aviso de borrador.
+- **Aviso de privacidad**: publicado el 30/10/2026 (`privacidad/index.html`), adaptado a la Ley N.º 29733 (Perú). Pendiente: revisión por un abogado e inscripción del banco de datos «Contactos web» ante la ANPD.
 - **Dominio**: `alivedigital.agency` (principal) y `www` en Vercel; `VITE_SITE_URL` definido.
 - **Analítica**: no hay ninguna. Si se añade, requiere aviso y, en su caso, consentimiento.
 - **Casos reales**: falta WeFunnels.

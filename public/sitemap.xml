@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generado por scripts/build-blog.mjs. Añadir /privacidad/ cuando deje de ser borrador. -->
+<!-- Generado por scripts/build-blog.mjs. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://alivedigital.agency/</loc>
@@ -7,6 +7,10 @@
   </url>
   <url>
     <loc>https://alivedigital.agency/prensa/</loc>
+    <lastmod>2026-10-30</lastmod>
+  </url>
+  <url>
+    <loc>https://alivedigital.agency/privacidad/</loc>
     <lastmod>2026-10-30</lastmod>
   </url>
   <url>

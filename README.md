@@ -40,7 +40,7 @@ src/
     Footer.tsx
     Turnstile.tsx           Widget antispam de Cloudflare (solo si hay site key)
 api/contact.ts              Vercel Function: valida, verifica Turnstile y envía con Resend
-privacidad/index.html       Aviso de privacidad (borrador)
+privacidad/index.html       Aviso de privacidad (Ley 29733, Perú)
 prensa/index.html           Menciones en prensa (recortes en public/prensa/)
 content/blog/*.md           Artículos del blog (Markdown con cabecera)
 scripts/build-blog.mjs      Genera blog/, el sitemap y el índice que activa el enlace «Blog»
@@ -121,6 +121,6 @@ HTTPS se activa automáticamente.
 `vercel.json` añade CSP (permite solo recursos propios y Turnstile), HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy` y bloqueo de iframes, y caché inmutable para `/assets`.
 
 ### Aviso de privacidad
-`privacidad/index.html` es un **borrador** con `noindex`: completa los textos entre corchetes, haz que lo revise un profesional y quita el `noindex` y el aviso de borrador.
+`privacidad/index.html` está publicado y adaptado a la Ley N.º 29733 (Perú). Si cambian los proveedores, el plazo de conservación o se añade analítica, actualiza el texto y la fecha.
 
 Variables locales de ejemplo en `.env.example`.
