@@ -93,8 +93,10 @@ Cloudflare → Turnstile → Add widget → modo **Managed**, dominios: el domin
 ### 5. Dominio con y sin www
 Vercel → Settings → Domains → añade `dominio.com` y `www.dominio.com`. Elige uno como principal y el otro redirige con 308. Registros DNS habituales (usa los que muestre Vercel):
 
-- `dominio.com`: `A` → `76.76.21.21`
-- `www.dominio.com`: `CNAME` → `cname.vercel-dns.com`
+- `dominio.com`: `A` → la IP que indique Vercel (en este proyecto, `216.198.79.1`)
+- `www.dominio.com`: `CNAME` → el valor propio del proyecto (p. ej. `xxxx.vercel-dns-017.com`)
+
+Con el DNS en GoDaddy, elimina el registro `A @ Parked` y no añadas registros `NS` de Vercel dentro de la zona.
 
 HTTPS se activa automáticamente.
 
