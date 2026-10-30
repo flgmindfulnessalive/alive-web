@@ -6,6 +6,7 @@ import './StudioServices.css'
 export function StudioServices() {
   const headRef = useReveal<HTMLDivElement>()
   const listRef = useReveal<HTMLOListElement>()
+  const sinceRef = useReveal<HTMLDivElement>()
 
   return (
     <section id="estudio" className="section studio theme-ivory" aria-labelledby="studio-title">
@@ -18,6 +19,19 @@ export function StudioServices() {
             </h2>
           </div>
           <p className="studio__text">{studio.text}</p>
+        </div>
+
+        <div ref={sinceRef} className="studio__since reveal">
+          <p className="studio__since-year" aria-label={`${studio.since.label} ${studio.since.year}`}>
+            <span className="studio__since-label" aria-hidden="true">
+              {studio.since.label}
+            </span>
+            <span aria-hidden="true">{studio.since.year}</span>
+          </p>
+          <div className="studio__since-copy">
+            <p className="studio__since-years">{studio.since.years}</p>
+            <p className="studio__since-text">{studio.since.text}</p>
+          </div>
         </div>
 
         <div id="servicios" className="studio__services">

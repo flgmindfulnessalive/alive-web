@@ -42,8 +42,9 @@
 }
 
 .hero__sculpture {
-  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent);
-  mask-image: linear-gradient(to bottom, #000 82%, transparent);
+  /* La imagen nace cortada arriba: se funde en ambos extremos. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 80%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 80%, transparent);
 }
 
 .hero__signature {

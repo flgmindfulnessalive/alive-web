@@ -14,10 +14,11 @@ export const footerNav: NavItem[] = [...nav, { label: 'Contacto', href: '#contac
 export const brand = {
   name: 'ALIVE',
   signature: 'Estrategia. Creatividad. Tecnología.',
+  founded: 2011,
 }
 
 export const hero = {
-  eyebrow: 'Estudio de inteligencia creativa',
+  eyebrow: 'Estudio de inteligencia creativa · Desde\u00a02011',
   title: 'Ideas que cobran vida.',
   // Cortes de línea del H1 para la entrada escalonada.
   titleLines: ['Ideas que', 'cobran vida.'],
@@ -41,9 +42,13 @@ export type Project = {
   summary: string
   details: string[]
   client?: string
+  // Enlace al proyecto publicado. Si existe, la tarjeta abre el sitio real.
+  url?: string
 }
 
 export const work = {
+  // Detalle en ventana modal al pulsar una exploración. Desactivado por ahora.
+  showDetails: false,
   title: 'Lo que podemos construir.',
   description:
     'Marcas, plataformas y experiencias digitales que conectan visión, diseño y tecnología.',
@@ -87,8 +92,19 @@ export const manifesto = {
   accent: 'que construye lo que viene.',
 }
 
+const FOUNDED = brand.founded
+export const currentYear = new Date().getFullYear()
+const years = currentYear - FOUNDED
+
 export const studio = {
   title: 'Pensamos contigo. Construimos para avanzar.',
+  // Trayectoria: el número de años se calcula solo.
+  since: {
+    year: FOUNDED,
+    label: 'Desde',
+    years: `${years} años de trayectoria`,
+    text: `ALIVE nació en ${FOUNDED}. Detrás del estudio hay ${years} años creando marcas, plataformas y experiencias digitales, y esa experiencia acompaña cada proyecto desde la primera conversación.`,
+  },
   text: 'Somos un estudio boutique que combina pensamiento estratégico, criterio creativo y ejecución tecnológica. Trabajamos cerca de cada proyecto para convertir una visión en una experiencia digital coherente.',
   // Propuesta comercial editable: no añadir especializaciones no confirmadas.
   services: [

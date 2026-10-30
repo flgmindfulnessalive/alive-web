@@ -27,6 +27,14 @@
   border: 0;
 }
 
+.work__card--static {
+  cursor: default;
+}
+
+.work__card--static:hover .work__media img {
+  transform: none;
+}
+
 .work__card:focus-visible {
   outline-offset: 6px;
 }

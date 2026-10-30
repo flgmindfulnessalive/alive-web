@@ -1,4 +1,4 @@
-import { brand, footerLinks, footerNav } from '../content/site'
+import { brand, currentYear, footerLinks, footerNav } from '../content/site'
 import { Wordmark } from './Wordmark'
 import './Footer.css'
 
@@ -11,6 +11,9 @@ export function Footer() {
             <Wordmark title="ALIVE, volver al inicio" />
           </a>
           <p className="footer__signature">{brand.signature}</p>
+          <p className="footer__signature">
+            © {brand.founded}–{currentYear} ALIVE
+          </p>
         </div>
         <nav aria-label="Pie de página">
           <ul className="footer__nav">

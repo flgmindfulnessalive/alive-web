@@ -5,44 +5,78 @@ import { EXPLORATION_SIZE, explorationImages } from './explorations'
 import { ProjectModal } from './ProjectModal'
 import './WorkGallery.css'
 
-function ProjectCard({ project, index, onOpen }: { project: Project; index: number; onOpen: (el: HTMLButtonElement) => void }) {
+type CardProps = { project: Project; index: number; onOpen: (el: HTMLButtonElement) => void }
+
+function ProjectCard({ project, index, onOpen }: CardProps) {
   const image = explorationImages[project.visual]
   const label = project.kind === 'exploration' ? 'Exploración visual' : project.client
-  return (
-    <li className="work__item" style={{ '--i': index } as CSSProperties}>
-      <button
-        type="button"
-        className="work__card"
-        aria-haspopup="dialog"
-        aria-label={`${project.title}. ${label}. Ver concepto`}
-        aria-describedby={`${project.id}-desc`}
-        onClick={(e) => onOpen(e.currentTarget)}
-      >
-        <span className="work__media">
-          <img
-            src={image.src}
-            srcSet={image.srcSet}
-            sizes="(min-width: 768px) 50vw, 100vw"
-            alt=""
-            width={EXPLORATION_SIZE.width}
-            height={EXPLORATION_SIZE.height}
-            loading="lazy"
-            decoding="async"
-          />
-          <span className="work__badge">{label}</span>
-        </span>
+  // Con enlace: abre el sitio real. Sin enlace: abre el detalle solo si está activado.
+  const action = project.url ? 'link' : work.showDetails ? 'modal' : 'static'
+
+  const body = (
+    <>
+      <span className="work__media">
+        <img
+          src={image.src}
+          srcSet={image.srcSet}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          alt={action === 'static' ? project.alt : ''}
+          width={EXPLORATION_SIZE.width}
+          height={EXPLORATION_SIZE.height}
+          loading="lazy"
+          decoding="async"
+        />
+        <span className="work__badge">{label}</span>
+      </span>
+      {action !== 'static' && (
         <span id={`${project.id}-desc`} className="visually-hidden">
           {project.alt}
         </span>
-        <span className="work__caption">
-          <span className="eyebrow">{project.discipline}</span>
-          <span className="work__title">
-            {project.title}
-            <span className="work__rule" aria-hidden="true" />
-            <span className="work__arrow" aria-hidden="true">→</span>
-          </span>
+      )}
+      <span className="work__caption">
+        <span className="eyebrow">{project.discipline}</span>
+        <span className="work__title">
+          {project.title}
+          {action !== 'static' && (
+            <>
+              <span className="work__rule" aria-hidden="true" />
+              <span className="work__arrow" aria-hidden="true">
+                {action === 'link' ? '↗' : '→'}
+              </span>
+            </>
+          )}
         </span>
-      </button>
+      </span>
+    </>
+  )
+
+  return (
+    <li className="work__item" style={{ '--i': index } as CSSProperties}>
+      {action === 'link' ? (
+        <a
+          className="work__card"
+          href={project.url}
+          target="_blank"
+          rel="noopener"
+          aria-label={`${project.title}. ${label}. Abrir sitio en una pestaña nueva`}
+          aria-describedby={`${project.id}-desc`}
+        >
+          {body}
+        </a>
+      ) : action === 'modal' ? (
+        <button
+          type="button"
+          className="work__card"
+          aria-haspopup="dialog"
+          aria-label={`${project.title}. ${label}. Ver concepto`}
+          aria-describedby={`${project.id}-desc`}
+          onClick={(e) => onOpen(e.currentTarget)}
+        >
+          {body}
+        </button>
+      ) : (
+        <div className="work__card work__card--static">{body}</div>
+      )}
     </li>
   )
 }
@@ -81,13 +115,15 @@ export function WorkGallery() {
         </ul>
       </div>
 
-      <ProjectModal
-        project={active}
-        onClose={() => {
-          setActive(null)
-          triggerRef.current?.focus()
-        }}
-      />
+      {work.showDetails && (
+        <ProjectModal
+          project={active}
+          onClose={() => {
+            setActive(null)
+            triggerRef.current?.focus()
+          }}
+        />
+      )}
     </section>
   )
 }

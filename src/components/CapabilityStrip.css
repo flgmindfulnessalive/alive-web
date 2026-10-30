@@ -29,12 +29,39 @@
   color: var(--color-text-muted);
 }
 
+/* Móvil: rejilla 2×2 centrada con cruz de líneas finas. */
 @media (max-width: 599px) {
+  .capabilities {
+    display: block;
+    padding-block: var(--space-2);
+  }
+
   .capabilities::after {
     display: none;
   }
 
+  .capabilities__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    text-align: center;
+  }
+
+  .capabilities__list li {
+    padding-block: var(--space-3);
+  }
+
   .capabilities__list li + li::before {
-    margin-inline: 0.6em;
+    content: none;
+  }
+
+  .capabilities__list li:nth-child(odd) {
+    border-right: 1px solid var(--line-strong);
+  }
+
+  .capabilities__list li:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line-strong);
   }
 }
