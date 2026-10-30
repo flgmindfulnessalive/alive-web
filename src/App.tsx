@@ -32,9 +32,9 @@ export default function App() {
       <main id="contenido" data-page-content>
         <Hero />
         <CapabilityStrip />
-        <WorkGallery />
         <Manifesto />
         <StudioServices />
+        <WorkGallery />
         <Process />
         <ContactForm />
       </main>
