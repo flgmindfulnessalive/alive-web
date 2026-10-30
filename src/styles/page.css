@@ -36,3 +36,18 @@
     text-align: center;
   }
 }
+
+@media (max-width: 599px) {
+  .page-footer__inner > nav {
+    flex-basis: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 599px) {
+  .page-footer__inner > span {
+    flex-basis: 100%;
+    text-align: center;
+  }
+}

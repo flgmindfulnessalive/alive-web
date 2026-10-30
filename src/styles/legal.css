@@ -151,8 +151,14 @@
 }
 
 @media (max-width: 599px) {
-  .legal__copy {
+  .legal__copy,
+  .legal__footer-inner > span {
+    flex-basis: 100%;
     text-align: center;
+  }
+
+  .legal__footer-inner {
+    justify-content: center;
   }
 }
 
