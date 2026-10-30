@@ -148,7 +148,8 @@
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     grid-template-rows: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    aspect-ratio: 16 / 9;
+    /* 9:4 hace que las tres celdas sean ≈ 3:2, como las fotos: no se recortan. */
+    aspect-ratio: 9 / 4;
   }
 
   .work__item--featured .work__media--mosaic img {
