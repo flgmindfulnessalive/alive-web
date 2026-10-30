@@ -53,12 +53,12 @@ export type Project = {
   kind: 'exploration' | 'case'
   title: string
   discipline: string
-  visual: 'flow' | 'web' | 'identity' | 'wewebinars-web'
+  visual: 'flow' | 'web' | 'identity' | 'wewebinars-stationery'
   // Ocupa todo el ancho de la sección.
   featured?: boolean
   alt: string
   // Piezas adicionales: con ellas la tarjeta muestra un mosaico (principal + dos).
-  gallery?: { visual: 'wewebinars-campaign' | 'wewebinars-stationery'; alt: string }[]
+  gallery?: { visual: 'flow-space' | 'flow-stationery' | 'wewebinars-web' | 'wewebinars-campaign'; alt: string }[]
   summary: string
   details: string[]
   client?: string
@@ -78,9 +78,19 @@ export const work = {
       kind: 'case',
       featured: true,
       title: 'FLOW Talent HUB',
-      discipline: 'Producto digital · Software de reclutamiento',
+      discipline: 'Producto digital y marca · Software de reclutamiento',
       visual: 'flow',
       alt: 'Plataforma FLOW Talent HUB en una pantalla: software de reclutamiento y selección con el titular «Una experiencia única en selección» y un panel de búsqueda con candidatos, compatibilidad y siguientes pasos.',
+      gallery: [
+        {
+          visual: 'flow-space',
+          alt: 'Marca FLOW Talent HUB en una oficina: roll-up «Tu experiencia. Un proceso a tu altura.», logotipo en la pared de recepción, bolsa de tela, cuaderno y credencial con el símbolo de FLOW.',
+        },
+        {
+          visual: 'flow-stationery',
+          alt: 'Papelería y piezas de FLOW Talent HUB: folleto «Menos carpetas. Más orden. Todo en FLOW.», carpeta «Tu experiencia. Un proceso a tu altura.», tableta con la misma campaña y tarjetas de visita.',
+        },
+      ],
       summary:
         'Plataforma de reclutamiento y selección que reúne perfiles, candidatos, evaluaciones y reportes en un mismo lugar para empresas, equipos de selección y headhunters.',
       details: [],
@@ -91,16 +101,16 @@ export const work = {
       featured: true,
       title: 'WeWebinars',
       discipline: 'Marca, web y campaña · Plataforma de webinars automatizados',
-      visual: 'wewebinars-web',
-      alt: 'Sitio web de WeWebinars en un monitor: titular «Convierte tu presentación en un sistema», botones para automatizar la primera presentación y ver planes, y una vista previa de un webinar en vivo con chat.',
+      visual: 'wewebinars-stationery',
+      alt: 'Identidad de WeWebinars aplicada a papelería: carpeta oscura con el símbolo W en degradado, folleto «Create once. Present endlessly.» y tarjetas de visita.',
       gallery: [
+        {
+          visual: 'wewebinars-web',
+          alt: 'Sitio web de WeWebinars en un monitor: titular «Convierte tu presentación en un sistema», botones para automatizar la primera presentación y ver planes, y una vista previa de un webinar en vivo con chat.',
+        },
         {
           visual: 'wewebinars-campaign',
           alt: 'Piezas de campaña de WeWebinars en violeta: un cartel «Your business on autopilot», un móvil con «Create once. Present endlessly. Sell 24/7.» y un banner «Everything you need. Nothing you don’t.».',
-        },
-        {
-          visual: 'wewebinars-stationery',
-          alt: 'Identidad de WeWebinars aplicada a papelería: carpeta oscura con el símbolo W en degradado, folleto «Create once. Present endlessly.» y tarjetas de visita.',
         },
       ],
       summary:
