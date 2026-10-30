@@ -15,6 +15,7 @@ export const brand = {
   name: 'ALIVE',
   signature: 'Estrategia. Creatividad. Tecnología.',
   founded: 2011,
+  founder: 'Francesco Lulli',
 }
 
 export const hero = {
@@ -103,7 +104,8 @@ export const studio = {
     year: FOUNDED,
     label: 'Desde',
     years: `${years} años de trayectoria`,
-    text: `ALIVE nació en ${FOUNDED}. Detrás del estudio hay ${years} años creando marcas, plataformas y experiencias digitales, y esa experiencia acompaña cada proyecto desde la primera conversación.`,
+    founder: `Fundado por ${brand.founder}`,
+    text: `ALIVE nació en ${FOUNDED} de la mano de ${brand.founder}. Detrás del estudio hay ${years} años creando marcas, plataformas y experiencias digitales, y esa experiencia acompaña cada proyecto desde la primera conversación.`,
   },
   text: 'Somos un estudio boutique que combina pensamiento estratégico, criterio creativo y ejecución tecnológica. Trabajamos cerca de cada proyecto para convertir una visión en una experiencia digital coherente.',
   // Propuesta comercial editable: no añadir especializaciones no confirmadas.

@@ -8,7 +8,7 @@ Todo lo de este documento ya está aplicado en `index.html` y `vite.config.ts`, 
 - **Posicionamiento:** un estudio de inteligencia creativa que construye lo que viene.
 - **Promesa:** Ideas que cobran vida.
 - **Firma:** Estrategia. Creatividad. Tecnología.
-- **Trayectoria:** desde 2011. Detrás del estudio hay una persona con experiencia; se menciona en el hero, en el bloque «Desde 2011» y en el pie.
+- **Trayectoria:** desde 2011. Fundado por Francesco Lulli; se menciona en el hero, en el bloque «Desde 2011» y en el pie.
 - **Tono:** seguro, cercano, selectivo. Sin promesas de resultados, sin cifras, sin clientes que no estén confirmados.
 - **Términos de búsqueda que cubrimos de forma natural:** estudio creativo, estrategia digital, branding, diseño web, diseño UX/UI, desarrollo web, inteligencia artificial aplicada, automatización.
 
@@ -36,7 +36,7 @@ En redes manda la emoción (la promesa); en Google, la claridad (qué hacemos).
 ## Datos estructurados (JSON-LD)
 
 Se generan en el build cuando existe `VITE_SITE_URL`:
-- **Organization:** nombre, URL, logo, imagen, eslogan, año de fundación (2011), descripción y áreas de conocimiento (los servicios de la web).
+- **Organization:** nombre, URL, logo, imagen, eslogan, año de fundación (2011), fundador (Francesco Lulli), descripción y áreas de conocimiento (los servicios de la web).
 - **WebSite:** idioma español, publicado por la organización.
 
 No incluyen dirección, teléfono ni redes porque aún no hay datos reales. Cuando existan, se añaden `address`, `telephone`, `email` y `sameAs` (perfiles sociales) en `vite.config.ts`.

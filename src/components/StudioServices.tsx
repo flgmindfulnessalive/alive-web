@@ -30,6 +30,7 @@ export function StudioServices() {
           </p>
           <div className="studio__since-copy">
             <p className="studio__since-years">{studio.since.years}</p>
+            <p className="studio__since-founder">{studio.since.founder}</p>
             <p className="studio__since-text">{studio.since.text}</p>
           </div>
         </div>

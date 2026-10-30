@@ -17,6 +17,7 @@ function jsonLd(base: string) {
         image: `${base}/og-image.jpg`,
         slogan: 'Estrategia. Creatividad. Tecnología.',
         foundingDate: '2011',
+        founder: { '@type': 'Person', name: 'Francesco Lulli' },
         description:
           'Estudio boutique de inteligencia creativa que combina estrategia, diseño y tecnología para crear marcas, sitios web y experiencias digitales.',
         knowsAbout: [
