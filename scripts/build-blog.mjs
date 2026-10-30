@@ -78,14 +78,7 @@ const head = ({ title, description, path, image, extra = '' }) => `<!doctype htm
 
 const header = `
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
-    <header class="page-header">
-      <div class="container page-header__inner">
-        <a href="/" class="page-header__logo" aria-label="ALIVE, ir al inicio">
-          <img src="/src/assets/brand/alive-wordmark.svg" alt="ALIVE" width="547" height="107" />
-        </a>
-        <a href="/blog/" class="text-link">Blog</a>
-      </div>
-    </header>`
+    <!--alive:header-->`
 
 // Iconos (24×24) para los botones de compartir.
 const ICONS = {

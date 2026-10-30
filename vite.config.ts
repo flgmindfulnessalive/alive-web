@@ -65,6 +65,48 @@ function siteUrl(url: string | undefined): Plugin {
   }
 }
 
+// Cabecera de las páginas secundarias (blog, prensa, privacidad): misma
+// navegación que la home, con menú hamburguesa en móvil (src/secondary.ts).
+function secondaryHeader(): Plugin {
+  return {
+    name: 'alive-secondary-header',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html, ctx) {
+        if (!html.includes('<!--alive:header-->')) return html
+        const items = [
+          { label: 'Estudio', href: '/#estudio' },
+          { label: 'Servicios', href: '/#servicios' },
+          { label: 'Proyectos', href: '/#proyectos' },
+          ...(existsSync('blog/index.html') ? [{ label: 'Blog', href: '/blog/' }] : []),
+        ]
+        const current = (href: string) =>
+          href === '/blog/' && ctx.path.startsWith('/blog/') ? ' aria-current="page"' : ''
+        const links = items.map((i) => `<li><a href="${i.href}"${current(i.href)}>${i.label}</a></li>`).join('')
+        const header = `<header class="site-header is-solid" data-secondary-header>
+      <div class="container site-header__inner">
+        <a class="site-header__logo" href="/" aria-label="ALIVE, ir al inicio">
+          <img src="/src/assets/brand/alive-wordmark.svg" alt="ALIVE" width="547" height="107" />
+        </a>
+        <nav class="site-header__nav" aria-label="Principal"><ul>${links}</ul></nav>
+        <a class="btn btn-ghost btn-sm site-header__cta" href="/#contacto">Hablemos <span class="arrow" aria-hidden="true">→</span></a>
+        <button type="button" class="site-header__toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Abrir menú">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
+      </div>
+      <div id="mobile-menu" class="mobile-menu" hidden>
+        <nav aria-label="Principal móvil" class="container">
+          <ul>${links}</ul>
+          <a class="btn btn-primary mobile-menu__cta" href="/#contacto">Hablemos de tu proyecto</a>
+        </nav>
+      </div>
+    </header>`
+        return html.replace('<!--alive:header-->', header)
+      },
+    },
+  }
+}
+
 // Páginas generadas por scripts/build-blog.mjs (blog/ y blog/<slug>/).
 function blogPages() {
   if (!existsSync('blog/index.html')) return {}
@@ -79,7 +121,7 @@ function blogPages() {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   return {
-    plugins: [react(), siteUrl(env.VITE_SITE_URL)],
+    plugins: [react(), secondaryHeader(), siteUrl(env.VITE_SITE_URL)],
     build: {
       rollupOptions: {
         input: {

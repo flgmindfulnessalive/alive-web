@@ -174,3 +174,13 @@
     display: inline-block;
   }
 }
+
+/* Logo como imagen en las páginas secundarias. */
+.site-header__logo img {
+  height: 22px;
+  width: auto;
+}
+
+.site-header__nav a[aria-current='page'] {
+  color: var(--color-text);
+}

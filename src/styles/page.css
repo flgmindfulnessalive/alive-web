@@ -1,20 +1,4 @@
 /* Cabecera y pie de las páginas secundarias (prensa, blog). */
-.page-header {
-  border-bottom: 1px solid var(--line);
-}
-
-.page-header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: var(--header-h);
-}
-
-.page-header__logo img {
-  height: 22px;
-  width: auto;
-}
 
 .page-footer {
   border-top: 1px solid var(--line);

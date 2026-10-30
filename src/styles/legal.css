@@ -11,24 +11,6 @@
   color: var(--color-ivory-muted);
 }
 
-.legal__header {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.legal__header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: var(--header-h);
-}
-
-.legal__logo img {
-  height: 22px;
-  width: auto;
-}
-
 .legal__main {
   padding-block: var(--space-8) var(--section-y);
 }
