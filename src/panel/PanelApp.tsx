@@ -66,9 +66,21 @@ function Shell({ children, right }: { children?: ReactNode; right?: ReactNode })
   )
 }
 
+// Motivo legible del fallo al pedir el enlace (Supabase responde en inglés).
+function loginError(message: string, status?: number) {
+  const m = message.toLowerCase()
+  if (m.includes('signups not allowed') || m.includes('user not found'))
+    return 'Este correo no tiene cuenta en el panel. Créala en Supabase → Authentication → Users con este mismo correo.'
+  if (status === 429 || m.includes('rate limit'))
+    return 'Demasiados intentos seguidos. Espera unos minutos y vuelve a pedir el enlace.'
+  if (m.includes('redirect')) return 'La dirección del panel no está autorizada en Supabase → Authentication → URL Configuration.'
+  return `No pudimos enviarte el enlace (${message}).`
+}
+
 function Login() {
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [reason, setReason] = useState('')
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -77,6 +89,7 @@ function Login() {
       email: email.trim(),
       options: { shouldCreateUser: false, emailRedirectTo: `${location.origin}/panel/` },
     })
+    if (error) setReason(loginError(error.message, error.status))
     setState(error ? 'error' : 'sent')
   }
 
@@ -98,7 +111,7 @@ function Login() {
             </button>
             {state === 'error' && (
               <p className="panel-error" role="alert">
-                No pudimos enviarte el enlace. Revisa el correo: solo pueden entrar las cuentas autorizadas.
+                {reason}
               </p>
             )}
           </form>
