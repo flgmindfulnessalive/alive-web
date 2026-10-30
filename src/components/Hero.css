@@ -187,7 +187,7 @@
   }
 }
 
-/* «vida» se llena de color y el punto cobra vida: idea → chispa → cohete → corazón → punto.
+/* «vida» se queda con el degradado y el punto cobra vida: idea → chispa → cohete → corazón → punto.
    Una sola vez (≈ 7 s) y de nuevo al pasar el cursor por el titular. */
 .hero__title {
   --t0: 1000ms; /* tras la entrada de la segunda línea */
@@ -195,6 +195,21 @@
 
 .hero__title.is-replay {
   --t0: 0ms;
+}
+
+/* «vida» queda con el degradado de marca. Dos capas recortadas al texto: arriba,
+   blanco que se desvanece hacia la derecha (solo se ve durante la entrada);
+   abajo, el degradado fijo. */
+.hero-alive {
+  --g1: #2563ff;
+  --g2: #8b3dff;
+  --g3: #00e0d0;
+  color: transparent;
+  background:
+    linear-gradient(90deg, transparent 0 40%, var(--color-text) 60% 100%) 0 0 / 250% 100% no-repeat,
+    linear-gradient(90deg, var(--g1), var(--g2) 52%, var(--g3));
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .hero-mark {
@@ -242,22 +257,9 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Barrido: una banda con el degradado de marca atraviesa «vida» de izquierda
-     a derecha, se detiene un instante con la palabra entera en color y sale. */
+  /* Entrada: una capa blanca se retira hacia la derecha y descubre el degradado. */
   .hero-alive {
-    color: transparent;
-    background: linear-gradient(
-        100deg,
-        var(--color-text) 0 30%,
-        var(--color-blue) 37%,
-        var(--color-violet) 50%,
-        var(--color-turquoise) 63%,
-        var(--color-text) 70% 100%
-      )
-      100% 0 / 300% 100% no-repeat;
-    -webkit-background-clip: text;
-    background-clip: text;
-    animation: alive-sweep 2600ms cubic-bezier(0.45, 0, 0.2, 1) both;
+    animation: alive-reveal 1800ms cubic-bezier(0.45, 0, 0.2, 1) both;
     animation-delay: var(--t0);
   }
 
@@ -283,11 +285,9 @@
   }
 }
 
-@keyframes alive-sweep {
-  0% { background-position: 100% 0; }
-  42%,
-  58% { background-position: 50% 0; }
-  100% { background-position: 0 0; }
+@keyframes alive-reveal {
+  from { background-position: 100% 0, 0 0; }
+  to { background-position: 0 0, 0 0; }
 }
 
 /* El punto late, se recoge mientras pasan los iconos y renace al final. */
