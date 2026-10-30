@@ -35,6 +35,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 - **Aviso de privacidad**: publicado el 30/10/2026 (`privacidad/index.html`), adaptado a la Ley N.º 29733 (Perú); incluye uso de IA (Claude y ChatGPT, sin entrenamiento) y cobros con Whop como merchant of record. Pendiente: revisión por un abogado e inscripción del banco de datos «Contactos web» ante la ANPD.
 - **Brief de proyecto** (`/brief-form/`): en producción desde el 30/10/2026. Blob Store privado `alive-briefs` (São Paulo) con `BLOB_READ_WRITE_TOKEN` y `BRIEF_SECRET` en Vercel. No revocar el token de lectura y escritura: lo usan las subidas. Probado de extremo a extremo: correo con enlaces a archivos y confirmación al cliente.
 - **Panel** (`/panel/`): en producción desde el 30/10/2026 con Supabase (proyecto `alive`, São Paulo). Acceso con correo y contraseña (usuarios de Supabase Auth listados en `panel_admins`); enlace al correo como alternativa. Pendiente: generar la propuesta en PDF desde la ficha del cliente.
+- **Google Search Console**: propiedad de dominio `alivedigital.agency` verificada (TXT en GoDaddy) y sitemap enviado el 30/10/2026: correcto, 7 páginas. Indexación solicitada para la portada y los 3 artículos.
 - **Dominio**: `alivedigital.agency` (principal) y `www` en Vercel; `VITE_SITE_URL` definido.
 - **Analítica**: no hay ninguna. Si se añade, requiere aviso y, en su caso, consentimiento.
 - **Casos reales**: falta WeFunnels.
