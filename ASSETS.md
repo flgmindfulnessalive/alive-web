@@ -31,9 +31,9 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 
 # Conexiones pendientes para producción
 
-- **Formulario**: listo en `api/contact.ts` (Resend + Turnstile). Falta definir las variables de entorno en Vercel y verificar el dominio en Resend. Ver README.
+- **Formulario**: en producción desde el 30/10/2026 (`api/contact.ts` con Resend + Turnstile; dominio verificado en Resend, región São Paulo; variables en Vercel → Production). Probado de extremo a extremo: el correo llega y la respuesta va al remitente.
 - **Aviso de privacidad**: borrador en `privacidad/index.html`. Completar los datos entre corchetes, revisión legal, quitar `noindex` y el aviso de borrador.
-- **Dominio**: añadir en Vercel con y sin `www` y definir `VITE_SITE_URL`.
+- **Dominio**: `alivedigital.agency` (principal) y `www` en Vercel; `VITE_SITE_URL` definido.
 - **Analítica**: no hay ninguna. Si se añade, requiere aviso y, en su caso, consentimiento.
 - **Casos reales**: falta WeFunnels.
 - **Casos con autorización**: cambia las piezas a `kind: 'case'` solo con autorización y datos verificados.
