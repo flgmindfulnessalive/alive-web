@@ -2,7 +2,9 @@
 // deciden las reglas de seguridad por filas (supabase/schema.sql), que solo dejan pasar a panel_admins.
 import { createClient } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
+// Solo el origen del proyecto (https://xxxx.supabase.co): si se copió con /rest/v1 u otra ruta, se quita.
+const cleanUrl = (raw?: string) => raw?.trim().replace(/\/(rest|auth)\/v1.*$/, '').replace(/\/+$/, '') || undefined
+const url = cleanUrl(import.meta.env.VITE_SUPABASE_URL as string | undefined)
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
 
 export const configured = Boolean(url && key)

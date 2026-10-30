@@ -18,7 +18,8 @@ export type ClientRow = {
 }
 
 export async function saveClient(row: ClientRow): Promise<boolean> {
-  const url = process.env.SUPABASE_URL
+  // Solo el origen del proyecto: si se copió con /rest/v1 u otra ruta, se quita.
+  const url = process.env.SUPABASE_URL?.trim().replace(/\/(rest|auth)\/v1.*$/, '').replace(/\/+$/, '')
   const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) return false
   const headers: Record<string, string> = {
@@ -28,7 +29,7 @@ export async function saveClient(row: ClientRow): Promise<boolean> {
   }
   // Las claves antiguas (JWT) también van en Authorization; las nuevas (sb_secret_…), solo en apikey.
   if (key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`
-  const res = await fetch(`${url.replace(/\/$/, '')}/rest/v1/clients`, {
+  const res = await fetch(`${url}/rest/v1/clients`, {
     method: 'POST',
     headers,
     body: JSON.stringify(row),
