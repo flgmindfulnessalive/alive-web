@@ -53,10 +53,12 @@ export type Project = {
   kind: 'exploration' | 'case'
   title: string
   discipline: string
-  visual: 'flow' | 'web' | 'identity'
+  visual: 'flow' | 'web' | 'identity' | 'wewebinars-web'
   // Ocupa todo el ancho de la sección.
   featured?: boolean
   alt: string
+  // Piezas adicionales: con ellas la tarjeta muestra un mosaico (principal + dos).
+  gallery?: { visual: 'wewebinars-campaign' | 'wewebinars-stationery'; alt: string }[]
   summary: string
   details: string[]
   client?: string
@@ -81,6 +83,28 @@ export const work = {
       alt: 'Plataforma FLOW Talent HUB en una pantalla: software de reclutamiento y selección con el titular «Una experiencia única en selección» y un panel de búsqueda con candidatos, compatibilidad y siguientes pasos.',
       summary:
         'Plataforma de reclutamiento y selección que reúne perfiles, candidatos, evaluaciones y reportes en un mismo lugar para empresas, equipos de selección y headhunters.',
+      details: [],
+    },
+    {
+      id: 'wewebinars',
+      kind: 'case',
+      featured: true,
+      title: 'WeWebinars',
+      discipline: 'Marca, web y campaña · Plataforma de webinars automatizados',
+      visual: 'wewebinars-web',
+      alt: 'Sitio web de WeWebinars en un monitor: titular «Convierte tu presentación en un sistema», botones para automatizar la primera presentación y ver planes, y una vista previa de un webinar en vivo con chat.',
+      gallery: [
+        {
+          visual: 'wewebinars-campaign',
+          alt: 'Piezas de campaña de WeWebinars en violeta: un cartel «Your business on autopilot», un móvil con «Create once. Present endlessly. Sell 24/7.» y un banner «Everything you need. Nothing you don’t.».',
+        },
+        {
+          visual: 'wewebinars-stationery',
+          alt: 'Identidad de WeWebinars aplicada a papelería: carpeta oscura con el símbolo W en degradado, folleto «Create once. Present endlessly.» y tarjetas de visita.',
+        },
+      ],
+      summary:
+        'Identidad, sitio web y campaña para una plataforma que convierte una presentación grabada en un evento automatizado que vende 24/7.',
       details: [],
     },
     {

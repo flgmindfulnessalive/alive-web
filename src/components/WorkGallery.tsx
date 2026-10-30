@@ -16,17 +16,33 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
 
   const body = (
     <>
-      <span className="work__media">
+      <span className={`work__media${project.gallery ? ' work__media--mosaic' : ''}`}>
         <img
           src={image.src}
           srcSet={image.srcSet}
-          sizes={project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
+          sizes={project.gallery ? '(min-width: 768px) 66vw, 100vw' : project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
           alt={action === 'static' ? project.alt : ''}
-          width={explorationImages[project.visual].width}
-          height={explorationImages[project.visual].height}
+          width={image.width}
+          height={image.height}
           loading="lazy"
           decoding="async"
         />
+        {project.gallery?.map((piece) => {
+          const img = explorationImages[piece.visual]
+          return (
+            <img
+              key={piece.visual}
+              src={img.src}
+              srcSet={img.srcSet}
+              sizes="(min-width: 768px) 33vw, 50vw"
+              alt={action === 'static' ? piece.alt : ''}
+              width={img.width}
+              height={img.height}
+              loading="lazy"
+              decoding="async"
+            />
+          )
+        })}
         {label && <span className="work__badge">{label}</span>}
       </span>
       {action !== 'static' && (

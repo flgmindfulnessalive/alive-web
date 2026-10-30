@@ -108,6 +108,24 @@
   transform: translateX(4px);
 }
 
+/* Mosaico: pieza principal arriba y dos más debajo (móvil); en escritorio,
+   la principal a la izquierda y las otras dos apiladas a la derecha. */
+.work__media--mosaic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  background: none;
+}
+
+.work__media--mosaic img {
+  border-radius: var(--radius-media);
+  object-fit: cover;
+}
+
+.work__media--mosaic img:first-child {
+  grid-column: 1 / -1;
+}
+
 @media (min-width: 768px) {
   .work__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -126,6 +144,24 @@
     object-position: 50% 45%;
   }
 
+  .work__item--featured .work__media--mosaic {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .work__item--featured .work__media--mosaic img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .work__item--featured .work__media--mosaic img:first-child {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+
   .work__item--featured .work__title {
     font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
   }
@@ -136,14 +172,9 @@
     column-gap: var(--space-4);
   }
 
-  /* Escalonado: la tarjeta derecha de cada par baja un paso. */
-  .work__item:not(.work__item--featured):nth-child(2),
-  .work__item--featured ~ .work__item:nth-child(3) {
+  /* Escalonado: en cada par de tarjetas normales, la derecha baja un paso. */
+  .work__item:not(.work__item--featured) + .work__item:not(.work__item--featured) {
     margin-top: var(--space-12);
-  }
-
-  .work__item--featured ~ .work__item:nth-child(2) {
-    margin-top: 0;
   }
 
   .work__head {
