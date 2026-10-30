@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { brand, hero } from '../content/site'
+import { hero } from '../content/site'
 import { useScrollProgress } from '../lib/useScrollProgress'
 import { Sculpture } from './Sculpture'
 import './Hero.css'
@@ -47,7 +47,7 @@ export function Hero() {
 
       <div className="container">
         <p className="hero__signature hero-enter" style={{ '--d': 5 } as CSSProperties}>
-          {brand.signature}
+          {hero.capabilitiesLabel}
         </p>
       </div>
     </section>

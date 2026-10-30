@@ -34,6 +34,8 @@ export const hero = {
   title: 'Ideas que cobran vida.',
   // Cortes de línea del H1 para la entrada escalonada.
   titleLines: ['Ideas que', 'cobran vida.'],
+  // Rótulo sobre la banda de capacidades.
+  capabilitiesLabel: 'Nuestro expertise',
   description:
     'Combinamos estrategia, creatividad y tecnología para transformar ideas en marcas, productos y experiencias digitales.',
   primaryCta: { label: 'Hablemos de tu proyecto', href: '#contacto' },

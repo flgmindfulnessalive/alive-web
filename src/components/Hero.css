@@ -55,6 +55,12 @@
   color: var(--color-text-muted);
 }
 
+@media (max-width: 599px) {
+  .hero__signature {
+    text-align: center;
+  }
+}
+
 @media (max-width: 479px) {
   .hero__actions .btn {
     width: 100%;
