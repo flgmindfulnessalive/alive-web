@@ -52,7 +52,7 @@ export function ContactForm() {
     }
 
     if (!activeAdapter.isDemo && TURNSTILE_SITE_KEY) {
-      data.spamToken = turnstileRef.current?.token() ?? undefined
+      data.spamToken = (turnstileRef.current?.token() ?? (await turnstileRef.current?.waitForToken(15000))) ?? undefined
       if (!data.spamToken) {
         setErrorMessage('Estamos comprobando que el envío es seguro. Inténtalo de nuevo en unos segundos.')
         setStatus('error')

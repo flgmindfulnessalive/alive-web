@@ -89,8 +89,10 @@ export function BriefApp() {
     setBusy(true)
     setMessage(null)
     try {
-      const token = turnstile.current?.token()
-      if (TURNSTILE_SITE_KEY && !token) throw new Error('Un segundo: estamos verificando la conexión. Vuelve a pulsar «Empezar».')
+      // Si Turnstile aún verifica (habitual en móvil), se espera aquí en vez de pedir otro toque.
+      const token = turnstile.current?.token() ?? (await turnstile.current?.waitForToken(15000)) ?? null
+      if (TURNSTILE_SITE_KEY && !token)
+        throw new Error('No pudimos verificar la conexión. Recarga la página y vuelve a intentarlo.')
       setSession((await postJson('/api/brief-session', { turnstileToken: token })) as Session)
       setPhase('form')
     } catch (error) {
@@ -206,7 +208,7 @@ export function BriefApp() {
           <Turnstile ref={turnstile} />
           <div className="brief__actions">
             <button type="button" className="btn btn-primary" onClick={start} disabled={busy}>
-              {busy ? 'Preparando…' : 'Empezar'} <span className="arrow" aria-hidden="true">→</span>
+              {busy ? 'Verificando…' : 'Empezar'} <span className="arrow" aria-hidden="true">→</span>
             </button>
           </div>
           {message && <p className="brief__message" role="alert">{message}</p>}

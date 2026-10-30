@@ -16,7 +16,12 @@ declare global {
   }
 }
 
-export type TurnstileHandle = { token: () => string | null; reset: () => void }
+export type TurnstileHandle = {
+  token: () => string | null
+  // Espera a que Turnstile termine (en móvil puede tardar unos segundos). null si falla o se agota el tiempo.
+  waitForToken: (timeoutMs?: number) => Promise<string | null>
+  reset: () => void
+}
 
 const SCRIPT_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
 let loading: Promise<TurnstileApi> | null = null
@@ -38,9 +43,28 @@ export function Turnstile({ ref }: { ref: Ref<TurnstileHandle> }) {
   const container = useRef<HTMLDivElement>(null)
   const widget = useRef<string | null>(null)
   const token = useRef<string | null>(null)
+  const waiters = useRef<((t: string | null) => void)[]>([])
+  const settle = (t: string | null) => {
+    token.current = t
+    waiters.current.splice(0).forEach((resolve) => resolve(t))
+  }
 
   useImperativeHandle(ref, () => ({
     token: () => token.current,
+    waitForToken: (timeoutMs = 15000) =>
+      token.current || !TURNSTILE_SITE_KEY
+        ? Promise.resolve(token.current)
+        : new Promise((resolve) => {
+            const timer = setTimeout(() => {
+              waiters.current = waiters.current.filter((w) => w !== done)
+              resolve(null)
+            }, timeoutMs)
+            const done = (t: string | null) => {
+              clearTimeout(timer)
+              resolve(t)
+            }
+            waiters.current.push(done)
+          }),
     reset: () => {
       token.current = null
       if (widget.current) window.turnstile?.reset(widget.current)
@@ -59,9 +83,9 @@ export function Turnstile({ ref }: { ref: Ref<TurnstileHandle> }) {
           size: 'flexible',
           appearance: 'interaction-only',
           language: 'es',
-          callback: (t: string) => (token.current = t),
+          callback: (t: string) => settle(t),
           'expired-callback': () => (token.current = null),
-          'error-callback': () => (token.current = null),
+          'error-callback': () => settle(null),
         })
       })
       .catch(() => {})
