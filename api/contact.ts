@@ -1,4 +1,5 @@
 // Vercel Function: POST /api/contact
+// (También guarda la consulta en el panel de ALIVE si Supabase está configurado: api/_db.ts.)
 // Valida la consulta, verifica Cloudflare Turnstile (si está configurado) y la
 // envía por correo con Resend. No guarda los datos en ningún sitio.
 //
@@ -8,6 +9,8 @@
 //   CONTACT_FROM          Remitente en un dominio verificado en Resend,
 //                         p. ej. "ALIVE Web <web@dominio.com>".
 //   TURNSTILE_SECRET_KEY  Clave secreta de Turnstile. Si falta, no se verifica.
+
+import { saveClient } from './_db.js'
 
 type Payload = {
   name?: unknown
@@ -99,7 +102,10 @@ export async function POST(request: Request): Promise<Response> {
     }),
   }).catch(() => null)
 
-  if (!res?.ok) {
+  // Al panel de ALIVE (Supabase), aunque el correo falle: así la consulta no se pierde.
+  const saved = await saveClient({ source: 'contacto', name, email, company: company || undefined, message })
+
+  if (!res?.ok && !saved) {
     return json(502, { error: 'No hemos podido enviar tu mensaje. Inténtalo de nuevo en unos minutos.' })
   }
   return json(200, { ok: true })

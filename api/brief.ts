@@ -7,6 +7,7 @@
 import { list } from '@vercel/blob'
 import { BRIEF_LIMITS, isVisible, steps, validateStep, type Answers, type Field } from '../src/brief/questions.js'
 import { fileLink, json, parseSession } from './_brief-auth.js'
+import { saveClient } from './_db.js'
 import { briefConfirmation } from './_email.js'
 
 const escapeHtml = (value: string) =>
@@ -84,6 +85,25 @@ export async function POST(request: Request): Promise<Response> {
 
   const nombre = String(answers.nombre)
   const marca = String(answers.marca)
+
+  // Al panel de ALIVE (Supabase), con los enlaces firmados a cada archivo.
+  const saved = await saveClient({
+    source: 'brief',
+    brief_id: session.id,
+    name: nombre,
+    email: String(answers.email),
+    phone: typeof answers.whatsapp === 'string' ? answers.whatsapp : undefined,
+    company: marca,
+    sector: typeof answers.sector === 'string' ? answers.sector : undefined,
+    answers: Object.fromEntries(Object.entries(answers).filter(([k]) => k !== 'consentimiento')),
+    files: files.map((f) => ({
+      name: f.pathname.split('/').pop() ?? '',
+      size: f.size,
+      group: f.pathname.split('/')[2] ?? 'otros',
+      url: fileLink(origin, f.pathname),
+    })),
+  })
+
   const sections = steps
     .map((step) => {
       const rows = step.fields
@@ -125,6 +145,7 @@ export async function POST(request: Request): Promise<Response> {
       <p style="margin:0;color:#4a4f57">${escapeHtml(nombre)} · ${escapeHtml(String(answers.email))}</p>
       ${sections}
       ${filesHtml}
+      ${saved ? `<p style="margin:28px 0 0"><a href="${origin}/panel/" style="display:inline-block;padding:10px 18px;border-radius:999px;background:#0b1218;color:#f5f7fa;text-decoration:none;font-size:14px">Ver en el panel</a></p>` : ''}
       <p style="margin:28px 0 0;font-size:12px;color:#8a8f97">Brief ${session.id}. Los enlaces a archivos son privados: no los reenvíes.</p>
     </div>`
 
