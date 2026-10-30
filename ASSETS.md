@@ -13,6 +13,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 | Publicación cuadrada | `docs/social/alive-post-1080.jpg` 1080×1080 | Igual que la anterior | Lista |
 | Exploración «Concepto de experiencia web» | `src/assets/visual/concept-web-{1200,2400}.webp` | Render de escena HTML/CSS (monitor y móvil en perspectiva) con marca, escultura e Inter reales: `npm run explorations` | Listo para demo; sustituir por render o mockup del estudio si existe |
 | Exploración «Concepto de identidad» | `src/assets/visual/concept-identity-{1200,2400}.webp` | Render de papelería ALIVE sobre marfil (cuaderno con A en relieve, tarjetas, sobre) | Listo para demo; la fotografía real de papelería impresa lo superaría |
+| Recortes de prensa | `public/prensa/*.webp` (originales en `brand-source/prensa/`) | Entregados por ALIVE: Correo 24/10/2015 y artículo sobre realidad virtual (Grupo Epensa) | Listos; falta confirmar medio y fecha del segundo |
 | Tipografía Inter | `@fontsource-variable/inter` (autoalojada) | SIL Open Font License 1.1 | En uso, sustituto provisional de Suisse Int'l |
 | Suisse Int'l | — | Comercial (Swiss Typefaces) | **No incluida.** Añadir `.woff2` con licencia web como `'Suisse Intl'`; `--font-display` ya la prioriza |
 

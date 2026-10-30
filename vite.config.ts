@@ -50,7 +50,8 @@ function siteUrl(url: string | undefined): Plugin {
   return {
     name: 'alive-site-url',
     transformIndexHtml(html, ctx) {
-      if (!url || ctx.path.includes('privacidad')) return html.replace('<!--alive:jsonld-->', '')
+      // Solo la home recibe canonical, og:url y JSON-LD.
+      if (!url || ctx.path !== '/index.html') return html.replace('<!--alive:jsonld-->', '')
       const base = url.replace(/\/$/, '')
       return html
         .replaceAll('content="/og-image.jpg', `content="${base}/og-image.jpg`)
@@ -70,7 +71,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), siteUrl(env.VITE_SITE_URL)],
     build: {
       rollupOptions: {
-        input: { main: 'index.html', privacidad: 'privacidad/index.html' },
+        input: { main: 'index.html', privacidad: 'privacidad/index.html', prensa: 'prensa/index.html' },
       },
     },
   }

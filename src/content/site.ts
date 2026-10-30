@@ -105,6 +105,7 @@ export const studio = {
     label: 'Desde',
     years: `${years} años de trayectoria`,
     founder: `Fundado por ${brand.founder}`,
+    press: { label: 'Ver menciones en prensa', href: '/prensa/' },
     text: `ALIVE nació en ${FOUNDED} de la mano de ${brand.founder}. Detrás del estudio hay ${years} años creando marcas, plataformas y experiencias digitales, y esa experiencia acompaña cada proyecto desde la primera conversación.`,
   },
   text: 'Somos un estudio boutique que combina pensamiento estratégico, criterio creativo y ejecución tecnológica. Trabajamos cerca de cada proyecto para convertir una visión en una experiencia digital coherente.',
@@ -152,4 +153,7 @@ export const contact = {
 }
 
 // Destinos reales de legales y redes. Vacío hasta que existan.
-export const footerLinks: NavItem[] = [{ label: 'Privacidad', href: '/privacidad/' }]
+export const footerLinks: NavItem[] = [
+  { label: 'Prensa', href: '/prensa/' },
+  { label: 'Privacidad', href: '/privacidad/' },
+]

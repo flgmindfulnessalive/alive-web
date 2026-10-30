@@ -31,6 +31,9 @@ export function StudioServices() {
           <div className="studio__since-copy">
             <p className="studio__since-years">{studio.since.years}</p>
             <p className="studio__since-founder">{studio.since.founder}</p>
+            <a className="text-link studio__since-press" href={studio.since.press.href}>
+              {studio.since.press.label} →
+            </a>
             <p className="studio__since-text">{studio.since.text}</p>
           </div>
         </div>

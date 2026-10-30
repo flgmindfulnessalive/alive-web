@@ -82,6 +82,11 @@
   background: linear-gradient(90deg, var(--color-blue), var(--color-violet));
 }
 
+.studio__since-press {
+  order: 4;
+  justify-self: start;
+}
+
 .studio__since-text {
   color: var(--color-ivory-muted);
   font-size: var(--fs-lead);

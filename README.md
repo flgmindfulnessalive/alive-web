@@ -39,6 +39,7 @@ src/
     Turnstile.tsx           Widget antispam de Cloudflare (solo si hay site key)
 api/contact.ts              Vercel Function: valida, verifica Turnstile y envía con Resend
 privacidad/index.html       Aviso de privacidad (borrador)
+prensa/index.html           Menciones en prensa (recortes en public/prensa/)
     Wordmark.tsx            Wordmark ALIVE (trazado en assets/brand/paths.ts)
     Sculpture.tsx           Escultura fluida de la marca
 brand-source/               Originales de marca entregados
