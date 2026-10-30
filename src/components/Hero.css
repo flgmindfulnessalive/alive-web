@@ -201,8 +201,8 @@
    blanco que se desvanece hacia la derecha (solo se ve durante la entrada);
    abajo, el degradado fijo. */
 .hero-alive {
-  --g1: #2563ff;
-  --g2: #8b3dff;
+  --g1: #7c3aed;
+  --g2: #2f6bff;
   --g3: #00e0d0;
   color: transparent;
   background:
@@ -236,7 +236,7 @@
 
 .hero-mark__icon {
   opacity: 0;
-  stroke: url(#hero-mark-gradient);
+  stroke: var(--color-text);
   stroke-width: 1.2px;
   vector-effect: non-scaling-stroke;
   stroke-linecap: round;
@@ -246,7 +246,7 @@
 }
 
 .hero-mark__icon--heart {
-  fill: url(#hero-mark-gradient);
+  fill: var(--color-text);
   stroke: none;
 }
 

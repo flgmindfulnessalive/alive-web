@@ -5,13 +5,6 @@ export function HeroMark() {
     <span className="hero-mark" aria-hidden="true">
       <span className="hero-mark__dot">.</span>
       <svg className="hero-mark__icons" viewBox="0 0 24 24" fill="none">
-        <defs>
-          <linearGradient id="hero-mark-gradient" x1="3" y1="21" x2="21" y2="3" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#3B82F6" />
-            <stop offset="0.55" stopColor="#8B5CF6" />
-            <stop offset="1" stopColor="#14D9D0" />
-          </linearGradient>
-        </defs>
         {/* Cada icono se desplaza para apoyarse en la línea base y empezar a la misma distancia de la «a». */}
         <g className="hero-mark__icon hero-mark__icon--idea">
           <g transform="translate(-2.8 3.3)">
