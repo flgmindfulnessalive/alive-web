@@ -263,25 +263,29 @@
     animation-delay: var(--t0);
   }
 
+  /* Fundido con desenfoque: el icono que sale se difumina mientras el siguiente
+     se enfoca en el mismo sitio (se solapan 260 ms), sin saltos ni rebotes. */
   .hero-mark__dot {
-    animation: mark-dot 5450ms cubic-bezier(0.65, 0, 0.35, 1) both;
+    animation: mark-dot 5600ms cubic-bezier(0.4, 0, 0.2, 1) both;
     animation-delay: calc(var(--t0) + 800ms);
   }
 
   .hero-mark__icon {
-    animation: mark-icon 900ms var(--ease-out) both;
+    transform-origin: 50% 60%;
+    animation: mark-icon 1120ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
 
-  .hero-mark__icon--idea { animation-delay: calc(var(--t0) + 950ms); }
-  .hero-mark__icon--spark { animation-delay: calc(var(--t0) + 1770ms); }
+  .hero-mark__icon--idea { animation-delay: calc(var(--t0) + 1000ms); }
+  .hero-mark__icon--spark { animation-delay: calc(var(--t0) + 1860ms); }
   .hero-mark__icon--rocket {
     animation-name: mark-rocket;
-    animation-delay: calc(var(--t0) + 2590ms);
+    animation-delay: calc(var(--t0) + 2720ms);
   }
 
   .hero-mark__icon--heart {
-    animation: mark-heart 2800ms var(--ease-out) both;
-    animation-delay: calc(var(--t0) + 3300ms);
+    transform-origin: 22% 96%; /* se recoge sobre el punto */
+    animation: mark-heart 2800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: calc(var(--t0) + 3580ms);
   }
 }
 
@@ -292,41 +296,39 @@
 
 /* El punto late, se recoge mientras pasan los iconos y renace al final. */
 @keyframes mark-dot {
-  0% { transform: none; opacity: 1; }
+  0% { transform: none; opacity: 1; filter: none; }
   1.9% { transform: scale(1.5); }
   3.9% { transform: scale(0.9); }
-  5.8% { transform: scale(1.35); }
-  8.5% { transform: scale(0); opacity: 0; }
-  95% { transform: scale(0); opacity: 0; }
-  98% { transform: scale(1.3); opacity: 1; }
-  100% { transform: none; opacity: 1; }
+  5.8% { transform: scale(1.3); opacity: 1; filter: none; }
+  9.5% { transform: scale(0.6); opacity: 0; filter: blur(3px); }
+  95% { transform: scale(0.6); opacity: 0; filter: blur(3px); }
+  98.5% { transform: scale(1.15); opacity: 1; filter: none; }
+  100% { transform: none; opacity: 1; filter: none; }
 }
 
 @keyframes mark-icon {
-  0% { opacity: 0; transform: translateY(18%) scale(0.35); filter: blur(3px); }
-  24% { opacity: 1; transform: scale(1.06); filter: blur(0); }
-  34% { transform: none; }
-  74% { opacity: 1; transform: none; filter: blur(0); }
-  100% { opacity: 0; transform: translateY(-22%) scale(0.7); filter: blur(3px); }
+  0% { opacity: 0; transform: scale(1.18); filter: blur(5px); }
+  23% { opacity: 1; transform: none; filter: blur(0); }
+  77% { opacity: 1; transform: none; filter: blur(0); }
+  100% { opacity: 0; transform: scale(0.86); filter: blur(5px); }
 }
 
-/* El cohete despega en diagonal. */
+/* El cohete entra igual y despega en diagonal, corto y suave. */
 @keyframes mark-rocket {
-  0% { opacity: 0; transform: translate(-20%, 20%) scale(0.35); filter: blur(3px); }
-  24% { opacity: 1; transform: scale(1.06); filter: blur(0); }
-  34% { transform: none; }
-  70% { opacity: 1; transform: none; filter: blur(0); }
-  100% { opacity: 0; transform: translate(45%, -45%) scale(0.8); filter: blur(4px); }
+  0% { opacity: 0; transform: scale(1.18); filter: blur(5px); }
+  23% { opacity: 1; transform: none; filter: blur(0); }
+  72% { opacity: 1; transform: none; filter: blur(0); }
+  100% { opacity: 0; transform: translate(28%, -28%) scale(0.9); filter: blur(5px); }
 }
 
-/* El corazón late tres veces, pausado (≈ 90 lpm), y se recoge en el punto. */
+/* El corazón se enfoca, late tres veces, pausado (≈ 90 lpm), y se recoge en el punto. */
 @keyframes mark-heart {
-  0% { opacity: 0; transform: scale(0.3); }
-  8% { opacity: 1; transform: none; }
-  14%, 37%, 60% { transform: scale(1.16); }
-  19%, 42%, 65% { transform: scale(0.97); }
-  24%, 47%, 70% { transform: scale(1.1); }
-  31%, 54%, 77% { transform: none; }
-  88% { opacity: 1; transform: none; }
-  100% { opacity: 0; transform: scale(0.12); }
+  0% { opacity: 0; transform: scale(1.18); filter: blur(5px); }
+  9% { opacity: 1; transform: none; filter: blur(0); }
+  15%, 38%, 61% { transform: scale(1.16); }
+  20%, 43%, 66% { transform: scale(0.97); }
+  25%, 48%, 71% { transform: scale(1.1); }
+  32%, 55%, 78% { transform: none; }
+  88% { opacity: 1; transform: none; filter: blur(0); }
+  100% { opacity: 0; transform: scale(0.15); filter: blur(1px); }
 }
