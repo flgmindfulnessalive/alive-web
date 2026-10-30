@@ -51,7 +51,7 @@
   position: relative;
   z-index: 1;
   padding-bottom: var(--space-5);
-  font-size: var(--fs-small);
+  font-size: 1rem;
   color: var(--color-text-muted);
 }
 
