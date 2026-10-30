@@ -237,12 +237,15 @@
 }
 
 .contact__whatsapp svg {
-  width: 22px;
-  height: 22px;
-  fill: #25d366;
+  width: 20px;
+  height: 20px;
+  fill: var(--color-text);
   flex: none;
 }
 
 .contact__whatsapp:hover {
-  border-color: #25d366;
+  border-color: transparent;
+  background:
+    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+    linear-gradient(90deg, #7c3aed, #2f6bff 52%, #00e0d0) border-box;
 }
