@@ -11,6 +11,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 | Escultura (cierre) | `src/assets/visual/sculpture-closing.webp` 1560×741, 182 KB | Igual que el anterior | Igual que el anterior |
 | Imagen Open Graph | `public/og-image.jpg` 1200×630 | Composición con titular, cinta real y dominio: `npm run social` | Lista |
 | Publicación cuadrada | `docs/social/alive-post-1080.jpg` 1080×1080 | Igual que la anterior | Lista |
+| Proyecto FLOW Talent HUB | `src/assets/visual/project-flow-{1000,1497}.webp` (original en `brand-source/proyectos/`) | Mockup entregado por ALIVE | Listo; destacado a todo el ancho, sin enlace |
 | Exploración «Concepto de experiencia web» | `src/assets/visual/concept-web-{1200,2400}.webp` | Render de escena HTML/CSS (monitor y móvil en perspectiva) con marca, escultura e Inter reales: `npm run explorations` | Listo para demo; sustituir por render o mockup del estudio si existe |
 | Exploración «Concepto de identidad» | `src/assets/visual/concept-identity-{1200,2400}.webp` | Render de papelería ALIVE sobre marfil (cuaderno con A en relieve, tarjetas, sobre) | Listo para demo; la fotografía real de papelería impresa lo superaría |
 | Recortes de prensa | `public/prensa/*.webp` (originales en `brand-source/prensa/`) | Entregados por ALIVE: Correo 24/10/2015 y artículo sobre realidad virtual (Grupo Epensa) | Listos; falta confirmar medio y fecha del segundo |

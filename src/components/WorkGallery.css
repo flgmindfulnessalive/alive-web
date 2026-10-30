@@ -113,6 +113,22 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3);
   }
+
+  /* Proyecto destacado: a todo el ancho, en formato panorámico. */
+  .work__item--featured {
+    grid-column: 1 / -1;
+    margin-bottom: var(--space-4);
+  }
+
+  .work__item--featured .work__media img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: 50% 45%;
+  }
+
+  .work__item--featured .work__title {
+    font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -120,8 +136,14 @@
     column-gap: var(--space-4);
   }
 
-  .work__item:nth-child(2) {
+  /* Escalonado: la tarjeta derecha de cada par baja un paso. */
+  .work__item:not(.work__item--featured):nth-child(2),
+  .work__item--featured ~ .work__item:nth-child(3) {
     margin-top: var(--space-12);
+  }
+
+  .work__item--featured ~ .work__item:nth-child(2) {
+    margin-top: 0;
   }
 
   .work__head {

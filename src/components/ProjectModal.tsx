@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { Project } from '../content/site'
-import { EXPLORATION_SIZE, explorationImages } from './explorations'
+import { explorationImages } from './explorations'
 import './ProjectModal.css'
 
 type Props = { project: Project | null; onClose: () => void }
@@ -34,8 +34,8 @@ export function ProjectModal({ project, onClose }: Props) {
             srcSet={explorationImages[project.visual].srcSet}
             sizes="(min-width: 760px) 720px, 100vw"
             alt={project.alt}
-            width={EXPLORATION_SIZE.width}
-            height={EXPLORATION_SIZE.height}
+            width={explorationImages[project.visual].width}
+            height={explorationImages[project.visual].height}
           />
           <div className="project-modal__top">
             <p className="eyebrow">

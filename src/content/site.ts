@@ -51,7 +51,9 @@ export type Project = {
   kind: 'exploration' | 'case'
   title: string
   discipline: string
-  visual: 'web' | 'identity'
+  visual: 'flow' | 'web' | 'identity'
+  // Ocupa todo el ancho de la sección.
+  featured?: boolean
   alt: string
   summary: string
   details: string[]
@@ -67,6 +69,18 @@ export const work = {
   description:
     'Marcas, plataformas y experiencias digitales que conectan visión, diseño y tecnología.',
   projects: [
+    {
+      id: 'flow-talent-hub',
+      kind: 'case',
+      featured: true,
+      title: 'FLOW Talent HUB',
+      discipline: 'Producto digital · Software de reclutamiento',
+      visual: 'flow',
+      alt: 'Plataforma FLOW Talent HUB en una pantalla: software de reclutamiento y selección con el titular «Una experiencia única en selección» y un panel de búsqueda con candidatos, compatibilidad y siguientes pasos.',
+      summary:
+        'Plataforma de reclutamiento y selección que reúne perfiles, candidatos, evaluaciones y reportes en un mismo lugar para empresas, equipos de selección y headhunters.',
+      details: [],
+    },
     {
       id: 'concepto-web',
       kind: 'exploration',

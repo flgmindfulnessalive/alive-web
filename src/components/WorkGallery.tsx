@@ -1,7 +1,7 @@
 import { useRef, useState, type CSSProperties } from 'react'
 import { work, type Project } from '../content/site'
 import { useReveal } from '../lib/useReveal'
-import { EXPLORATION_SIZE, explorationImages } from './explorations'
+import { explorationImages } from './explorations'
 import { ProjectModal } from './ProjectModal'
 import './WorkGallery.css'
 
@@ -20,10 +20,10 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
         <img
           src={image.src}
           srcSet={image.srcSet}
-          sizes="(min-width: 768px) 50vw, 100vw"
+          sizes={project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
           alt={action === 'static' ? project.alt : ''}
-          width={EXPLORATION_SIZE.width}
-          height={EXPLORATION_SIZE.height}
+          width={explorationImages[project.visual].width}
+          height={explorationImages[project.visual].height}
           loading="lazy"
           decoding="async"
         />
@@ -52,7 +52,10 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
   )
 
   return (
-    <li className="work__item" style={{ '--i': index } as CSSProperties}>
+    <li
+      className={`work__item${project.featured ? ' work__item--featured' : ''}`}
+      style={{ '--i': index } as CSSProperties}
+    >
       {action === 'link' ? (
         <a
           className="work__card"
