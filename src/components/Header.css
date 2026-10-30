@@ -246,8 +246,9 @@
   align-self: flex-start;
 }
 
-.menu-open,
-.menu-open body {
+/* Bloquea el scroll solo en <html>: si también se bloquea <body>, este pasa a ser
+   el contenedor de la cabecera sticky y la cabecera se va arriba del documento. */
+.menu-open {
   overflow: hidden;
 }
 
