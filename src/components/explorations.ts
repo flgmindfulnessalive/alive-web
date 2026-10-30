@@ -6,8 +6,8 @@ import identity1200 from '../assets/visual/concept-identity-1200.webp'
 import identity2400 from '../assets/visual/concept-identity-2400.webp'
 import flow1000 from '../assets/visual/project-flow-1000.webp'
 import flow1497 from '../assets/visual/project-flow-1497.webp'
-import flowSpace600 from '../assets/visual/project-flow-espacio-600.webp'
-import flowSpace1000 from '../assets/visual/project-flow-espacio-1000.webp'
+import flowDevices600 from '../assets/visual/project-flow-dispositivos-600.webp'
+import flowDevices1000 from '../assets/visual/project-flow-dispositivos-1000.webp'
 import flowStationery600 from '../assets/visual/project-flow-papeleria-600.webp'
 import flowStationery1000 from '../assets/visual/project-flow-papeleria-1000.webp'
 import wwStationery800 from '../assets/visual/project-wewebinars-papeleria-800.webp'
@@ -20,7 +20,7 @@ import wwCampaign1000 from '../assets/visual/project-wewebinars-campana-1000.web
 export const explorationImages = {
   flow: { src: flow1000, srcSet: `${flow1000} 1000w, ${flow1497} 1497w`, width: 1497, height: 1051 },
   web: { src: web1200, srcSet: `${web1200} 1200w, ${web2400} 2400w`, width: 1600, height: 1120 },
-  'flow-space': { src: flowSpace600, srcSet: `${flowSpace600} 600w, ${flowSpace1000} 1000w`, width: 1536, height: 1024 },
+  'flow-devices': { src: flowDevices600, srcSet: `${flowDevices600} 600w, ${flowDevices1000} 1000w`, width: 1536, height: 1024 },
   'flow-stationery': { src: flowStationery600, srcSet: `${flowStationery600} 600w, ${flowStationery1000} 1000w`, width: 1536, height: 1024 },
   'wewebinars-stationery': { src: wwStationery800, srcSet: `${wwStationery800} 800w, ${wwStationery1499} 1499w`, width: 1499, height: 1049 },
   'wewebinars-web': { src: wwWeb600, srcSet: `${wwWeb600} 600w, ${wwWeb1000} 1000w`, width: 1499, height: 1049 },

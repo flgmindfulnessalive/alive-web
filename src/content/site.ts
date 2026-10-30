@@ -58,7 +58,7 @@ export type Project = {
   featured?: boolean
   alt: string
   // Piezas adicionales: con ellas la tarjeta muestra un mosaico (principal + dos).
-  gallery?: { visual: 'flow-space' | 'flow-stationery' | 'wewebinars-web' | 'wewebinars-campaign'; alt: string }[]
+  gallery?: { visual: 'flow-devices' | 'flow-stationery' | 'wewebinars-web' | 'wewebinars-campaign'; alt: string }[]
   summary: string
   details: string[]
   client?: string
@@ -83,8 +83,8 @@ export const work = {
       alt: 'Plataforma FLOW Talent HUB en una pantalla: software de reclutamiento y selección con el titular «Una experiencia única en selección» y un panel de búsqueda con candidatos, compatibilidad y siguientes pasos.',
       gallery: [
         {
-          visual: 'flow-space',
-          alt: 'Marca FLOW Talent HUB en una oficina: roll-up «Tu experiencia. Un proceso a tu altura.», logotipo en la pared de recepción, bolsa de tela, cuaderno y credencial con el símbolo de FLOW.',
+          visual: 'flow-devices',
+          alt: 'FLOW Talent HUB en monitor, tableta y móvil: la sección «Construye tu Banco del Talento Digital» con los pasos atrae, evalúa, selecciona y crea; la portada «Una experiencia única en selección» y el portal «Encuentra tu próximo empleo».',
         },
         {
           visual: 'flow-stationery',
