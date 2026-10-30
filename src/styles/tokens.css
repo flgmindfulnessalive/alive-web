@@ -1,0 +1,81 @@
+:root {
+  color-scheme: dark;
+
+  /* Color — paleta de trabajo ALIVE (Opción D) */
+  --color-bg: #080f14;
+  --color-surface: #101820;
+  --color-surface-2: #16202a;
+  --color-text: #f5f7fa;
+  --color-text-muted: #a1a1aa; /* 7.4:1 sobre --color-bg */
+  --color-ivory: #f5f3ee;
+  --color-ivory-text: #0b1218;
+  --color-ivory-muted: #4a4f57; /* 7.6:1 sobre marfil */
+  --color-blue: #3b82f6; /* 5.1:1 sobre --color-bg (texto/enlaces) */
+  --color-action: #2563eb; /* botón: 5.2:1 con texto blanco */
+  --color-action-hover: #1d4ed8;
+  --color-violet: #8b5cf6;
+  --color-green: #22c55e;
+  --color-turquoise: #14d9d0;
+  --color-error: #fca5a5; /* 9.4:1 sobre --color-bg */
+
+  --line: rgb(245 247 250 / 0.1);
+  --line-strong: rgb(245 247 250 / 0.28);
+  --line-ivory: rgb(11 18 24 / 0.14);
+  --focus: #7cb2ff;
+
+  /* Tipografía — Inter provisional hasta disponer de Suisse Int'l con licencia */
+  --font-display: 'Suisse Intl', 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-body: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  --fs-h1: clamp(2.75rem, 1.4rem + 5.6vw, 7rem); /* 44 → 112 px */
+  --fs-h2: clamp(2.25rem, 1.5rem + 3vw, 4.5rem);
+  --fs-h3: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  --fs-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem); /* 18 → 22 px */
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.75rem;
+
+  --tracking-tight: -0.035em;
+  --tracking-display: -0.025em;
+  --tracking-eyebrow: 0.16em;
+
+  /* Espaciado — múltiplos de 8 px */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 2.5rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+  --space-10: 5rem;
+  --space-12: 6rem;
+  --space-16: 8rem;
+
+  --container: 1344px;
+  --gutter: 1.25rem; /* 20 px móvil */
+  --section-y: var(--space-8); /* 64 px móvil */
+  --header-h: 72px;
+
+  --radius-pill: 999px;
+  --radius-media: 2px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-hover: 180ms;
+  --dur-enter: 560ms;
+  --measure: 62ch;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 2rem;
+    --section-y: var(--space-12);
+    --header-h: 80px;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --gutter: 4rem;
+    --section-y: var(--space-16);
+  }
+}

@@ -1,0 +1,47 @@
+.manifesto {
+  padding-block: var(--section-y);
+}
+
+.manifesto__text {
+  max-width: 15em;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.2rem + 5.4vw, 6.5rem);
+  font-weight: 450;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* Cada palabra pasa de tenue a plena cuando el progreso (--p) la alcanza. */
+.manifesto__word {
+  --lit: clamp(0, calc(var(--p, 1) * (var(--n) + 2) - var(--i)), 1);
+  opacity: calc(0.16 + var(--lit) * 0.84);
+  transition: opacity 160ms linear;
+}
+
+.manifesto__word--accent {
+  background: linear-gradient(100deg, var(--color-blue) 0%, var(--color-violet) 45%, var(--color-turquoise) 100%);
+  /* Cada palabra muestra su tramo de un único degradado continuo. */
+  background-size: calc(var(--k) * 100%) 100%;
+  background-position: calc(var(--j) / (var(--k) - 1) * 100%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.manifesto__signature {
+  margin-top: var(--space-5);
+  font-size: var(--fs-small);
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 1024px) {
+  .manifesto__text {
+    margin-left: calc((100% - var(--space-3) * 11) / 12 + var(--space-3));
+  }
+
+  .manifesto__signature {
+    margin-left: calc((100% - var(--space-3) * 11) / 12 + var(--space-3));
+  }
+}

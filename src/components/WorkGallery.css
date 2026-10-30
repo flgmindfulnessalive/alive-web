@@ -1,0 +1,125 @@
+.work__head {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.work__heading {
+  margin-top: var(--space-2);
+}
+
+.work__intro {
+  max-width: 30em;
+  color: var(--color-text-muted);
+}
+
+.work__list {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.work__card {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  background: none;
+  border: 0;
+}
+
+.work__card:focus-visible {
+  outline-offset: 6px;
+}
+
+.work__media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-media);
+  background: var(--color-surface);
+}
+
+.work__media img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 10 / 7;
+  transition: transform 600ms var(--ease-out);
+}
+
+.work__card:hover .work__media img {
+  transform: scale(1.02);
+}
+
+.work__badge {
+  position: absolute;
+  left: var(--space-2);
+  top: var(--space-2);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgb(8 15 20 / 0.82);
+  color: var(--color-text);
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.work__caption {
+  display: grid;
+  gap: 6px;
+  padding-top: var(--space-2);
+}
+
+.work__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-h3);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.work__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+  transform-origin: left;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+
+.work__arrow {
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+
+.work__card:hover .work__rule {
+  background: var(--color-text);
+}
+
+.work__card:hover .work__arrow {
+  transform: translateX(4px);
+}
+
+@media (min-width: 768px) {
+  .work__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .work__list {
+    column-gap: var(--space-4);
+  }
+
+  .work__item:nth-child(2) {
+    margin-top: var(--space-12);
+  }
+
+  .work__head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 22rem);
+    align-items: end;
+    gap: var(--space-8);
+    margin-bottom: var(--space-6);
+  }
+}
