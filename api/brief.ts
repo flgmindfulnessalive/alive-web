@@ -7,6 +7,7 @@
 import { list } from '@vercel/blob'
 import { BRIEF_LIMITS, isVisible, steps, validateStep, type Answers, type Field } from '../src/brief/questions.js'
 import { fileLink, json, parseSession } from './_brief-auth.js'
+import { briefConfirmation } from './_email.js'
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
@@ -142,18 +143,15 @@ export async function POST(request: Request): Promise<Response> {
   })
   if (!res?.ok) return json(502, { error: 'No hemos podido enviar tu brief. Inténtalo de nuevo en unos minutos.' })
 
-  // Confirmación al cliente, sin repetir sus respuestas (no reenviamos texto libre a terceros).
+  // Confirmación al cliente, con la plantilla de marca y sin repetir sus respuestas
+  // (no reenviamos texto libre a terceros).
+  const confirmation = briefConfirmation({ nombre, marca, files: files.length })
   await send({
     to: [String(answers.email)],
     reply_to: CONTACT_TO.split(',')[0].trim(),
-    subject: 'Recibimos tu brief · ALIVE',
-    html: `<div style="font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.6;color:#0b1218;max-width:560px">
-      <p>Hola, ${escapeHtml(nombre)}:</p>
-      <p>Recibimos el brief de <strong>${escapeHtml(marca)}</strong>${files.length ? ` y ${files.length} archivo${files.length === 1 ? '' : 's'}` : ''}. Lo revisamos y te escribimos para agendar la reunión de arranque.</p>
-      <p>Si quieres añadir algo, responde a este correo.</p>
-      <p style="margin-top:24px">ALIVE · Estrategia. Creatividad. Tecnología.<br><a href="https://alivedigital.agency" style="color:#2f6bff">alivedigital.agency</a></p>
-    </div>`,
-    text: `Hola, ${nombre}:\n\nRecibimos el brief de ${marca}. Lo revisamos y te escribimos para agendar la reunión de arranque.\n\nALIVE · alivedigital.agency`,
+    subject: `Recibimos tu brief, ${nombre.split(' ')[0]} · ALIVE`,
+    html: confirmation.html,
+    text: confirmation.text,
   })
 
   return json(200, { ok: true, files: files.length })
