@@ -244,3 +244,119 @@
   gap: var(--space-3);
   padding-block: var(--space-6);
 }
+
+/* ——— Compartir ——— */
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.share__label {
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.share__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.share__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  transition:
+    border-color var(--dur-hover) var(--ease-out),
+    background-color var(--dur-hover) var(--ease-out),
+    color var(--dur-hover) var(--ease-out);
+}
+
+.share__btn:hover {
+  border-color: var(--color-text);
+}
+
+.share__btn--whatsapp:hover { color: #25d366; border-color: #25d366; }
+.share__btn--linkedin:hover { color: #4f9cf0; border-color: #4f9cf0; }
+.share__btn--facebook:hover { color: #4f8ef7; border-color: #4f8ef7; }
+
+.share__btn--native {
+  background: var(--color-action);
+  border-color: var(--color-action);
+  color: #fff;
+}
+
+.share__status {
+  font-size: var(--fs-small);
+  color: var(--color-green);
+}
+
+.share__status:empty {
+  display: none;
+}
+
+.share--top {
+  margin-top: var(--space-2);
+}
+
+/* En la cabecera, en pantallas estrechas, solo iconos para no ocupar tanto. */
+@media (max-width: 599px) {
+  .share--top .share__btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .share--top .share__btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .share--top .share__buttons {
+    gap: 6px;
+  }
+}
+
+.post__share-end {
+  padding-top: var(--space-6);
+}
+
+.post__share-end .share {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.post__share-end .share__label {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 450;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  color: var(--color-text);
+}
+
+.share__btn[hidden] {
+  display: none;
+}

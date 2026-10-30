@@ -65,7 +65,7 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
    Para crear la imagen para compartir con el título: `npm run blog-covers` y pon `image: /blog/<slug>.jpg`.
 3. Escribe en Markdown y sube el cambio a `main`.
 
-El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo publicado. Cada artículo genera su página estática con canonical, Open Graph y JSON-LD `BlogPosting`, y entra en el sitemap. Para ver borradores en local: `BLOG_DRAFTS=1 npm run dev`.
+El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo publicado. Cada artículo lleva botones para compartir (WhatsApp, LinkedIn, X, Facebook, copiar enlace y, en móvil, el menú nativo) bajo el autor y al final; son enlaces directos, sin scripts de terceros. Cada artículo genera su página estática con canonical, Open Graph y JSON-LD `BlogPosting`, y entra en el sitemap. Para ver borradores en local: `BLOG_DRAFTS=1 npm run dev`.
 
 ## Verificación realizada
 
