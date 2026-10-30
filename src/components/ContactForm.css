@@ -249,3 +249,10 @@
     linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
     linear-gradient(90deg, #7c3aed, #2f6bff 52%, #00e0d0) border-box;
 }
+
+/* Móvil: sobra, el botón flotante de WhatsApp ya acompaña siempre. */
+@media (max-width: 599px) {
+  .contact__whatsapp {
+    display: none;
+  }
+}
