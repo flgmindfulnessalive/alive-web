@@ -34,6 +34,8 @@ export const hero = {
   title: 'Ideas que cobran vida.',
   // Cortes de línea del H1 para la entrada escalonada.
   titleLines: ['Ideas que', 'cobran vida.'],
+  // Palabra que «respira» al entrar; el punto final se anima (HeroMark).
+  titleAccent: 'vida',
   // Rótulo sobre la banda de capacidades.
   capabilitiesLabel: 'Nuestro expertise',
   description:

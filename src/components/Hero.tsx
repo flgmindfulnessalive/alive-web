@@ -1,14 +1,42 @@
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 import { hero } from '../content/site'
 import { useScrollProgress } from '../lib/useScrollProgress'
+import { HeroMark } from './HeroMark'
 import { Sculpture } from './Sculpture'
 import './Hero.css'
 
 // Progreso 0 → 1 mientras el hero sale de pantalla por arriba.
 const leaving = (rect: DOMRect) => -rect.top / rect.height
 
+// «vida» letra a letra para que respire de izquierda a derecha; el punto final pasa a HeroMark.
+function renderLine(line: string, run: number): ReactNode {
+  const at = line.lastIndexOf(hero.titleAccent)
+  if (at < 0 || !line.endsWith('.')) return line
+  const word = line.slice(at, at + hero.titleAccent.length)
+  return (
+    <>
+      {line.slice(0, at)}
+      <span key={`w${run}`} className="hero-alive">
+        {[...word].map((ch, i) => (
+          <span key={i} style={{ '--i': i } as CSSProperties}>
+            {ch}
+          </span>
+        ))}
+      </span>
+      {line.slice(at + word.length, -1)}
+      <HeroMark key={`m${run}`} />
+    </>
+  )
+}
+
 export function Hero() {
   const ref = useScrollProgress<HTMLElement>(leaving)
+  // Se reproduce una vez al cargar; al pasar el cursor por el titular, otra vez.
+  const [play, setPlay] = useState({ n: 0, busy: true })
+  const replay = () => {
+    if (play.busy) return
+    setPlay({ n: play.n + 1, busy: true })
+  }
 
   return (
     <section ref={ref} id="inicio" className="hero" aria-labelledby="hero-title">
@@ -17,11 +45,19 @@ export function Hero() {
           <p className="eyebrow eyebrow--below hero__eyebrow hero-enter" style={{ '--d': 0 } as CSSProperties}>
             {hero.eyebrow}
           </p>
-          <h1 id="hero-title" className="display hero__title" aria-label={hero.title}>
+          <h1
+            id="hero-title"
+            className={`display hero__title${play.n ? ' is-replay' : ''}`}
+            aria-label={hero.title}
+            onPointerEnter={(e) => e.pointerType === 'mouse' && replay()}
+            onAnimationEnd={(e) => {
+              if ((e.target as Element).classList.contains('hero-mark__dot')) setPlay((p) => ({ ...p, busy: false }))
+            }}
+          >
             {hero.titleLines.map((line, i) => (
               <span key={line} className="hero__line" aria-hidden="true">
                 <span className="hero__line-inner" style={{ '--d': i + 1 } as CSSProperties}>
-                  {line}
+                  {renderLine(line, play.n)}
                 </span>{' '}
               </span>
             ))}
