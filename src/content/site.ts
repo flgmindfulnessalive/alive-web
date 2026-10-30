@@ -14,12 +14,12 @@ export const footerNav: NavItem[] = [...nav, { label: 'Contacto', href: '#contac
 export const brand = {
   name: 'ALIVE',
   signature: 'Estrategia. Creatividad. Tecnología.',
-  founded: 2011,
+  founded: 2012,
   founder: 'Francesco Lulli',
 }
 
 export const hero = {
-  eyebrow: 'Estudio de inteligencia creativa · Desde\u00a02011',
+  eyebrow: 'Estudio de inteligencia creativa · Desde\u00a02012',
   title: 'Ideas que cobran vida.',
   // Cortes de línea del H1 para la entrada escalonada.
   titleLines: ['Ideas que', 'cobran vida.'],
