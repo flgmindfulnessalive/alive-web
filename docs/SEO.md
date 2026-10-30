@@ -48,6 +48,18 @@ No incluyen dirección, teléfono ni redes porque aún no hay datos reales. Cuan
 - `site.webmanifest` e iconos (`apple-touch-icon.png` 180, `icon-192.png`, `icon-512.png`).
 - La página de privacidad tiene `noindex` mientras sea borrador.
 
+## Blog
+
+| Artículo | Búsquedas objetivo | Servicio |
+|---|---|---|
+| [Inteligencia artificial para empresas: por dónde empezar](/blog/inteligencia-artificial-para-empresas/) | inteligencia artificial para empresas, IA para pymes, cómo usar IA en mi empresa | Tecnología + IA |
+| [9 señales de que tu página web necesita un rediseño](/blog/senales-pagina-web-necesita-rediseno/) | rediseño de página web, mejorar mi web, web lenta | Diseño y desarrollo |
+| [Estrategia digital: qué decidir antes de diseñar o programar](/blog/estrategia-digital-antes-de-disenar/) | estrategia digital para empresas, plan digital | Estrategia |
+
+Cada artículo: title y description propios, imagen para compartir (`public/blog/<slug>.jpg`, `npm run blog-covers`), JSON-LD `BlogPosting`, preguntas frecuentes, enlaces internos entre artículos y hacia contacto, y entrada en el sitemap. Sin cifras inventadas; los únicos datos citados son los umbrales públicos de Core Web Vitals y la entrevista real en Correo (2015).
+
+**Para compartir:** LinkedIn es el mejor canal para estos tres artículos. Publica uno por semana con un párrafo propio y el enlace; la imagen sale sola.
+
 ## Después de publicar
 
 1. **Google Search Console:** añadir la propiedad de dominio `alivedigital.agency` (verificación por registro TXT en GoDaddy) y enviar `https://alivedigital.agency/sitemap.xml`.

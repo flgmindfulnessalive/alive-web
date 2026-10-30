@@ -15,6 +15,7 @@ npm run explorations   # regenera los renders de las exploraciones (Playwright +
 npm run social         # regenera miniatura OG y publicación cuadrada (Playwright + Chromium)
 npm run icons          # regenera favicon (SVG + ICO) e iconos de app desde la A del logo
 npm run blog           # genera el blog desde content/blog/ (lo hacen solos dev y build)
+npm run blog-covers    # imágenes para compartir de cada artículo (public/blog/<slug>.jpg)
 ```
 
 ## Estructura
@@ -60,7 +61,8 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 ## Blog
 
 1. Copia `content/blog/_ejemplo.md` a un archivo nuevo, por ejemplo `content/blog/mi-articulo.md` (el nombre es la URL: `/blog/mi-articulo/`).
-2. Edita la cabecera: `title`, `description` (≈150 caracteres), `date` (AAAA-MM-DD) y opcionalmente `author` y `cover` (imagen en `public/blog/`). Quita `draft: true`.
+2. Edita la cabecera: `title`, `description` (≈150 caracteres), `date` (AAAA-MM-DD) y opcionalmente `author`, `order` (desempata artículos del mismo día), `cover` (imagen dentro del artículo) e `image` (imagen para compartir). Quita `draft: true`.
+   Para crear la imagen para compartir con el título: `npm run blog-covers` y pon `image: /blog/<slug>.jpg`.
 3. Escribe en Markdown y sube el cambio a `main`.
 
 El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo publicado. Cada artículo genera su página estática con canonical, Open Graph y JSON-LD `BlogPosting`, y entra en el sitemap. Para ver borradores en local: `BLOG_DRAFTS=1 npm run dev`.

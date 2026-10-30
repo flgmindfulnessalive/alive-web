@@ -39,7 +39,11 @@ function parse(file) {
     date: meta.date,
     author: meta.author || DEFAULT_AUTHOR,
     cover: meta.cover || '',
+    // Imagen para compartir (Open Graph). Si falta, se usa la portada o la imagen general.
+    image: meta.image || meta.cover || '',
     draft: meta.draft === 'true',
+    // Desempata artículos con la misma fecha (menor = antes).
+    order: Number(meta.order ?? 99),
     minutes: Math.max(1, Math.round(words / 220)),
     html: marked.parse(m[2]),
   }
@@ -96,7 +100,7 @@ const footer = `
     </footer>`
 
 function postPage(p) {
-  const image = p.cover || '/og-image.jpg?v=20261030'
+  const image = p.image || '/og-image.jpg?v=20261030'
   const ld = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -113,7 +117,7 @@ function postPage(p) {
     <meta property="og:type" content="article" />
     <meta property="article:published_time" content="${p.date}" />
     <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`
-  return `${head({ title: `${p.title} | Blog ALIVE`, description: p.description, path: `/blog/${p.slug}/`, image, extra })}
+  return `${head({ title: `${p.title} | ALIVE`, description: p.description, path: `/blog/${p.slug}/`, image, extra })}
   <body class="blog">${header}
     <main id="contenido">
       <header class="post__hero">
@@ -185,7 +189,7 @@ const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.md')
 const posts = files
   .map(parse)
   .filter((p) => DRAFTS || !p.draft)
-  .sort((a, b) => b.date.localeCompare(a.date))
+  .sort((a, b) => b.date.localeCompare(a.date) || a.order - b.order)
 
 const out = new URL('blog/', root)
 rmSync(out, { recursive: true, force: true })
