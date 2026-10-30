@@ -5,6 +5,12 @@ import { explorationImages } from './explorations'
 import { ProjectModal } from './ProjectModal'
 import './WorkGallery.css'
 
+// Composición según el número de piezas adicionales.
+const LAYOUTS = { 1: 'pair', 2: 'trio', 3: 'quad' } as const
+type Layout = (typeof LAYOUTS)[keyof typeof LAYOUTS]
+const MAIN_VW: Record<Layout, number> = { pair: 50, trio: 66, quad: 25 }
+const PIECE_VW: Record<Layout, number> = { pair: 50, trio: 33, quad: 25 }
+
 type CardProps = { project: Project; index: number; onOpen: (el: HTMLButtonElement) => void }
 
 function ProjectCard({ project, index, onOpen }: CardProps) {
@@ -13,16 +19,17 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
   const label = project.kind === 'case' ? project.client : undefined
   // Con enlace: abre el sitio real. Sin enlace: abre el detalle solo si está activado.
   const action = project.url ? 'link' : work.showDetails ? 'modal' : 'static'
+  const layout: Layout | undefined = project.gallery && LAYOUTS[project.gallery.length as keyof typeof LAYOUTS]
 
   const body = (
     <>
       <span
-        className={`work__media${project.gallery ? ` work__media--mosaic${project.gallery.length === 1 ? ' work__media--pair' : ''}` : ''}`}
+        className={`work__media${layout ? ` work__media--mosaic work__media--${layout}` : ''}`}
       >
         <img
           src={image.src}
           srcSet={image.srcSet}
-          sizes={project.gallery ? `(min-width: 768px) ${project.gallery.length === 1 ? 50 : 66}vw, 100vw` : project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
+          sizes={layout ? `(min-width: 768px) ${MAIN_VW[layout]}vw, ${layout === 'quad' ? 50 : 100}vw` : project.featured ? '100vw' : '(min-width: 768px) 50vw, 100vw'}
           alt={action === 'static' ? project.alt : ''}
           width={image.width}
           height={image.height}
@@ -36,7 +43,7 @@ function ProjectCard({ project, index, onOpen }: CardProps) {
               key={piece.visual}
               src={img.src}
               srcSet={img.srcSet}
-              sizes={project.gallery?.length === 1 ? '(min-width: 768px) 50vw, 100vw' : '(min-width: 768px) 33vw, 50vw'}
+              sizes={`(min-width: 768px) ${PIECE_VW[layout!]}vw, ${layout === 'pair' ? 100 : 50}vw`}
               alt={action === 'static' ? piece.alt : ''}
               width={img.width}
               height={img.height}

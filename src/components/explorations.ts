@@ -18,6 +18,14 @@ import glusWeb800 from '../assets/visual/project-glus-web-800.webp'
 import glusWeb1536 from '../assets/visual/project-glus-web-1536.webp'
 import glusCampaign800 from '../assets/visual/project-glus-campana-800.webp'
 import glusCampaign1536 from '../assets/visual/project-glus-campana-1536.webp'
+import vitaraHome480 from '../assets/visual/project-vitara-inicio-480.webp'
+import vitaraHome850 from '../assets/visual/project-vitara-inicio-850.webp'
+import vitaraConfig480 from '../assets/visual/project-vitara-personaliza-480.webp'
+import vitaraConfig850 from '../assets/visual/project-vitara-personaliza-850.webp'
+import vitaraGallery480 from '../assets/visual/project-vitara-galeria-480.webp'
+import vitaraGallery850 from '../assets/visual/project-vitara-galeria-850.webp'
+import vitaraTablet480 from '../assets/visual/project-vitara-tableta-480.webp'
+import vitaraTablet850 from '../assets/visual/project-vitara-tableta-850.webp'
 import wwCampaign600 from '../assets/visual/project-wewebinars-campana-600.webp'
 import wwCampaign1000 from '../assets/visual/project-wewebinars-campana-1000.webp'
 
@@ -31,5 +39,9 @@ export const explorationImages = {
   'wewebinars-campaign': { src: wwCampaign600, srcSet: `${wwCampaign600} 600w, ${wwCampaign1000} 1000w`, width: 1499, height: 1049 },
   'glus-web': { src: glusWeb800, srcSet: `${glusWeb800} 800w, ${glusWeb1536} 1536w`, width: 1536, height: 1024 },
   'glus-campaign': { src: glusCampaign800, srcSet: `${glusCampaign800} 800w, ${glusCampaign1536} 1536w`, width: 1536, height: 1024 },
+  'vitara-home': { src: vitaraHome480, srcSet: `${vitaraHome480} 480w, ${vitaraHome850} 850w`, width: 850, height: 850 },
+  'vitara-config': { src: vitaraConfig480, srcSet: `${vitaraConfig480} 480w, ${vitaraConfig850} 850w`, width: 850, height: 850 },
+  'vitara-gallery': { src: vitaraGallery480, srcSet: `${vitaraGallery480} 480w, ${vitaraGallery850} 850w`, width: 850, height: 850 },
+  'vitara-tablet': { src: vitaraTablet480, srcSet: `${vitaraTablet480} 480w, ${vitaraTablet850} 850w`, width: 850, height: 850 },
   identity: { src: identity1200, srcSet: `${identity1200} 1200w, ${identity2400} 2400w`, width: 1600, height: 1120 },
 } as const

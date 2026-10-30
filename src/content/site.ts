@@ -53,13 +53,22 @@ export type Project = {
   kind: 'exploration' | 'case'
   title: string
   discipline: string
-  visual: 'flow' | 'flow-devices' | 'web' | 'identity' | 'wewebinars-stationery' | 'glus-web'
+  visual: 'flow' | 'flow-devices' | 'web' | 'identity' | 'wewebinars-stationery' | 'glus-web' | 'vitara-home'
   // Ocupa todo el ancho de la sección.
   featured?: boolean
   alt: string
-  // Piezas adicionales: con dos, mosaico (principal + dos); con una, pareja lado a lado.
+  // Piezas adicionales: con una, pareja lado a lado; con dos, mosaico (principal + dos);
+  // con tres, cuatro cuadradas en fila.
   gallery?: {
-    visual: 'flow' | 'flow-stationery' | 'wewebinars-web' | 'wewebinars-campaign' | 'glus-campaign'
+    visual:
+      | 'flow'
+      | 'flow-stationery'
+      | 'wewebinars-web'
+      | 'wewebinars-campaign'
+      | 'glus-campaign'
+      | 'vitara-config'
+      | 'vitara-gallery'
+      | 'vitara-tablet'
     alt: string
   }[]
   summary: string
@@ -136,6 +145,32 @@ export const work = {
       ],
       summary:
         'Sitio web y campaña para el programa de asociados comerciales de GLUS, que invita a conectar empresas con soluciones y desarrollar oportunidades junto a un Director Comercial.',
+      details: [],
+    },
+    {
+      id: 'suzuki-vitara-vive',
+      kind: 'case',
+      featured: true,
+      title: 'Campaña Vitara Vive – Suzuki',
+      discipline: 'Campaña digital y sitio web · Lanzamiento automotriz',
+      visual: 'vitara-home',
+      alt: 'Sitio de la campaña «Vitara! Vive» de Suzuki en una laptop y una tableta: portada con el Vitara entre confeti y la sección «Vive» con el video de la campaña.',
+      gallery: [
+        {
+          visual: 'vitara-config',
+          alt: 'Sección «Personalízala» del sitio Vitara Vive: visor 360° para elegir grado, color de carrocería, llantas y accesorios; en la tableta, el formulario «Cotízala aquí» y en el móvil, la galería.',
+        },
+        {
+          visual: 'vitara-gallery',
+          alt: 'Galería de fotos del Suzuki Vitara en la laptop y la página de tecnología ALLGRIP con sus modos de conducción en la tableta.',
+        },
+        {
+          visual: 'vitara-tablet',
+          alt: 'Manos sosteniendo una tableta con la sección «Vive» del sitio: el texto de la campaña junto al Vitara atravesando un camino de bosque.',
+        },
+      ],
+      summary:
+        'Sitio de campaña para el lanzamiento del Suzuki Vitara: historia de la campaña, galería, equipamiento, tecnología, configurador 360° y cotización.',
       details: [],
     },
     {

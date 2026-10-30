@@ -55,7 +55,7 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 ## Editar contenido
 
 - Textos, servicios y pasos: `src/content/site.ts`.
-- Proyectos: añade elementos a `work.projects` y su imagen en `src/components/explorations.ts`. `featured: true` lo muestra a todo el ancho; `gallery` con dos piezas lo convierte en mosaico y con una, en pareja lado a lado; `url` lo enlaza (ahora ninguno lleva enlace).
+- Proyectos: añade elementos a `work.projects` y su imagen en `src/components/explorations.ts`. `featured: true` lo muestra a todo el ancho; `gallery` con una pieza la muestra en pareja, con dos en mosaico y con tres en fila de cuatro cuadradas; `url` lo enlaza (ahora ninguno lleva enlace).
 - Aviso de privacidad: define `contact.privacyHref` y aparecerá junto al botón de envío.
 - Enlaces legales y redes: añádelos a `footerLinks` cuando existan destinos reales.
 
