@@ -133,12 +133,13 @@ function share(p, variant) {
 const footer = `
     <footer class="page-footer">
       <div class="container page-footer__inner">
-        <span>© 2012–${new Date().getFullYear()} ALIVE · Estrategia. Creatividad. Tecnología.</span>
+        <span>Estrategia. Creatividad. Tecnología.</span>
         <nav aria-label="Pie de página">
           <a href="/" class="text-link">Inicio</a>
           <a href="/prensa/" class="text-link">Prensa</a>
           <a href="/privacidad/" class="text-link">Privacidad</a>
         </nav>
+        <p class="page-footer__copy">© 2012–${new Date().getFullYear()} ALIVE</p>
       </div>
     </footer>`
 

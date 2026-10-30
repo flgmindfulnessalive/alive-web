@@ -26,6 +26,7 @@
 }
 
 .footer__signature,
+.footer__copy,
 .footer__nav a {
   font-size: var(--fs-small);
   color: var(--color-text-muted);
@@ -45,4 +46,17 @@
 
 .footer__nav a:hover {
   color: var(--color-text);
+}
+
+/* Copyright en su propia fila, al final del pie. */
+.footer__copy {
+  flex-basis: 100%;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 599px) {
+  .footer__copy {
+    text-align: center;
+  }
 }

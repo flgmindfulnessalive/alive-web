@@ -40,3 +40,15 @@
   min-height: 44px;
   color: var(--color-text);
 }
+
+.page-footer__copy {
+  flex-basis: 100%;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 599px) {
+  .page-footer__copy {
+    text-align: center;
+  }
+}

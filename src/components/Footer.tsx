@@ -11,9 +11,6 @@ export function Footer() {
             <Wordmark title="ALIVE, volver al inicio" />
           </a>
           <p className="footer__signature">{brand.signature}</p>
-          <p className="footer__signature">
-            © {brand.founded}–{currentYear} ALIVE
-          </p>
         </div>
         <nav aria-label="Pie de página">
           <ul className="footer__nav">
@@ -24,6 +21,9 @@ export function Footer() {
             ))}
           </ul>
         </nav>
+        <p className="footer__copy">
+          © {brand.founded}–{currentYear} ALIVE
+        </p>
       </div>
     </footer>
   )
