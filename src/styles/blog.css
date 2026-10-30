@@ -1,0 +1,246 @@
+.blog {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ——— Listado ——— */
+.blog__main {
+  padding-block: var(--space-8) var(--section-y);
+}
+
+.blog__head {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 44rem;
+}
+
+.blog__heading {
+  font-size: clamp(3.5rem, 2rem + 6vw, 8rem);
+}
+
+.blog__list {
+  margin-top: var(--space-8);
+  border-top: 1px solid var(--line-strong);
+}
+
+.blog__item {
+  border-bottom: 1px solid var(--line);
+}
+
+.blog__link {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-4);
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+
+.blog__meta {
+  font-size: var(--fs-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.blog__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  font-weight: 450;
+  letter-spacing: var(--tracking-display);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.blog__excerpt {
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+}
+
+.blog__more {
+  margin-top: var(--space-1);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--color-blue);
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+
+.blog__link:hover .blog__title {
+  color: #fff;
+}
+
+.blog__link:hover .blog__more {
+  transform: translateX(4px);
+}
+
+@media (min-width: 1024px) {
+  .blog__link {
+    grid-template-columns: 12rem minmax(0, 1fr) auto;
+    column-gap: var(--space-4);
+    align-items: baseline;
+  }
+
+  .blog__meta {
+    grid-row: span 2;
+    padding-top: 0.6em;
+  }
+
+  .blog__excerpt {
+    grid-column: 2;
+  }
+
+  .blog__more {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+/* ——— Artículo ——— */
+.post__hero {
+  padding-block: var(--space-8) var(--space-6);
+}
+
+.post__hero-inner {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.post__meta time {
+  white-space: nowrap;
+}
+
+.post__title {
+  max-width: 16em;
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 5rem);
+  line-height: 1.02;
+}
+
+.post__lead {
+  max-width: 38em;
+}
+
+.post__author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+
+.post__author::before {
+  content: '';
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-violet));
+}
+
+.post__cover img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-media);
+}
+
+/* Cuerpo del artículo sobre marfil: lectura larga y cómoda. */
+.post__body {
+  margin-top: var(--space-6);
+  padding-block: var(--space-8);
+  background: var(--color-ivory);
+  color: var(--color-ivory-text);
+}
+
+.post__prose {
+  max-width: 68ch;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.post__prose > * + * {
+  margin-top: 1.1em;
+}
+
+.post__prose h2,
+.post__prose h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 2em;
+}
+
+.post__prose h2 {
+  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+}
+
+.post__prose h3 {
+  font-size: 1.35rem;
+}
+
+.post__prose a {
+  color: var(--color-action);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.post__prose ul,
+.post__prose ol {
+  padding-left: 1.3em;
+}
+
+.post__prose ul {
+  list-style: disc;
+}
+
+.post__prose ol {
+  list-style: decimal;
+}
+
+.post__prose li + li {
+  margin-top: 0.4em;
+}
+
+.post__prose blockquote {
+  margin-inline: 0;
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-violet);
+  font-size: 1.25rem;
+  color: var(--color-ivory-text);
+}
+
+.post__prose img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-media);
+}
+
+.post__prose code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: rgb(11 18 24 / 0.07);
+  font-size: 0.9em;
+}
+
+.post__prose pre {
+  overflow-x: auto;
+  padding: var(--space-2);
+  border-radius: 6px;
+  background: #0b1218;
+  color: var(--color-text);
+}
+
+.post__prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.post__prose hr {
+  border: 0;
+  border-top: 1px solid var(--line-ivory);
+}
+
+.post__back {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+}

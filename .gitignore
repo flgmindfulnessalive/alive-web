@@ -27,3 +27,7 @@ dist-ssr
 alive-web-source.zip
 .env
 shots/
+
+# Generados por scripts/build-blog.mjs
+/blog/
+src/content/blog-index.json

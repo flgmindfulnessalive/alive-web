@@ -1,15 +1,26 @@
 // Contenido editable de la homepage. La presentación vive en src/components.
 // Cualquier texto comercial, alcance o proyecto se cambia aquí sin tocar el diseño.
 
+import blogIndex from './blog-index.json'
+
 export type NavItem = { label: string; href: string }
+
+// El enlace «Blog» aparece solo cuando hay al menos un artículo publicado.
+export const hasBlog = blogIndex.length > 0
+const blogLink: NavItem[] = hasBlog ? [{ label: 'Blog', href: '/blog/' }] : []
 
 export const nav: NavItem[] = [
   { label: 'Estudio', href: '#estudio' },
   { label: 'Servicios', href: '#servicios' },
   { label: 'Proyectos', href: '#proyectos' },
+  ...blogLink,
 ]
 
-export const footerNav: NavItem[] = [...nav, { label: 'Contacto', href: '#contacto' }]
+export const footerNav: NavItem[] = [
+  ...nav.filter((item) => item.href.startsWith('#')),
+  { label: 'Contacto', href: '#contacto' },
+  ...blogLink,
+]
 
 export const brand = {
   name: 'ALIVE',

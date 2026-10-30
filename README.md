@@ -14,6 +14,7 @@ npm run brand          # regenera escultura y OG desde brand-source/ (Python 3 +
 npm run explorations   # regenera los renders de las exploraciones (Playwright + Chromium)
 npm run social         # regenera miniatura OG y publicación cuadrada (Playwright + Chromium)
 npm run icons          # regenera favicon (SVG + ICO) e iconos de app desde la A del logo
+npm run blog           # genera el blog desde content/blog/ (lo hacen solos dev y build)
 ```
 
 ## Estructura
@@ -40,6 +41,8 @@ src/
 api/contact.ts              Vercel Function: valida, verifica Turnstile y envía con Resend
 privacidad/index.html       Aviso de privacidad (borrador)
 prensa/index.html           Menciones en prensa (recortes en public/prensa/)
+content/blog/*.md           Artículos del blog (Markdown con cabecera)
+scripts/build-blog.mjs      Genera blog/, el sitemap y el índice que activa el enlace «Blog»
     Wordmark.tsx            Wordmark ALIVE (trazado en assets/brand/paths.ts)
     Sculpture.tsx           Escultura fluida de la marca
 brand-source/               Originales de marca entregados
@@ -53,6 +56,14 @@ scripts/render-explorations.mjs  Renderiza las dos exploraciones visuales
 - Proyectos: añade elementos a `work.projects`. Usa `kind: 'case'` y `client` solo con casos autorizados; las piezas `exploration` no llevan etiqueta.
 - Aviso de privacidad: define `contact.privacyHref` y aparecerá junto al botón de envío.
 - Enlaces legales y redes: añádelos a `footerLinks` cuando existan destinos reales.
+
+## Blog
+
+1. Copia `content/blog/_ejemplo.md` a un archivo nuevo, por ejemplo `content/blog/mi-articulo.md` (el nombre es la URL: `/blog/mi-articulo/`).
+2. Edita la cabecera: `title`, `description` (≈150 caracteres), `date` (AAAA-MM-DD) y opcionalmente `author` y `cover` (imagen en `public/blog/`). Quita `draft: true`.
+3. Escribe en Markdown y sube el cambio a `main`.
+
+El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo publicado. Cada artículo genera su página estática con canonical, Open Graph y JSON-LD `BlogPosting`, y entra en el sitemap. Para ver borradores en local: `BLOG_DRAFTS=1 npm run dev`.
 
 ## Verificación realizada
 

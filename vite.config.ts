@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react'
+import { existsSync, readdirSync } from 'node:fs'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 
 // Con VITE_SITE_URL (p. ej. https://alivedigital.agency) la home recibe
@@ -64,6 +65,16 @@ function siteUrl(url: string | undefined): Plugin {
   }
 }
 
+// Páginas generadas por scripts/build-blog.mjs (blog/ y blog/<slug>/).
+function blogPages() {
+  if (!existsSync('blog/index.html')) return {}
+  const pages: Record<string, string> = { blog: 'blog/index.html' }
+  for (const slug of readdirSync('blog', { withFileTypes: true })) {
+    if (slug.isDirectory()) pages[`blog-${slug.name}`] = `blog/${slug.name}/index.html`
+  }
+  return pages
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
@@ -71,7 +82,12 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), siteUrl(env.VITE_SITE_URL)],
     build: {
       rollupOptions: {
-        input: { main: 'index.html', privacidad: 'privacidad/index.html', prensa: 'prensa/index.html' },
+        input: {
+          main: 'index.html',
+          privacidad: 'privacidad/index.html',
+          prensa: 'prensa/index.html',
+          ...blogPages(),
+        },
       },
     },
   }

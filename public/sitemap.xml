@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Añadir /privacidad/ cuando el aviso deje de ser borrador (y quitar su noindex). -->
+<!-- Generado por scripts/build-blog.mjs. Añadir /privacidad/ cuando deje de ser borrador. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://alivedigital.agency/</loc>
