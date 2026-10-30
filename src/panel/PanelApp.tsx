@@ -66,9 +66,12 @@ function Shell({ children, right }: { children?: ReactNode; right?: ReactNode })
   )
 }
 
-// Motivo legible del fallo al pedir el enlace (Supabase responde en inglés).
+// Motivo legible del fallo al entrar (Supabase responde en inglés).
 function loginError(message: string, status?: number) {
   const m = message.toLowerCase()
+  if (m.includes('invalid login credentials')) return 'Correo o contraseña incorrectos.'
+  if (m.includes('email not confirmed'))
+    return 'Tu usuario aún no está confirmado. En Supabase → Authentication → Users, confírmalo o vuelve a crearlo con «Auto Confirm User».'
   if (m.includes('signups not allowed') || m.includes('user not found'))
     return 'Este correo no tiene cuenta en el panel. Créala en Supabase → Authentication → Users con este mismo correo.'
   if (status === 429 || m.includes('rate limit'))
@@ -79,11 +82,28 @@ function loginError(message: string, status?: number) {
 
 function Login() {
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [reason, setReason] = useState('')
 
+  // Acceso con contraseña. Al entrar, onAuthStateChange muestra el panel.
   async function submit(e: FormEvent) {
     e.preventDefault()
+    setState('sending')
+    const { error } = await supabase!.auth.signInWithPassword({ email: email.trim(), password })
+    if (error) {
+      setReason(loginError(error.message, error.status))
+      setState('error')
+    } else setState('idle')
+  }
+
+  // Alternativa si se olvida la contraseña: enlace de acceso al correo.
+  async function sendLink() {
+    if (!email.trim()) {
+      setReason('Escribe tu correo y vuelve a pulsar «Entrar con un enlace».')
+      setState('error')
+      return
+    }
     setState('sending')
     const { error } = await supabase!.auth.signInWithOtp({
       email: email.trim(),
@@ -104,16 +124,28 @@ function Login() {
           </p>
         ) : (
           <form className="panel-login" onSubmit={submit}>
-            <label htmlFor="login-email">Tu correo</label>
-            <input id="login-email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label htmlFor="login-email">Correo</label>
+            <input id="login-email" type="email" required autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label htmlFor="login-password">Contraseña</label>
+            <input
+              id="login-password"
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <button className="btn btn-primary" disabled={state === 'sending'}>
-              {state === 'sending' ? 'Enviando…' : 'Enviarme un enlace'}
+              {state === 'sending' ? 'Entrando…' : 'Entrar'}
             </button>
             {state === 'error' && (
               <p className="panel-error" role="alert">
                 {reason}
               </p>
             )}
+            <button type="button" className="panel-link panel-login__alt" onClick={sendLink} disabled={state === 'sending'}>
+              ¿Olvidaste la contraseña? Entrar con un enlace al correo
+            </button>
           </form>
         )}
       </main>

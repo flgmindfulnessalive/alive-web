@@ -143,6 +143,16 @@
   justify-self: start;
 }
 
+.panel-login label + input + label {
+  margin-top: 6px;
+}
+
+.panel-login__alt {
+  justify-self: start;
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
 /* Espacio de trabajo */
 .panel-main {
   padding: var(--space-5) var(--gutter) var(--space-8);
