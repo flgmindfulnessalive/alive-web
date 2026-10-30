@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type CSSProperties, type
 import { upload } from '@vercel/blob/client'
 import wordmarkUrl from '../assets/brand/alive-wordmark.svg'
 import { TURNSTILE_SITE_KEY, Turnstile, type TurnstileHandle } from '../components/Turnstile'
+import { PhoneField } from './PhoneField'
 import {
   ALLOWED_TYPES,
   BRIEF_LIMITS,
@@ -482,6 +483,15 @@ function FieldView({ field, value, error, onChange, uploads, onFiles, onRemove }
     )
   }
 
+  if (field.kind === 'tel') {
+    return (
+      <>
+        <PhoneField id={id} label={field.label} value={(value as string) ?? ''} describedBy={describedBy} invalid={!!error} onChange={onChange} />
+        {err}
+      </>
+    )
+  }
+
   const common = {
     id,
     value: (value as string) ?? '',
@@ -500,8 +510,8 @@ function FieldView({ field, value, error, onChange, uploads, onFiles, onRemove }
         <input
           type={field.kind}
           maxLength={BRIEF_LIMITS.text}
-          autoComplete={field.id === 'nombre' ? 'name' : field.id === 'email' ? 'email' : field.id === 'whatsapp' ? 'tel' : field.id === 'marca' ? 'organization' : 'off'}
-          inputMode={field.kind === 'tel' ? 'tel' : field.kind === 'url' ? 'url' : undefined}
+          autoComplete={field.id === 'nombre' ? 'name' : field.id === 'email' ? 'email' : field.id === 'marca' ? 'organization' : 'off'}
+          inputMode={field.kind === 'url' ? 'url' : undefined}
           {...common}
         />
       )}

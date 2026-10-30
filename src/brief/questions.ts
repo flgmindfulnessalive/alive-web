@@ -54,7 +54,7 @@ export const steps: Step[] = [
     fields: [
       { id: 'nombre', kind: 'text', label: 'Tu nombre', required: true, placeholder: 'Nombre y apellido' },
       { id: 'email', kind: 'email', label: 'Correo electrónico', required: true, placeholder: 'tu@empresa.com' },
-      { id: 'whatsapp', kind: 'tel', label: 'WhatsApp o teléfono', placeholder: '+51 …' },
+      { id: 'whatsapp', kind: 'tel', label: 'WhatsApp o teléfono' },
       { id: 'marca', kind: 'text', label: 'Nombre de la marca o empresa', required: true },
       { id: 'sector', kind: 'text', label: '¿A qué se dedica?', required: true, placeholder: 'Ej.: estudio de arquitectura en Lima' },
       { id: 'webActual', kind: 'url', label: 'Web actual', hint: 'Si ya tienes una.', placeholder: 'https://' },
