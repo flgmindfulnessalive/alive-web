@@ -208,6 +208,7 @@ function Workspace({ session }: { session: Session }) {
       setError('No se pudo guardar el cambio.')
       load()
     }
+    return !error
   }
 
   async function remove(id: string) {
@@ -449,13 +450,34 @@ function Detail({
   client: Client
   author: string
   onClose: () => void
-  onUpdate: (id: string, patch: Partial<Client>) => void
+  onUpdate: (id: string, patch: Partial<Client>) => Promise<boolean>
   onRemove: (id: string) => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const [notes, setNotes] = useState<Note[]>([])
   const [draft, setDraft] = useState('')
   const [value, setValue] = useState(c.value?.toString() ?? '')
+  // Todo se guarda solo; este aviso confirma cada cambio («Guardando…» → «Guardado ✓»).
+  const [saved, setSaved] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  async function save(patch: Partial<Client>) {
+    setSaved('saving')
+    setSaved((await onUpdate(c.id, patch)) ? 'saved' : 'error')
+  }
+  // El valor se guarda al salir del campo, con Enter o al cerrar la ficha, solo si cambió.
+  // Se lleva en refs (actualizadas en los eventos) para poder guardarlo también al desmontar.
+  const typed = useRef(value)
+  const stored = useRef(c.value)
+  function saveValue() {
+    const next = typed.current ? Number(typed.current) : null
+    if (next === stored.current) return
+    stored.current = next
+    void save({ value: next })
+  }
+  const saveOnClose = useRef(saveValue)
+  useEffect(() => {
+    saveOnClose.current = saveValue
+  })
+  useEffect(() => () => saveOnClose.current(), [])
 
   useEffect(() => {
     dialog.current?.showModal()
@@ -488,6 +510,9 @@ function Detail({
         <header className="detail__head">
           <div>
             <span className={`tag tag--${c.source}`}>{SOURCE_LABEL[c.source]}</span>
+            <span className={`detail__saved is-${saved}`} role="status" aria-live="polite">
+              {saved === 'saving' ? 'Guardando…' : saved === 'saved' ? 'Guardado ✓' : saved === 'error' ? 'No se guardó' : 'Se guarda automáticamente'}
+            </span>
             {typesOf(c).map((t) => (
               <span key={t} className="tag tag--type">
                 {t}
@@ -504,7 +529,7 @@ function Detail({
         <div className="detail__grid">
           <label>
             <span>Etapa</span>
-            <select value={c.stage} onChange={(e) => onUpdate(c.id, { stage: e.target.value as Stage })}>
+            <select value={c.stage} onChange={(e) => save({ stage: e.target.value as Stage })}>
               {STAGES.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.label}
@@ -518,8 +543,13 @@ function Detail({
               inputMode="decimal"
               value={value}
               placeholder="450"
-              onChange={(e) => setValue(e.target.value.replace(/[^\d.]/g, ''))}
-              onBlur={() => onUpdate(c.id, { value: value ? Number(value) : null })}
+              onChange={(e) => {
+                const v = e.target.value.replace(/[^\d.]/g, '')
+                typed.current = v
+                setValue(v)
+              }}
+              onBlur={saveValue}
+              onKeyDown={(e) => e.key === 'Enter' && saveValue()}
             />
           </label>
         </div>
