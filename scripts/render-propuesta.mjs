@@ -336,7 +336,7 @@ p + p { margin-top: 8px; }
 <section class="page">
   <p class="eyebrow">03 · Cómo trabajamos</p>
   <h2>${marca ? 'Del brief<br />a tu marca lista' : eco ? 'De la primera reunión<br />a tu tienda publicada' : 'De la primera reunión<br />a tu web publicada'}</h2>
-  <p class="lead" style="margin-bottom:16px">${esc(Plazo)} de trabajo, contados desde que tenemos el material y los accesos. No cuentan los días en que esperamos tu respuesta.</p>
+  <p class="lead" style="margin-bottom:16px">${esc(Plazo)} de trabajo, contados desde que tenemos ${marca ? 'el brief completo' : 'el material y los accesos'}. No cuentan los días en que esperamos tu respuesta.</p>
   ${fases.map(([cuando, titulo, texto], i) => `
   <div class="fase">
     <div><div class="n">0${i + 1}</div><div class="cuando">${cuando}</div></div>
@@ -383,7 +383,7 @@ p + p { margin-top: 8px; }
   <h2>Un estudio con oficio,<br />desde 2012</h2>
   <div class="card firma">
     <div class="sello"><img src="${asset('src/assets/brand/alive-symbol.svg')}" alt="" /></div>
-    <div><h3>Francesco Lulli</h3><p>Fundador y director de ALIVE. Lleva tu proyecto de principio a fin, con un solo interlocutor desde la primera reunión hasta la publicación.</p></div>
+    <div><h3>Francesco Lulli</h3><p>Fundador y director de ALIVE. Lleva tu proyecto de principio a fin, con un solo interlocutor desde la primera reunión hasta la ${marca ? 'entrega' : 'publicación'}.</p></div>
   </div>
   <h3 style="margin-top:20px">Algunos trabajos</h3>
   <div class="trabajos">
