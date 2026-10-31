@@ -1,0 +1,37 @@
+{
+  "slug": "ejemplo-identidad-completa",
+  "cliente": {
+    "nombre": "Nombre del cliente",
+    "detalle": "Sector o tipo de negocio"
+  },
+  "fecha": "2026-10-31",
+  "validezDias": 30,
+  "moneda": "USD",
+  "servicio": {
+    "nombre": "Identidad Completa",
+    "tipo": "Marca e identidad · pago único",
+    "precio": 450,
+    "marca": {
+      "nivel": "completa",
+      "adicionales": []
+    }
+  },
+  "pago": {
+    "adelanto": 70,
+    "saldo": 30
+  },
+  "plazo": "hasta 10 días hábiles",
+  "rondasDeAjustes": 2,
+  "acompanamientoDias": 7,
+  "pausa": {
+    "diasSinRespuesta": 10,
+    "diasCierre": 30
+  },
+  "portada": {
+    "titulo": [
+      "Tu marca, con criterio propio",
+      "y lista para usar en todas partes."
+    ],
+    "bajada": "Estrategia, 3 rutas creativas y todos los archivos que necesitas, con una guía clara para usarlos."
+  }
+}

@@ -1153,6 +1153,8 @@ function NewProject({
             <option value="we">{SERVICES.we} · desde US$ 350</option>
             <option value="wep">{SERVICES.wep} · desde US$ 450</option>
             <option value="eco">{SERVICES.eco} · desde US$ 750</option>
+            <option value="mar">{SERVICES.mar} · desde US$ 200</option>
+            <option value="mid">{SERVICES.mid} · desde US$ 450</option>
             <option value="otro">Otro servicio (sin ficha aún)</option>
           </select>
         </label>

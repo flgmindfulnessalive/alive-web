@@ -190,7 +190,7 @@ export function buildDashboard(
   }))
 
   // ——— Servicios ———
-  const servicios = (['we', 'wep', 'eco', 'otro'] as const)
+  const servicios = (['we', 'wep', 'eco', 'mar', 'mid', 'otro'] as const)
     .map((s) => {
       const ps = vendidos.filter((p) => p.service === s)
       return {

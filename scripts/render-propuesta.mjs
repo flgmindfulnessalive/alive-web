@@ -34,15 +34,18 @@ const dinero = (n) => {
 const eco = d.servicio.ecommerce ?? null
 const bloques = eco ? (eco.bloquesExtra ?? 0) : 0
 const precioBloque = eco?.precioBloque ?? 100
-const adicionales = eco?.adicionales ?? []
+// Marca: nivel Esencial o Completa (servicio.marca.nivel). Admite adicionales, por ejemplo un combo con web.
+const marca = d.servicio.marca ?? null
+const completa = marca?.nivel === 'completa'
+const adicionales = (eco ?? marca)?.adicionales ?? []
 const total =
   d.servicio.precio == null ? null : d.servicio.precio + bloques * precioBloque + adicionales.reduce((a, x) => a + (x.precio ?? 0), 0)
 const parte = (pct) => (total == null ? null : Math.round(total * pct) / 100)
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const cliente = esc(d.cliente.nombre)
 const Plazo = d.plazo.charAt(0).toUpperCase() + d.plazo.slice(1)
-const panel = d.servicio.panel !== false || Boolean(d.servicio.ecommerce)
-const cosa = d.servicio.ecommerce ? 'tienda' : 'web'
+const panel = !marca && (d.servicio.panel !== false || Boolean(d.servicio.ecommerce))
+const cosa = d.servicio.ecommerce ? 'tienda' : marca ? 'marca' : 'web'
 const pausa = { diasSinRespuesta: 10, diasCierre: 30, ...d.pausa }
 const alojamiento = d.alojamiento?.mensual == null ? '<mark>[alojamiento]</mark>' : `${dinero(d.alojamiento.mensual)} / mes`
 
@@ -62,7 +65,22 @@ const incluyeEco = [
   'Libro de reclamaciones virtual y páginas legales',
   `${d.rondasDeAjustes} rondas de cambios y ${d.acompanamientoDias} días de acompañamiento con tu primer pedido`,
 ]
-const incluye = eco ? incluyeEco : [
+const incluyeMarca = [
+  ...(completa ? ['Estrategia de marca: propósito, público, posicionamiento, personalidad y tono de voz con ejemplos'] : ['Concepto de marca en una página, para decidir con criterio']),
+  '3 rutas creativas distintas para elegir, cada una con logotipo, colores, tipografía y una aplicación real',
+  `${d.rondasDeAjustes} rondas de cambios sobre la ruta elegida`,
+  'Logotipo principal, horizontal, vertical y símbolo para redes; a color, en negativo y a una tinta',
+  'Paleta de colores (HEX, RGB y CMYK) y 2 tipografías de licencia libre',
+  ...(completa
+    ? [
+        'Sistema visual: recursos gráficos, estilo de fotografía e íconos base',
+        'Aplicaciones: tarjeta, hoja membretada, firma de correo y 3 plantillas de redes',
+        'Manual de marca en PDF y archivos editables (Figma o Illustrator)',
+      ]
+    : ['Foto de perfil para redes y guía corta de uso en PDF']),
+  `Archivos en SVG, PDF y PNG, y ${d.acompanamientoDias} días de acompañamiento`,
+]
+const incluye = marca ? incluyeMarca : eco ? incluyeEco : [
   'Dirección visual propia: color, tipografía, composición y tono',
   'Hasta 5 secciones a medida de tu negocio',
   ...(panel ? ['Panel propio para editar textos, imágenes, precios y bloques ya diseñados desde el móvil, sin WordPress ni plugins'] : []),
@@ -73,7 +91,12 @@ const incluye = eco ? incluyeEco : [
   'Seguridad con HTTPS y aviso de privacidad adaptado',
   `${d.rondasDeAjustes} rondas de cambios y ${d.acompanamientoDias} días de acompañamiento después de publicar`,
 ]
-const noIncluye = eco ? [
+const noIncluye = marca ? [
+  'Búsqueda y registro de la marca en INDECOPI, que hace el cliente',
+  'Creación del nombre (naming), que se cotiza aparte',
+  'Impresión, fotografía y web',
+  ...(completa ? [] : ['Manual completo, aplicaciones y archivos editables (incluidos en Identidad Completa)']),
+] : eco ? [
   'Fotografía de producto y redacción de textos largos',
   'Gestión diaria de la tienda: pedidos, envíos y atención',
   'Campañas de publicidad y gestión de redes sociales',
@@ -86,7 +109,12 @@ const noIncluye = eco ? [
   ...(panel ? [] : ['Panel para editar la web tú mismo (disponible en la versión con panel)']),
   'El dominio y el alojamiento, que se pagan aparte y quedan a tu nombre',
 ]
-const necesitamos = eco ? [
+const necesitamos = marca ? [
+  'El brief de marca completo (te enviamos el enlace)',
+  'El nombre exacto, tal como se escribe',
+  'Marcas que te gustan y lo que no quieres ver',
+  'Si es un rediseño, tu logo actual',
+] : eco ? [
   'Logotipo, fotos de productos y datos de contacto',
   'La planilla de productos que te enviamos, con precios y stock',
   `Tu cuenta de ${esc(eco.pasarela ?? 'Culqi o Whop')} a tu nombre (te guiamos para abrirla)`,
@@ -97,7 +125,12 @@ const necesitamos = eco ? [
   'Datos de contacto: teléfono, WhatsApp, correo y dirección',
   'Acceso al dominio, o lo registramos contigo',
 ]
-const fases = eco ? [
+const fases = marca ? [
+  ['Al confirmar', 'Inicio y estrategia', `Con el adelanto del ${d.pago.adelanto} % y tu brief, definimos ${completa ? 'la estrategia de tu marca' : 'el concepto de tu marca'}. La apruebas antes de diseñar.`],
+  ['Primeros días', '3 rutas creativas', 'Te presentamos 3 caminos distintos, cada uno con logotipo, colores, tipografía y una aplicación real. Eliges uno.'],
+  ['Ajustes', `${d.rondasDeAjustes} rondas de cambios`, 'Sobre la ruta elegida, en cada ronda nos envías todos tus comentarios juntos en una sola lista.'],
+  ['Entrega', 'Archivos y guía', `Con la marca aprobada y el ${d.pago.saldo} % restante, te entregamos la carpeta completa${completa ? ', el manual y las aplicaciones' : ' y la guía de uso'}.`],
+] : eco ? [
   ['Al confirmar', 'Inicio', `Con el adelanto del ${d.pago.adelanto} % recibimos tu material y la planilla de productos, y abres tu cuenta de pagos. El plazo cuenta desde que el material está completo.`],
   ['Primeros días', 'Dirección visual', 'Te mostramos la portada y la ficha de producto diseñadas en un enlace de prueba. Las apruebas antes de construir el resto.'],
   ['Construcción', 'Tienda y catálogo', `Construimos catálogo, carrito, pago, pedidos, envíos y páginas legales, y cargamos tus productos con fichas escritas con IA. Tienes ${d.rondasDeAjustes} rondas de cambios, cada una en una sola lista.`],
@@ -255,23 +288,30 @@ p + p { margin-top: 8px; }
 <!-- 2 · Resumen -->
 <section class="page">
   <p class="eyebrow">01 · Resumen</p>
-  ${eco ? `<h2>Tu tienda, abierta todo el día.<br />Con tu marca, no con una plantilla.</h2>
+  ${marca ? `<h2>Una marca que se reconoce<br />antes de leer tu nombre.</h2>
+  <p class="lead">Tu marca es lo que la gente recuerda de ti. Esta propuesta es para que se vea profesional en todas partes, desde tu perfil de WhatsApp hasta tu fachada, con un sistema claro que puedas usar sin depender de nadie.</p>` : eco ? `<h2>Tu tienda, abierta todo el día.<br />Con tu marca, no con una plantilla.</h2>
   <p class="lead">Quien te compra por internet decide en segundos si confía en ti. Esta propuesta es para que comprarte sea fácil y se sienta tuyo: una tienda con diseño propio, pago seguro desde el celular y un panel donde llevas pedidos, stock y productos sin depender de nadie.</p>` : `<h2>Tu web es lo primero que ven.<br />Tiene que estar a tu altura.</h2>
   <p class="lead">Antes de escribirte, la gente busca tu nombre, entra en tu web y decide en segundos si confía en ti. Esta propuesta es para que esa primera impresión trabaje a tu favor: una web con diseño propio, ${panel ? 'que puedes actualizar tú' : 'pensada para que te escriban'} y que Google entiende desde el primer día.</p>`}
   <div class="grid3" style="margin-top:18px">
-    <div class="card pilar"><h3 class="grad">Diseño propio</h3><p>Una dirección visual pensada para ${cliente}, no una plantilla. La apruebas antes de construir.</p></div>
-    ${eco
+    ${marca
+      ? `<div class="card pilar"><h3 class="grad">Con estrategia</h3><p>Antes de dibujar, definimos qué tiene que transmitir ${cliente}. Así eliges con criterio, no solo por gusto.</p></div>`
+      : `<div class="card pilar"><h3 class="grad">Diseño propio</h3><p>Una dirección visual pensada para ${cliente}, no una plantilla. La apruebas antes de construir.</p></div>`}
+    ${marca
+      ? '<div class="card pilar"><h3 class="grad">3 rutas</h3><p>Tres caminos de verdad distintos, vistos en aplicaciones reales, para que elijas el tuyo.</p></div>'
+      : eco
       ? '<div class="card pilar"><h3 class="grad">Pago fácil</h3><p>Pago pensado para celular, con tu cuenta a tu nombre, y pedido por WhatsApp para quien lo prefiera.</p></div>'
       : panel
       ? '<div class="card pilar"><h3 class="grad">Panel propio</h3><p>Cambias textos, fotos y precios desde el móvil, sin WordPress y sin pedir ayuda.</p></div>'
       : '<div class="card pilar"><h3 class="grad">Contacto directo</h3><p>Formulario y WhatsApp conectados para que quien te visita te escriba en un toque.</p></div>'}
-    ${eco
+    ${marca
+      ? '<div class="card pilar"><h3 class="grad">Lista para usar</h3><p>Archivos para redes, web e imprenta, con una guía que dice cuál usar en cada caso.</p></div>'
+      : eco
       ? '<div class="card pilar"><h3 class="grad">Fichas con IA</h3><p>Descripciones de producto escritas con IA a partir de tus datos, revisadas por nosotros y listas para Google.</p></div>'
       : '<div class="card pilar"><h3 class="grad">Lista para Google</h3><p>Rápida, adaptada a móvil y con el SEO técnico de base hecho desde el primer día.</p></div>'}
   </div>
   <h3 style="margin-top:22px">Cómo empezamos</h3>
-  <p style="margin-top:6px; max-width:160mm">Una reunión para entender tu negocio y, en pocos días, una dirección visual que apruebas antes de construir nada. Después, ${eco ? 'la tienda completa con tus productos y su panel de pedidos' : `la web completa${panel ? ' con su panel' : ''}`}, publicada en tu dominio en ${esc(d.plazo)} desde que tenemos el material.</p>
-  <p class="nota"><strong>En una frase:</strong> ${eco ? `una tienda propia, sin licencias mensuales de plataforma, que se publica en ${esc(d.plazo)} de trabajo y que manejas tú.` : `una web propia, que se paga una vez, se publica en ${esc(d.plazo)}${panel ? ' y que actualizas tú' : ' y trabaja para ti desde el primer día'}.`}</p>
+  <p style="margin-top:6px; max-width:160mm">${marca ? `Un brief para entender tu negocio y ${completa ? 'una estrategia' : 'un concepto'} que apruebas antes de diseñar. Después, 3 rutas creativas, ${d.rondasDeAjustes} rondas de cambios y todos los archivos listos, en ${esc(d.plazo)} de trabajo.` : `Una reunión para entender tu negocio y, en pocos días, una dirección visual que apruebas antes de construir nada. Después, ${eco ? 'la tienda completa con tus productos y su panel de pedidos' : `la web completa${panel ? ' con su panel' : ''}`}, publicada en tu dominio en ${esc(d.plazo)} desde que tenemos el material.`}</p>
+  <p class="nota"><strong>En una frase:</strong> ${marca ? `una marca propia, con ${completa ? 'estrategia, sistema y manual' : 'sus versiones y una guía clara'}, que es tuya desde el pago completo.` : eco ? `una tienda propia, sin licencias mensuales de plataforma, que se publica en ${esc(d.plazo)} de trabajo y que manejas tú.` : `una web propia, que se paga una vez, se publica en ${esc(d.plazo)}${panel ? ' y que actualizas tú' : ' y trabaja para ti desde el primer día'}.`}</p>
   ${pie(2)}
 </section>
 
@@ -288,14 +328,14 @@ p + p { margin-top: 8px; }
     <div class="card"><h3 style="margin-bottom:8px">Lo que no incluye</h3><ul class="check cross">${li(noIncluye)}</ul></div>
     <div class="card"><h3 style="margin-bottom:8px">Lo que necesitamos de ti</h3><ul class="check">${li(necesitamos)}</ul></div>
   </div>
-  <p class="nota">${eco ? `Cada bloque de 40 productos más que carguemos cuesta ${dinero(precioBloque)}. Otras funciones (otra pasarela, facturación electrónica, envíos por courier) se cotizan aparte.` : 'Si más adelante necesitas más secciones, varios idiomas o funciones a medida, lo cotizamos aparte, sobre la misma base.'}</p>
+  <p class="nota">${marca ? 'La marca se diseña para tu nombre: te recomendamos hacer la búsqueda en INDECOPI antes de la ronda final, para no invertir en un diseño que luego no puedas registrar.' : eco ? `Cada bloque de 40 productos más que carguemos cuesta ${dinero(precioBloque)}. Otras funciones (otra pasarela, facturación electrónica, envíos por courier) se cotizan aparte.` : 'Si más adelante necesitas más secciones, varios idiomas o funciones a medida, lo cotizamos aparte, sobre la misma base.'}</p>
   ${pie(3)}
 </section>
 
 <!-- 4 · Cómo trabajamos -->
 <section class="page">
   <p class="eyebrow">03 · Cómo trabajamos</p>
-  <h2>De la primera reunión<br />a tu web publicada</h2>
+  <h2>${marca ? 'Del brief<br />a tu marca lista' : eco ? 'De la primera reunión<br />a tu tienda publicada' : 'De la primera reunión<br />a tu web publicada'}</h2>
   <p class="lead" style="margin-bottom:16px">${esc(Plazo)} de trabajo, contados desde que tenemos el material y los accesos. No cuentan los días en que esperamos tu respuesta.</p>
   ${fases.map(([cuando, titulo, texto], i) => `
   <div class="fase">
@@ -312,17 +352,17 @@ p + p { margin-top: 8px; }
   <h2>Lo que cuesta, sin letra pequeña</h2>
   <div class="tabla${eco ? ' eco' : ''}">
     <div class="fila etiqueta">Una vez</div>
-    <div class="fila"><div>${esc(d.servicio.nombre)}<small>${eco ? `Tienda, panel de pedidos y carga de ${eco.productos ?? 40} productos` : `Diseño, desarrollo${panel ? ', panel' : ''} y puesta en marcha`}</small></div><div class="importe">${dinero(d.servicio.precio)}</div></div>
+    <div class="fila"><div>${esc(d.servicio.nombre)}<small>${marca ? (completa ? 'Estrategia, 3 rutas, sistema, aplicaciones, manual y editables' : 'Concepto, 3 rutas, versiones del logotipo y guía de uso') : eco ? `Tienda, panel de pedidos y carga de ${eco.productos ?? 40} productos` : `Diseño, desarrollo${panel ? ', panel' : ''} y puesta en marcha`}</small></div><div class="importe">${dinero(d.servicio.precio)}</div></div>
     ${bloques ? `<div class="fila"><div>Productos adicionales<small>${bloques} ${bloques === 1 ? 'bloque' : 'bloques'} de 40 productos cargados por ALIVE</small></div><div class="importe">${dinero(bloques * precioBloque)}</div></div>` : ''}
     ${adicionales.map((x) => `<div class="fila"><div>${esc(x.nombre)}${x.detalle ? `<small>${esc(x.detalle)}</small>` : ''}</div><div class="importe">${dinero(x.precio)}</div></div>`).join('')}
     ${bloques || adicionales.length ? `<div class="fila"><div><b>Total del proyecto</b></div><div class="importe">${dinero(total)}</div></div>` : ''}
-    ${eco ? `<div class="fila"><div>Alojamiento mensual<small>Servidor, base de datos de pedidos e imágenes</small></div><div class="importe">${alojamiento}</div></div>` : `<div class="fila"><div>Acompañamiento tras la publicación<small>Dudas y pequeños ajustes</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
+    ${marca ? `<div class="fila"><div>Acompañamiento tras la entrega<small>Dudas sobre el uso de los archivos</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>` : eco ? `<div class="fila"><div>Alojamiento mensual<small>Servidor, base de datos de pedidos e imágenes</small></div><div class="importe">${alojamiento}</div></div>` : `<div class="fila"><div>Acompañamiento tras la publicación<small>Dudas y pequeños ajustes</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
     <div class="fila etiqueta">Mensual · opcional</div>
     <div class="fila"><div>Alojamiento<small>Servidor y certificado de seguridad, o la publicamos en una cuenta tuya</small></div><div class="importe">${alojamiento}</div></div>`}
   </div>
   <div class="total">
     <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>Adelanto para reservar el inicio${eco ? ', con Whop' : ' del proyecto'}.</small></div>
-    <div class="card"><span>Al aprobar la ${cosa} · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>Saldo, antes de publicarla en tu dominio.</small></div>
+    <div class="card"><span>Al aprobar la ${cosa} · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>${marca ? 'Saldo, antes de entregarte los archivos.' : 'Saldo, antes de publicarla en tu dominio.'}</small></div>
   </div>
   ${eco ? '' : '<p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>'}
   <h3 style="margin-top:20px">Condiciones</h3>
@@ -330,8 +370,8 @@ p + p { margin-top: 8px; }
     <div><h3>Plazos</h3><p>${esc(Plazo)} de trabajo desde que tenemos el material. No cuentan los días que esperamos tu respuesta.</p></div>
     <div><h3>Cambios</h3><p>${d.rondasDeAjustes} rondas, cada una con una sola lista. Lo que no está en esta propuesta se cotiza aparte, antes de hacerlo.</p></div>
     <div><h3>Si no hay respuesta</h3><p>A los ${pausa.diasSinRespuesta} días hábiles sin respuesta el proyecto se pausa, y a los ${pausa.diasCierre} días de pausa se cierra. Para retomarlo, se paga el saldo.</p></div>
-    ${eco ? '<div><h3>Dominio y alojamiento</h3><p>El dominio queda a tu nombre. La tienda se aloja en nuestra cuenta y, si un día te vas, te la transferimos con todos tus datos.</p></div>' : '<div><h3>Dominio y alojamiento</h3><p>Se pagan aparte y quedan a tu nombre. El alojamiento con nosotros es opcional.</p></div>'}
-    <div><h3>Propiedad</h3><p>Con el pago completo, la ${cosa} y sus contenidos son tuyos.</p></div>
+    ${marca ? '<div><h3>Registro de la marca</h3><p>La búsqueda y el registro en INDECOPI los hace el cliente. ALIVE no garantiza la disponibilidad registral.</p></div>' : eco ? '<div><h3>Dominio y alojamiento</h3><p>El dominio queda a tu nombre. La tienda se aloja en nuestra cuenta y, si un día te vas, te la transferimos con todos tus datos.</p></div>' : '<div><h3>Dominio y alojamiento</h3><p>Se pagan aparte y quedan a tu nombre. El alojamiento con nosotros es opcional.</p></div>'}
+    <div><h3>Propiedad</h3><p>${marca ? 'Con el pago completo, los derechos sobre la marca y sus archivos pasan a ti.' : `Con el pago completo, la ${cosa} y sus contenidos son tuyos.`}</p></div>
     <div><h3>Contratas con</h3><p>Francesco Lulli Guzmán (ALIVE), Lima, Perú.</p></div>
   </div>
   ${pie(5)}
@@ -364,8 +404,15 @@ p + p { margin-top: 8px; }
       ${[
         ['Confirmas la propuesta', `Antes del ${larga(vence)}.`],
         ['Adelanto y reunión de arranque', `${d.pago.adelanto} % con Whop y te pedimos el material.`],
-        ['Dirección visual', 'La apruebas antes de construir.'],
-        ['Web publicada', `En ${esc(d.plazo)} desde que tenemos el material.`],
+        ...(marca
+          ? [
+              ['3 rutas creativas', 'Eliges la que es tuya.'],
+              ['Marca entregada', `En ${esc(d.plazo)} de trabajo desde que tenemos el brief.`],
+            ]
+          : [
+              ['Dirección visual', 'La apruebas antes de construir.'],
+              [eco ? 'Tienda publicada' : 'Web publicada', `En ${esc(d.plazo)} desde que tenemos el material.`],
+            ]),
       ].map(([t, p], i) => `<div class="paso" style="border-color:var(--line-dark)"><div class="n" style="background:var(--text);color:var(--bg)">${i + 1}</div><div><h3>${t}</h3><p style="color:var(--text-muted)">${p}</p></div></div>`).join('')}
     </div>
     <div class="contacto meta" style="grid-template-columns:repeat(2,auto)">

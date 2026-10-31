@@ -2,7 +2,7 @@
 // viernes), avisos por falta de respuesta (días 3, 7 y 10) y plantillas de WhatsApp.
 // Lógica pura, sin React ni Supabase, para poder probarla aparte.
 
-export type Service = 'we' | 'wep' | 'eco' | 'otro'
+export type Service = 'we' | 'wep' | 'eco' | 'mar' | 'mid' | 'otro'
 export type Owner = 'alive' | 'cliente'
 export type HistoryItem = { i: number; s: string; e: string }
 
@@ -30,10 +30,12 @@ export const SERVICES: Record<Service, string> = {
   we: 'Web Esencial',
   wep: 'Web Esencial + Panel',
   eco: 'Ecommerce Esencial',
+  mar: 'Marca Esencial',
+  mid: 'Identidad Completa',
   otro: 'Otro servicio',
 }
 // Precio «desde» de cada servicio con ficha: se propone al crear el proyecto y se puede cambiar.
-export const PRICE_FROM: Partial<Record<Service, number>> = { we: 350, wep: 450, eco: 750 }
+export const PRICE_FROM: Partial<Record<Service, number>> = { we: 350, wep: 450, eco: 750, mar: 200, mid: 450 }
 export const money = (n: number | null | undefined) => (n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`)
 
 export const projectName = (p: Pick<Project, 'service' | 'title'>) => (p.service === 'otro' ? p.title || 'Proyecto' : SERVICES[p.service])
@@ -163,6 +165,43 @@ export const STAGES_ECO: { n: string; f: Phase[] }[] = [
   { n: 'Cierre', f: [{ o: 'alive', d: 11, l: 'Acompañamiento hasta el primer pedido (15 días naturales)' }] },
 ]
 
+// ——— Etapas de la ficha Marca (Esencial y Completa difieren en estrategia y en el paquete final) ———
+const stagesMarca = (completa: boolean): { n: string; f: Phase[] }[] => [
+  { n: 'Inicio', f: [{ o: 'cliente', d: 5, l: 'Pago del 70 % y brief de marca completo', pago: 'deposit' }] },
+  {
+    n: 'Estrategia',
+    f: [
+      { o: 'alive', d: 1, l: completa ? 'Estrategia de marca' : 'Concepto de marca en una página' },
+      { o: 'cliente', d: 2, l: 'Aprobar la estrategia' },
+    ],
+  },
+  { n: 'Rutas creativas', f: [{ o: 'alive', d: 3, l: 'Diseñar las 3 rutas y su presentación' }] },
+  { n: 'Elección', f: [{ o: 'cliente', d: 3, l: 'Elegir una ruta y enviar comentarios en una lista' }] },
+  {
+    n: 'Ronda de cambios 1',
+    f: [
+      { o: 'alive', d: 1, l: 'Ajustar la ruta elegida' },
+      { o: 'cliente', d: 3, l: 'Revisar y enviar los últimos cambios' },
+    ],
+  },
+  {
+    n: 'Ronda de cambios 2',
+    f: [
+      { o: 'alive', d: 1, l: 'Ajustes finales' },
+      { o: 'cliente', d: 2, l: 'Aprobación final por escrito' },
+    ],
+  },
+  { n: 'Sistema y archivos', f: [{ o: 'alive', d: completa ? 3 : 2, l: completa ? 'Manual, aplicaciones, editables y exportación' : 'Versiones, guía corta y exportación' }] },
+  {
+    n: 'Entrega',
+    f: [
+      { o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' },
+      { o: 'alive', d: 1, l: 'Entregar la carpeta de archivos y el LÉEME' },
+    ],
+  },
+  { n: 'Cierre', f: [{ o: 'alive', d: 5, l: 'Acompañamiento (7 días naturales)' }] },
+]
+
 const flatten = (stages: { n: string; f: Phase[] }[]) => stages.flatMap((s, stage) => s.f.map((f) => ({ ...f, stage })))
 export type FlowPhase = Phase & { stage: number }
 export type Flow = {
@@ -171,19 +210,24 @@ export type Flow = {
   last: number
   support: number // días naturales de acompañamiento
   plazo: number // días hábiles de trabajo prometidos
-  thing: string // «tu web» o «tu tienda» en los mensajes
+  thing: string // «tu web», «tu tienda» o «tu marca» en los mensajes
+  kind: 'web' | 'marca'
 }
-const mkFlow = (stages: Flow['stages'], support: number, plazo: number, thing: string): Flow => ({
+const mkFlow = (stages: Flow['stages'], support: number, plazo: number, thing: string, kind: Flow['kind'] = 'web'): Flow => ({
   stages,
   phases: flatten(stages),
   last: stages.length - 1,
   support,
   plazo,
   thing,
+  kind,
 })
 const FLOW_WE = mkFlow(STAGES_WE, 10, 10, 'tu web')
 const FLOW_ECO = mkFlow(STAGES_ECO, 15, 20, 'tu tienda')
-export const flowOf = (service: Service) => (service === 'eco' ? FLOW_ECO : FLOW_WE)
+const FLOW_MAR = mkFlow(stagesMarca(false), 7, 10, 'tu marca', 'marca')
+const FLOW_MID = mkFlow(stagesMarca(true), 7, 10, 'tu marca', 'marca')
+export const flowOf = (service: Service) =>
+  service === 'eco' ? FLOW_ECO : service === 'mar' ? FLOW_MAR : service === 'mid' ? FLOW_MID : FLOW_WE
 
 // ——— Plantillas (documento operativo · Común 7) ———
 export type TemplateKey =
@@ -243,12 +287,16 @@ export const TEMPLATES: Record<TemplateKey, { t: string; m: (c: Ctx) => string }
   final: {
     t: 'Entrega final',
     m: (c) =>
-      `Hola ${c.nombre}, ¡${F(c).thing} está aprobada! Para publicarla en tu dominio, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, la publico y te envío los accesos${panelGuide(c)}.`,
+      F(c).kind === 'marca'
+        ? `Hola ${c.nombre}, ¡tu marca está aprobada! Para entregarte todos los archivos, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, te envío la carpeta completa con la guía de uso.`
+        : `Hola ${c.nombre}, ¡${F(c).thing} está aprobada! Para publicarla en tu dominio, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, la publico y te envío los accesos${panelGuide(c)}.`,
   },
   cierre: {
     t: 'Cierre del proyecto',
     m: (c) =>
-      `Hola ${c.nombre}, ${F(c).thing} ya está publicada en [dominio]. Te envío los accesos${panelGuide(c)}. Tienes ${F(c).support} días de acompañamiento para dudas o ajustes menores${c.project.service === 'eco' ? ', y vemos juntos tu primer pedido real' : ''}. Gracias por confiar en ALIVE.`,
+      F(c).kind === 'marca'
+        ? `Hola ${c.nombre}, ¡tu marca está lista! Aquí tienes todos los archivos: [enlace]. Te dejé un archivo LÉEME que explica cuál usar en cada caso. Tienes ${F(c).support} días de acompañamiento para cualquier duda. Y si quieres que tu marca tenga su web, la armamos con todo esto ya listo. Gracias por confiar en ALIVE.`
+        : `Hola ${c.nombre}, ${F(c).thing} ya está publicada en [dominio]. Te envío los accesos${panelGuide(c)}. Tienes ${F(c).support} días de acompañamiento para dudas o ajustes menores${c.project.service === 'eco' ? ', y vemos juntos tu primer pedido real' : ''}. Gracias por confiar en ALIVE.`,
   },
 }
 
@@ -295,7 +343,7 @@ export function tasksOf(p: Project, today = businessToday()): Task[] {
       out.push({ key: 'recordatorio', level: 'warn', text: `Día ${s.days} sin respuesta: enviar recordatorio` })
   }
   if (s.kind === 'acompanamiento' && !wasSent(p, 'cierre'))
-    out.push({ key: 'cierre', level: 'info', text: 'Publicado: enviar «Cierre del proyecto»' })
+    out.push({ key: 'cierre', level: 'info', text: `${flowOf(p.service).kind === 'marca' ? 'Entregado' : 'Publicado'}: enviar «Cierre del proyecto»` })
   if (s.kind === 'acompanamiento' && s.calendar >= flowOf(p.service).support)
     out.push({ level: 'info', text: `Pasaron los ${flowOf(p.service).support} días de acompañamiento: cerrar el proyecto` })
   return out
