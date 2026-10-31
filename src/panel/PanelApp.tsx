@@ -5,7 +5,7 @@ import { PROJECT_TYPES, steps } from '../brief/questions'
 import { parseBriefEmail, type ImportedBrief } from './importBrief'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
 import { Production } from './Production'
-import { projectName, statusLabel, type Project } from './production'
+import { projectName, statusLabel, waNumber, type Project } from './production'
 
 const money = (n: number | null) =>
   n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
@@ -26,7 +26,7 @@ const TYPE_SHORT: Record<string, string> = {
 const typesOf = (c: Client) =>
   Array.isArray(c.answers?.tipos) ? (c.answers.tipos as string[]).map((t) => TYPE_SHORT[t] ?? t) : []
 
-const waLink = (phone: string) => `https://wa.me/${phone.replace(/\D/g, '')}`
+const waLink = (phone: string) => `https://wa.me/${waNumber(phone)}`
 
 // ¿Es administrador? (panel_admins solo devuelve filas a quien lo es) y la lista de clientes.
 async function fetchWorkspace() {
@@ -183,6 +183,7 @@ function Workspace({ session }: { session: Session }) {
     location.hash === '#produccion' ? 'produccion' : 'clientes',
   )
   const [newProjectFor, setNewProjectFor] = useState<string | null>(null)
+  const [focusProject, setFocusProject] = useState<string | null>(null)
   const [admin, setAdmin] = useState<boolean | null>(null)
   const [view, setView] = useState<'tablero' | 'lista'>('tablero')
   const [query, setQuery] = useState('')
@@ -247,6 +248,8 @@ function Workspace({ session }: { session: Session }) {
   async function remove(id: string) {
     setOpenId(null)
     setClients((list) => list.filter((c) => c.id !== id))
+    // Sus proyectos se borran en cascada en Supabase; aquí también, para que no queden huérfanos en Producción.
+    setProjects((list) => list.filter((p) => p.client_id !== id))
     const { error } = await supabase!.from('clients').delete().eq('id', id)
     if (error) {
       setError('No se pudo eliminar.')
@@ -316,6 +319,7 @@ function Workspace({ session }: { session: Session }) {
               </div>
             )}
             <Production
+              initialOpenId={focusProject}
               clients={clients}
               projects={projects}
               author={session.user.email ?? ''}
@@ -384,6 +388,7 @@ function Workspace({ session }: { session: Session }) {
       </main>
       {open && (
         <Detail
+          key={open.id}
           client={open}
           author={session.user.email ?? ''}
           projects={projects.filter((p) => p.client_id === open.id)}
@@ -392,8 +397,9 @@ function Workspace({ session }: { session: Session }) {
             go('produccion')
             setNewProjectFor(open.id)
           }}
-          onOpenProjects={() => {
+          onOpenProject={(id) => {
             setOpenId(null)
+            setFocusProject(id)
             go('produccion')
           }}
           onClose={() => setOpenId(null)}
@@ -530,7 +536,7 @@ function Detail({
   author,
   projects,
   onNewProject,
-  onOpenProjects,
+  onOpenProject,
   onClose,
   onUpdate,
   onRemove,
@@ -539,7 +545,7 @@ function Detail({
   author: string
   projects: Project[]
   onNewProject: () => void
-  onOpenProjects: () => void
+  onOpenProject: (id: string) => void
   onClose: () => void
   onUpdate: (id: string, patch: Partial<Client>) => Promise<boolean>
   onRemove: (id: string) => void
@@ -645,36 +651,30 @@ function Detail({
           </label>
         </div>
 
-        <dl className="detail__contact">
-          {c.email && (
-            <div>
-              <dt>Correo</dt>
-              <dd>
-                <a href={`mailto:${c.email}`}>{c.email}</a>
-              </dd>
-            </div>
-          )}
-          {c.phone && (
-            <div>
-              <dt>WhatsApp</dt>
-              <dd>
-                <a href={waLink(c.phone)} target="_blank" rel="noopener">
-                  {c.phone}
-                </a>
-              </dd>
-            </div>
-          )}
-          {c.sector && (
-            <div>
-              <dt>Sector</dt>
-              <dd>{c.sector}</dd>
-            </div>
-          )}
-          <div>
-            <dt>Recibido</dt>
-            <dd>{date(c.created_at)}</dd>
-          </div>
-        </dl>
+        <div className="detail__grid detail__grid--contact">
+          <ContactField label="Nombre" value={c.name} required onSave={(v) => save({ name: v! })} />
+          <ContactField label="Marca o empresa" value={c.company} onSave={(v) => save({ company: v })} />
+          <ContactField
+            label="WhatsApp"
+            hint="Con código de país, por ejemplo +51 906 013 371"
+            type="tel"
+            value={c.phone}
+            onSave={(v) => save({ phone: v })}
+            action={c.phone ? { href: waLink(c.phone), label: 'Abrir chat' } : undefined}
+          />
+          <ContactField
+            label="Correo"
+            type="email"
+            value={c.email}
+            onSave={(v) => save({ email: v })}
+            action={c.email ? { href: `mailto:${c.email}`, label: 'Escribir' } : undefined}
+          />
+          <ContactField label="Sector" value={c.sector} onSave={(v) => save({ sector: v })} />
+          <label>
+            <span>Recibido</span>
+            <input value={date(c.created_at)} readOnly tabIndex={-1} className="is-readonly" />
+          </label>
+        </div>
 
         <section className="detail__section">
           <h3>Proyectos</h3>
@@ -682,13 +682,16 @@ function Detail({
             <ul className="detail__files">
               {projects.map((p) => (
                 <li key={p.id}>
-                  <button className="panel-link" onClick={onOpenProjects}>
+                  <button className="panel-link" onClick={() => onOpenProject(p.id)}>
                     {projectName(p)}
                   </button>
                   <span>{statusLabel(p).text}</span>
                 </li>
               ))}
             </ul>
+          )}
+          {c.stage === 'ganado' && !projects.length && (
+            <p className="prod-hint">Cliente ganado: crea su proyecto para seguir sus etapas en Producción.</p>
           )}
           <button className="btn btn-ghost btn-sm prod-start" onClick={onNewProject}>
             + Crear proyecto
@@ -779,6 +782,16 @@ function Detail({
                 <span>
                   {date(n.created_at)}
                   {n.author ? ` · ${n.author}` : ''}
+                  <button
+                    className="panel-link detail__note-delete"
+                    onClick={async () => {
+                      if (!confirm('¿Eliminar esta nota?')) return
+                      const { error } = await supabase!.from('notes').delete().eq('id', n.id)
+                      if (!error) setNotes((list) => list.filter((x) => x.id !== n.id))
+                    }}
+                  >
+                    Eliminar
+                  </button>
                 </span>
               </li>
             ))}
@@ -797,6 +810,68 @@ function Detail({
         </footer>
       </div>
     </dialog>
+  )
+}
+
+// Campo de contacto que se guarda al salir de él (o con Enter), solo si cambió.
+function ContactField({
+  label,
+  value,
+  onSave,
+  type = 'text',
+  required = false,
+  hint,
+  action,
+}: {
+  label: string
+  value: string | null
+  onSave: (v: string | null) => void
+  type?: 'text' | 'email' | 'tel'
+  required?: boolean
+  hint?: string
+  action?: { href: string; label: string }
+}) {
+  const [draft, setDraft] = useState(value ?? '')
+  const [problem, setProblem] = useState<string | null>(null)
+  function commit() {
+    const v = draft.trim()
+    if (v === (value ?? '')) return setProblem(null)
+    if (required && !v) {
+      setDraft(value ?? '')
+      return setProblem('Este dato es obligatorio.')
+    }
+    if (type === 'tel' && v && waNumber(v).length < 9) return setProblem('Revisa el número: faltan dígitos.')
+    if (type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return setProblem('Revisa el correo.')
+    setProblem(null)
+    onSave(v || null)
+  }
+  // Si se cierra la ficha con el campo a medio editar (Esc o clic fuera), también se guarda.
+  const commitRef = useRef(commit)
+  useEffect(() => {
+    commitRef.current = commit
+  })
+  useEffect(() => () => commitRef.current(), [])
+  return (
+    <label>
+      <span>
+        {label}
+        {action && (
+          <a className="detail__field-action" href={action.href} target="_blank" rel="noopener">
+            {action.label}
+          </a>
+        )}
+      </span>
+      <input
+        type={type}
+        value={draft}
+        placeholder={hint}
+        aria-invalid={problem ? true : undefined}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => e.key === 'Enter' && (e.currentTarget as HTMLInputElement).blur()}
+      />
+      {problem && <small className="panel-error detail__field-error">{problem}</small>}
+    </label>
   )
 }
 

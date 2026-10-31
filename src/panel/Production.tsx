@@ -20,6 +20,7 @@ import {
   statusOf,
   tasksOf,
   TEMPLATES,
+  undo,
   waNumber,
   type Project,
   type Service,
@@ -36,6 +37,7 @@ type Props = {
   onCreated: (p: Project) => void
   onOpenClient: (id: string) => void
   onDeleted: (id: string) => void
+  initialOpenId?: string | null
 }
 
 const clientLabel = (c?: Client) => (c ? c.company || c.name : 'Cliente eliminado')
@@ -44,8 +46,8 @@ async function logNote(client_id: string, body: string, author: string) {
   await supabase!.from('notes').insert({ client_id, body, author })
 }
 
-export function Production({ clients, projects, author, newFor, onNewHandled, onUpdate, onCreated, onOpenClient, onDeleted }: Props) {
-  const [openId, setOpenId] = useState<string | null>(null)
+export function Production({ clients, projects, author, newFor, onNewHandled, onUpdate, onCreated, onOpenClient, onDeleted, initialOpenId = null }: Props) {
+  const [openId, setOpenId] = useState<string | null>(initialOpenId)
   const [message, setMessage] = useState<{ id: string; key: TemplateKey } | null>(null)
   const [creating, setCreating] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
@@ -118,15 +120,17 @@ export function Production({ clients, projects, author, newFor, onNewHandled, on
         </header>
         {tasks.length ? (
           tasks.map((t) => (
-            <div key={`${t.p.id}-${t.key}`} className={`prod-task is-${t.level}`}>
+            <div key={`${t.p.id}-${t.key ?? t.text}`} className={`prod-task is-${t.level}`}>
               <div className="prod-task__txt">
                 <b>{clientLabel(byId.get(t.p.client_id))}</b> · {projectName(t.p)}
                 <small>{t.text}</small>
               </div>
               <div className="prod-task__act">
-                <button className="btn btn-sm prod-wa" onClick={() => setMessage({ id: t.p.id, key: t.key })}>
-                  WhatsApp: {TEMPLATES[t.key].t}
-                </button>
+                {t.key && (
+                  <button className="btn btn-sm prod-wa" onClick={() => setMessage({ id: t.p.id, key: t.key! })}>
+                    WhatsApp: {TEMPLATES[t.key].t}
+                  </button>
+                )}
                 <button className="btn btn-ghost btn-sm" onClick={() => setOpenId(t.p.id)}>
                   Ver
                 </button>
@@ -224,7 +228,9 @@ function Timeline({ clients, projects, openId, onOpen }: { clients: Client[]; pr
   const W = useColumnWidth()
   const today = businessToday()
   const N = 30
-  const start = addBusinessDays(today, -16)
+  // Ventana de 30 días hábiles; se mueve por semanas para ver proyectos largos (Ecommerce dura 6 a 7 semanas).
+  const [weeks, setWeeks] = useState(0)
+  const start = addBusinessDays(today, -16 + weeks * 5)
   const idx = (d: string | Date) => businessDaysBetween(start, d)
   const days = Array.from({ length: N }, (_, i) => addBusinessDays(start, i))
   const width = N * W
@@ -242,7 +248,25 @@ function Timeline({ clients, projects, openId, onOpen }: { clients: Client[]; pr
     .map((c) => ({ c, ps: projects.filter((p) => p.client_id === c.id && visible(p)) }))
     .filter((g) => g.ps.length)
 
-  return <TimelineGrid {...{ groups, W, today, N, start, idx, days, width, todayIdx, openId, onOpen }} />
+  return (
+    <>
+      <div className="prod-tl-nav" role="group" aria-label="Mover la línea de tiempo">
+        <button className="btn btn-ghost btn-sm" onClick={() => setWeeks((w) => w - 1)}>
+          ← Semana anterior
+        </button>
+        <button className="btn btn-ghost btn-sm" disabled={weeks === 0} onClick={() => setWeeks(0)}>
+          Hoy
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={() => setWeeks((w) => w + 1)}>
+          Semana siguiente →
+        </button>
+        <span>
+          {shortDate(days[0])} – {shortDate(days[N - 1])}
+        </span>
+      </div>
+      <TimelineGrid {...{ groups, W, today, N, start, idx, days, width, todayIdx, openId, onOpen }} />
+    </>
+  )
 }
 
 function TimelineGrid({
@@ -473,11 +497,17 @@ function ProjectDetail({
         )}
         {tasks.length > 0 && (
           <div className="prod-actions">
-            {tasks.map((t) => (
-              <button key={t.key} className="btn btn-sm prod-wa" onClick={() => onMessage(t.key)}>
-                WhatsApp: {TEMPLATES[t.key].t}
-              </button>
-            ))}
+            {tasks.map((t) =>
+              t.key ? (
+                <button key={t.key} className="btn btn-sm prod-wa" onClick={() => onMessage(t.key!)}>
+                  WhatsApp: {TEMPLATES[t.key].t}
+                </button>
+              ) : (
+                <p key={t.text} className="prod-hint">
+                  {t.text}.
+                </p>
+              ),
+            )}
           </div>
         )}
         {missing && <p className="prod-hint">Para avanzar falta marcar el pago del {f.pago === 'deposit' ? '70' : '30'} %.</p>}
@@ -511,6 +541,8 @@ function ProjectDetail({
     )
   }
 
+  // En pausa no se ofrece: lo que corresponde es «Reactivar».
+  const previous = p.history.length && !p.paused_since ? fl.phases[p.history[p.history.length - 1].i] : null
   return (
     <dialog ref={dialog} className="detail" aria-labelledby="prod-title" onClose={onClose} onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}>
       <div className="detail__body">
@@ -528,6 +560,17 @@ function ProjectDetail({
         </header>
 
         {now}
+        {previous && (
+          <button
+            className="panel-link prod-undo"
+            onClick={async () => {
+              const patch = undo(p)
+              if (patch && (await onUpdate(p.id, patch))) toast(`Volviste a: ${previous.l}`)
+            }}
+          >
+            ↶ Deshacer el último paso (volver a «{previous.l}»)
+          </button>
+        )}
 
         {p.service !== 'otro' && (
           <section className="detail__section">

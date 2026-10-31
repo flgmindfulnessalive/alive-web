@@ -1376,3 +1376,64 @@ label.prod-pays {
 .detail .btn-ghost:hover {
   background: rgb(245 247 250 / 0.06);
 }
+
+/* Datos de contacto editables */
+.detail__grid--contact {
+  margin-top: -4px;
+}
+
+.detail__grid--contact span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.detail__field-action {
+  color: var(--color-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.detail__grid input.is-readonly {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.detail__grid input[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+.detail__field-error {
+  margin-top: 0;
+  font-size: 12px;
+}
+
+.prod-tl-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.prod-tl-nav span {
+  margin-left: 4px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.prod-tl-nav .btn[disabled] {
+  opacity: 0.4;
+}
+
+.prod-undo {
+  justify-self: start;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.detail__note-delete {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}

@@ -173,7 +173,7 @@ export function statusOf(p: Project, today = businessToday()): Status {
 
 export const wasSent = (p: Project, k: TemplateKey) => p.sent.includes(`${p.phase}:${k}`)
 
-export type Task = { key: TemplateKey; level: 'crit' | 'warn' | 'info'; text: string }
+export type Task = { key?: TemplateKey; level: 'crit' | 'warn' | 'info'; text: string }
 
 // Qué mensaje toca hoy en cada proyecto.
 export function tasksOf(p: Project, today = businessToday()): Task[] {
@@ -192,7 +192,9 @@ export function tasksOf(p: Project, today = businessToday()): Task[] {
     else if (s.days >= 3 && !wasSent(p, 'recordatorio')) out.push({ key: 'recordatorio', level: 'warn', text: `Día ${s.days} sin respuesta: enviar recordatorio` })
   }
   if (s.kind === 'acompanamiento' && !wasSent(p, 'cierre'))
-    out.push({ key: 'cierre', level: 'info', text: 'Web publicada: enviar «Cierre del proyecto»' })
+    out.push({ key: 'cierre', level: 'info', text: 'Publicado: enviar «Cierre del proyecto»' })
+  if (s.kind === 'acompanamiento' && s.calendar >= flowOf(p.service).support)
+    out.push({ level: 'info', text: `Pasaron los ${flowOf(p.service).support} días de acompañamiento: cerrar el proyecto` })
   return out
 }
 
@@ -215,13 +217,21 @@ export function advance(p: Project, today = iso(businessToday())): Partial<Proje
   }
 }
 
+// Deshacer el último «Marcar como hecho» (o un cierre administrativo): vuelve a la fase anterior con sus fechas.
+export function undo(p: Project): Partial<Project> | null {
+  const last = p.history[p.history.length - 1]
+  if (!last) return null
+  return { history: p.history.slice(0, -1), phase: last.i, phase_started: last.s, closed_admin: false, paused_since: null }
+}
+
 // Efectos de enviar un mensaje: se marca como enviado y, si es de pausa, cierre o reactivación, cambia el estado.
 export function afterMessage(p: Project, k: TemplateKey, today = iso(businessToday())): Partial<Project> {
   const patch: Partial<Project> = { sent: p.sent.includes(`${p.phase}:${k}`) ? p.sent : [...p.sent, `${p.phase}:${k}`] }
   if (k === 'pausa' && p.service !== 'otro') patch.paused_since = today
   if (k === 'reactivacion' && p.paused_since) Object.assign(patch, { paused_since: null, phase_started: today })
   const total = flowOf(p.service).phases.length
-  if (k === 'cierreAdm' && p.service !== 'otro' && p.phase < total)
+  // El cierre administrativo solo cierra un proyecto en pausa (evita cerrarlo por error desde «Otros mensajes»).
+  if (k === 'cierreAdm' && p.service !== 'otro' && p.phase < total && p.paused_since)
     Object.assign(patch, {
       history: [...p.history, { i: p.phase, s: p.phase_started, e: p.paused_since ?? today }],
       phase: total,
@@ -232,4 +242,9 @@ export function afterMessage(p: Project, k: TemplateKey, today = iso(businessTod
 }
 
 export const firstName = (name: string) => name.trim().split(/\s+/)[0] || name
-export const waNumber = (phone: string | null) => (phone ?? '').replace(/\D/g, '')
+// Solo dígitos, con código de país. Un celular peruano escrito sin código (9 dígitos que empiezan
+// por 9) se completa con 51 para que el enlace de WhatsApp funcione.
+export function waNumber(phone: string | null) {
+  const d = (phone ?? '').replace(/\D/g, '').replace(/^00/, '')
+  return /^9\d{8}$/.test(d) ? `51${d}` : d
+}
