@@ -5,7 +5,7 @@
 //
 // Variables: RESEND_API_KEY, CONTACT_TO, CONTACT_FROM (como /api/contact) y BLOB_READ_WRITE_TOKEN.
 import { list } from '@vercel/blob'
-import { BRIEF_LIMITS, isVisible, steps, validateStep, type Answers, type Field } from '../src/brief/questions.js'
+import { activeSteps, BRIEF_LIMITS, isVisible, steps, validateStep, type Answers, type Field } from '../src/brief/questions.js'
 import { fileLink, json, parseSession } from './_brief-auth.js'
 import { saveClient } from './_db.js'
 import { briefConfirmation } from './_email.js'
@@ -72,7 +72,7 @@ export async function POST(request: Request): Promise<Response> {
   if (!session) return json(403, { error: 'La sesión del brief caducó. Recarga la página y vuelve a enviarlo.' })
 
   const answers = clean(payload.answers)
-  const invalid = steps.find((s) => Object.keys(validateStep(s, answers)).length > 0)
+  const invalid = activeSteps(answers).find((s) => Object.keys(validateStep(s, answers)).length > 0)
   if (invalid) return json(400, { error: `Revisa el paso «${invalid.title}»: falta algún dato obligatorio.` })
 
   // Archivos: los que hay de verdad en la carpeta del brief, no los que diga el navegador.
@@ -85,6 +85,7 @@ export async function POST(request: Request): Promise<Response> {
 
   const nombre = String(answers.nombre)
   const marca = String(answers.marca)
+  const tipos = Array.isArray(answers.tipos) ? answers.tipos.join(', ') : ''
 
   // Al panel de ALIVE (Supabase), con los enlaces firmados a cada archivo.
   const saved = await saveClient({
@@ -104,7 +105,7 @@ export async function POST(request: Request): Promise<Response> {
     })),
   })
 
-  const sections = steps
+  const sections = activeSteps(answers)
     .map((step) => {
       const rows = step.fields
         .filter((f) => f.kind !== 'files' && f.kind !== 'consent' && isVisible(f, answers))
@@ -159,7 +160,7 @@ export async function POST(request: Request): Promise<Response> {
   const res = await send({
     to: CONTACT_TO.split(',').map((s) => s.trim()),
     reply_to: String(answers.email),
-    subject: `Brief: ${marca} (${nombre})`,
+    subject: `Brief: ${marca} (${nombre})${tipos ? ` · ${tipos}` : ''}`,
     html,
   })
   if (!res?.ok) return json(502, { error: 'No hemos podido enviar tu brief. Inténtalo de nuevo en unos minutos.' })

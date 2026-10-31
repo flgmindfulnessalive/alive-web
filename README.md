@@ -71,7 +71,7 @@ El enlace «Blog» aparece en el menú y en el pie en cuanto hay un artículo pu
 
 ## Brief de proyecto (`/brief-form/`)
 
-Formulario por pasos para clientes (no se indexa ni aparece en el menú: se comparte por enlace). Las preguntas están en `src/brief/questions.ts`, que usan tanto el formulario como el correo. Los archivos se suben desde el navegador directamente a un **Blob Store privado de Vercel**; las respuestas y los enlaces firmados a los archivos llegan por correo con Resend, y el cliente recibe una confirmación.
+Formulario por pasos para clientes (no se indexa ni aparece en el menú: se comparte por enlace). Se adapta al tipo de proyecto: un tronco común (contacto, proyecto, objetivo, público, estilo, archivos) y un paso propio para cada tipo marcado (Sitio web, Marca e identidad, Producto digital o app, IA y automatización). Enlaces directos por servicio: `/brief-form/?tipo=web`, `?tipo=marca`, `?tipo=producto`, `?tipo=ia`. Las preguntas están en `src/brief/questions.ts`, que usan tanto el formulario como el correo. Los archivos se suben desde el navegador directamente a un **Blob Store privado de Vercel**; las respuestas y los enlaces firmados a los archivos llegan por correo con Resend, y el cliente recibe una confirmación.
 
 Funciones: `api/brief-session.ts` (verifica Turnstile y abre una sesión firmada de 48 h), `api/brief-upload.ts` (autoriza subidas solo en la carpeta de esa sesión, con tipos y tamaños permitidos), `api/brief.ts` (envía el brief) y `api/brief-file.ts` (abre o borra archivos con firma). Variables: las del formulario de contacto, más `BLOB_READ_WRITE_TOKEN` (la crea Vercel al conectar el Blob Store) y, recomendado, `BRIEF_SECRET` (firma de sesiones y enlaces; si falta, se usa el token de Blob).
 

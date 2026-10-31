@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import wordmarkUrl from '../assets/brand/alive-wordmark.svg'
-import { steps } from '../brief/questions'
+import { PROJECT_TYPES, steps } from '../brief/questions'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
 
 const money = (n: number | null) =>
@@ -12,6 +12,17 @@ const ago = (iso: string) => {
   const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
   return days === 0 ? 'hoy' : days === 1 ? 'ayer' : days < 30 ? `hace ${days} días` : date(iso)
 }
+// Etiquetas cortas de los tipos de proyecto marcados en el brief.
+const TYPE_SHORT: Record<string, string> = {
+  [PROJECT_TYPES.web]: 'Web',
+  [PROJECT_TYPES.marca]: 'Marca',
+  [PROJECT_TYPES.producto]: 'App',
+  [PROJECT_TYPES.ia]: 'IA',
+  [PROJECT_TYPES.otro]: 'Otro',
+}
+const typesOf = (c: Client) =>
+  Array.isArray(c.answers?.tipos) ? (c.answers.tipos as string[]).map((t) => TYPE_SHORT[t] ?? t) : []
+
 const waLink = (phone: string) => `https://wa.me/${phone.replace(/\D/g, '')}`
 
 // ¿Es administrador? (panel_admins solo devuelve filas a quien lo es) y la lista de clientes.
@@ -158,6 +169,7 @@ function Workspace({ session }: { session: Session }) {
   const [admin, setAdmin] = useState<boolean | null>(null)
   const [view, setView] = useState<'tablero' | 'lista'>('tablero')
   const [query, setQuery] = useState('')
+  const [type, setType] = useState('')
   const [openId, setOpenId] = useState<string | null>(null)
   const [adding, setAdding] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -200,9 +212,12 @@ function Workspace({ session }: { session: Session }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return clients
-    return clients.filter((c) => [c.name, c.company, c.email, c.sector].some((v) => v?.toLowerCase().includes(q)))
-  }, [clients, query])
+    return clients.filter(
+      (c) =>
+        (!type || typesOf(c).includes(type)) &&
+        (!q || [c.name, c.company, c.email, c.sector].some((v) => v?.toLowerCase().includes(q))),
+    )
+  }, [clients, query, type])
 
   const open = clients.find((c) => c.id === openId) ?? null
   const nuevos = clients.filter((c) => c.stage === 'nuevo').length
@@ -241,6 +256,12 @@ function Workspace({ session }: { session: Session }) {
             </p>
           </div>
           <div className="panel-toolbar__actions">
+            <select className="panel-filter" aria-label="Filtrar por tipo" value={type} onChange={(e) => setType(e.target.value)}>
+              <option value="">Todos los tipos</option>
+              {Object.values(TYPE_SHORT).map((t) => (
+                <option key={t}>{t}</option>
+              ))}
+            </select>
             <input className="panel-search" type="search" placeholder="Buscar cliente, marca o correo" aria-label="Buscar" value={query} onChange={(e) => setQuery(e.target.value)} />
             <div className="panel-tabs" role="tablist" aria-label="Vista">
               {(['tablero', 'lista'] as const).map((v) => (
@@ -326,6 +347,13 @@ function Board({ clients, onOpen, onMove }: { clients: Client[]; onOpen: (id: st
                     <span className="card__date">{ago(c.created_at)}</span>
                   </span>
                   <span className="card__company">{c.company || c.name}</span>
+                  {typesOf(c).length > 0 && (
+                    <span className="card__types">
+                      {typesOf(c).map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </span>
+                  )}
                   {c.company && <span className="card__name">{c.name}</span>}
                   {c.value != null && <span className="card__value">{money(c.value)}</span>}
                 </button>
@@ -425,6 +453,11 @@ function Detail({
         <header className="detail__head">
           <div>
             <span className={`tag tag--${c.source}`}>{SOURCE_LABEL[c.source]}</span>
+            {typesOf(c).map((t) => (
+              <span key={t} className="tag tag--type">
+                {t}
+              </span>
+            ))}
             <h2 id="detail-title">{c.company || c.name}</h2>
             {c.company && <p className="panel-muted">{c.name}</p>}
           </div>

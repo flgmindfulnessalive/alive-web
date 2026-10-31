@@ -339,6 +339,41 @@
   color: var(--color-text-muted);
 }
 
+.card__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.card__types span,
+.tag--type {
+  padding: 1px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: none;
+}
+
+.tag--type {
+  margin-left: 6px;
+}
+
+.panel-filter {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: rgb(245 247 250 / 0.04);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+.panel-filter option {
+  background: #0f1820;
+}
+
 .card__value {
   margin-top: 4px;
   font-size: var(--fs-small);

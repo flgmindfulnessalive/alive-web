@@ -7,7 +7,8 @@ import {
   ALLOWED_TYPES,
   BRIEF_LIMITS,
   isVisible,
-  steps,
+  activeSteps,
+  typeFromQuery,
   validateStep,
   type Answers,
   type Field,
@@ -56,7 +57,11 @@ async function postJson(url: string, body: unknown) {
 export function BriefApp() {
   const [phase, setPhase] = useState<Phase>('intro')
   const [index, setIndex] = useState(0)
-  const [answers, setAnswers] = useState<Answers>({ personalidad: [3, 3, 3, 3] })
+  // ?tipo=web|marca|producto|ia: enlace directo por servicio, con el tipo ya marcado.
+  const [answers, setAnswers] = useState<Answers>(() => {
+    const preset = typeFromQuery(new URLSearchParams(location.search).get('tipo'))
+    return { personalidad: [3, 3, 3, 3], ...(preset ? { tipos: [preset] } : {}) }
+  })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [session, setSession] = useState<Session | null>(null)
   const [uploads, setUploads] = useState<Upload[]>([])
@@ -103,7 +108,9 @@ export function BriefApp() {
     }
   }
 
-  const step = steps[index]
+  // Los pasos dependen de los tipos de proyecto marcados.
+  const steps = activeSteps(answers)
+  const step = steps[Math.min(index, steps.length - 1)]
   const uploading = uploads.some((u) => u.status === 'uploading')
 
   function next() {
@@ -197,8 +204,8 @@ export function BriefApp() {
             <span className="brief__grad"> Lo hacemos crecer juntos.</span>
           </h1>
           <p className="brief__lead">
-            Con tus respuestas preparamos la reunión de arranque y la dirección visual. Son {steps.length} pasos cortos,
-            unos 10 minutos, y al final puedes subir tu logo, fotos y documentos.
+            Con tus respuestas preparamos la reunión de arranque. Son pasos cortos, unos 10 minutos: solo te preguntamos
+            lo que aplica a tu proyecto, y al final puedes subir tu logo, fotos y documentos.
           </p>
           <ul className="brief__promises">
             <li>Si no sabes algo, déjalo en blanco: lo vemos juntos.</li>
