@@ -707,3 +707,18 @@
   border-color: var(--color-blue);
   background: rgb(47 107 255 / 0.06);
 }
+
+/* Listas desplegables nativas (etapa, filtro): en Windows el desplegable usaba fondo claro con
+   texto blanco. Se pide la versión oscura del sistema y colores explícitos para cada opción. */
+.panel select {
+  color-scheme: dark;
+}
+
+.panel select option {
+  background-color: #0f1820;
+  color: var(--color-text);
+}
+
+.panel select option:checked {
+  background-color: #1e3a8a;
+}
