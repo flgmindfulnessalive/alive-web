@@ -44,15 +44,27 @@ def color_to_alpha(rgb: np.ndarray) -> Image.Image:
     return Image.fromarray(rgba, 'RGBA')
 
 
+# La escultura se muestra siempre sobre el fondo de la web (#080F14): se aplana sobre ese color.
+# Sin canal alfa pesa ~6 veces menos (la del hero pasa de 137 KB a ~25 KB) y se ve igual.
+PAGE_BG = (8, 15, 20)
+
+
+def flatten(img: Image.Image) -> Image.Image:
+    bg = Image.new('RGBA', img.size, PAGE_BG + (255,))
+    return Image.alpha_composite(bg, img).convert('RGB')
+
+
+def save_sculptures(sculpture: Image.Image) -> None:
+    flatten(sculpture.crop((640, 0, 1560, 741))).save(OUT / 'sculpture-hero.webp', quality=84, method=6)
+    flatten(sculpture.crop((440, 0, 2000, 741))).save(OUT / 'sculpture-closing.webp', quality=82, method=6)
+
+
 def main(banner_path: str) -> None:
     banner = np.array(Image.open(banner_path).convert('RGB'))
     clean = remove_text(banner, TEXT_BOXES)
     sculpture = color_to_alpha(clean)
 
-    hero = sculpture.crop((640, 0, 1560, 741))
-    hero.save(OUT / 'sculpture-hero.webp', quality=86, method=6)
-    closing = sculpture.crop((440, 0, 2000, 741))
-    closing.save(OUT / 'sculpture-closing.webp', quality=84, method=6)
+    save_sculptures(sculpture)
 
     # Open Graph: banner sin titular derecho, conservando wordmark y firma.
     og_src = remove_text(banner, TEXT_BOXES[1:])

@@ -7,7 +7,7 @@ Homepage responsive de ALIVE construida con React 19, TypeScript, Vite y CSS con
 ```bash
 npm install
 npm run dev        # desarrollo en http://localhost:5173
-npm run build      # comprobación de tipos + compilación en dist/
+npm run build      # tipos + compilación en dist/ + portada prerenderizada (scripts/prerender.mjs)
 npm run preview    # sirve dist/ en http://localhost:4173
 npm run lint       # oxlint
 npm run brand          # regenera escultura y OG desde brand-source/ (Python 3 + Pillow + NumPy)

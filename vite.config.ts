@@ -130,11 +130,12 @@ function blogPages() {
 }
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, isSsrBuild }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   return {
     plugins: [react(), secondaryHeader(), whatsappButton(), siteUrl(env.VITE_SITE_URL)],
-    build: {
+    // El build SSR (solo para prerenderizar la portada) usa su propia entrada.
+    build: isSsrBuild ? {} : {
       rollupOptions: {
         input: {
           main: 'index.html',
