@@ -64,7 +64,7 @@ export function clientEmail(o: Options): string {
           <!-- Cabecera oscura -->
           <tr>
             <td class="hero" style="background-color:#080f14;border-radius:16px 16px 0 0;padding:40px 44px 36px">
-              <img src="${SITE}/email/alive-wordmark.png" width="120" height="24" alt="ALIVE" style="display:block;border:0;width:120px;height:auto;color:#f5f7fa;${font};font-size:20px;font-weight:600;letter-spacing:2px">
+              <img src="${SITE}/email/alive-wordmark.png" width="120" height="22" alt="ALIVE" style="display:block;border:0;width:120px;height:auto;color:#f5f7fa;${font};font-size:20px;font-weight:600;letter-spacing:2px">
               <p style="margin:40px 0 0;${font};font-size:11px;line-height:16px;letter-spacing:2.6px;text-transform:uppercase;color:#a1a1aa">${o.eyebrow}</p>
               <h1 class="title" style="margin:10px 0 0;${font};font-size:30px;line-height:36px;font-weight:500;letter-spacing:-0.6px;color:#f5f7fa">${o.title}</h1>
             </td>

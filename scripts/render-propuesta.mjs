@@ -37,7 +37,7 @@ const cliente = esc(d.cliente.nombre)
 const wordmark = readFileSync(resolve(root, 'src/assets/brand/alive-wordmark.svg'), 'utf8')
   .replace(/<\?xml[^>]*>/, '')
   .replace('<svg', '<svg class="wordmark" aria-label="ALIVE"')
-  .replaceAll('fill="#F5F7FA"', 'fill="currentColor"')
+  .replaceAll('#F5F7FA', 'currentColor')
 
 // ——— Contenido ———
 const incluye = [

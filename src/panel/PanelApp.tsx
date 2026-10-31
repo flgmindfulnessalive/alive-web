@@ -173,6 +173,14 @@ function Workspace({ session }: { session: Session }) {
   const [openId, setOpenId] = useState<string | null>(null)
   const [adding, setAdding] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // ¿Pueden las funciones de la web guardar en Supabase? Si no, se avisa con el motivo.
+  const [health, setHealth] = useState<{ ok: boolean; reason?: string; warning?: string; detail?: string } | null>(null)
+  useEffect(() => {
+    fetch('/api/panel-health', { headers: { Authorization: `Bearer ${session.access_token}` } })
+      .then((r) => r.json())
+      .then(setHealth)
+      .catch(() => setHealth(null))
+  }, [session.access_token])
 
   const load = useCallback(
     () =>
@@ -275,6 +283,13 @@ function Workspace({ session }: { session: Session }) {
             </button>
           </div>
         </div>
+        {health && (!health.ok || health.warning) && (
+          <div className="panel-alert" role="alert">
+            <strong>Los briefs y consultas nuevos no están entrando al panel.</strong> {health.reason ?? health.warning}
+            {health.detail && <code>{health.detail}</code>}
+            <span>Mientras tanto siguen llegando por correo; puedes añadirlos con «+ Cliente».</span>
+          </div>
+        )}
         {error && (
           <p className="panel-error" role="alert">
             {error}{' '}

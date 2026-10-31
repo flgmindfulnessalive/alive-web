@@ -198,14 +198,34 @@ export function BriefApp() {
 
       {phase === 'intro' && (
         <main className="brief__intro container" id="contenido">
-          <p className="eyebrow eyebrow--rule">Brief de proyecto</p>
+          <div className="brief__meta">
+            <p className="eyebrow eyebrow--rule">Brief de proyecto</p>
+            <p className="brief__time">
+              <svg className="brief__clock" viewBox="0 0 24 24" aria-hidden="true">
+                <defs>
+                  <linearGradient id="brief-clock-g" x1="0" y1="1" x2="1" y2="0">
+                    <stop offset="0" stopColor="#7c3aed" />
+                    <stop offset="0.52" stopColor="#2f6bff" />
+                    <stop offset="1" stopColor="#00e0d0" />
+                  </linearGradient>
+                </defs>
+                <circle cx="12" cy="12" r="9.25" />
+                <line className="brief__clock-hour" x1="12" y1="12" x2="12" y2="7.5" />
+                <line className="brief__clock-min" x1="12" y1="12" x2="15.5" y2="12" />
+                <circle className="brief__clock-dot" cx="12" cy="12" r="1.1" />
+              </svg>
+              <span>
+                <strong>10 minutos</strong> aprox.
+              </span>
+            </p>
+          </div>
           <h1 ref={heading} tabIndex={-1} className="brief__title">
             Cuéntanos tu proyecto.
             <span className="brief__grad"> Lo hacemos crecer juntos.</span>
           </h1>
           <p className="brief__lead">
-            Con tus respuestas preparamos la reunión de arranque. Son pasos cortos, unos 10 minutos: solo te preguntamos
-            lo que aplica a tu proyecto, y al final puedes subir tu logo, fotos y documentos.
+            Con tus respuestas preparamos la reunión de arranque. Son pasos cortos: solo te preguntamos lo que aplica a tu
+            proyecto, y al final puedes subir tu logo, fotos y documentos.
           </p>
           <ul className="brief__promises">
             <li>Si no sabes algo, déjalo en blanco: lo vemos juntos.</li>

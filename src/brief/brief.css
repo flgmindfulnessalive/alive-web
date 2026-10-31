@@ -63,6 +63,72 @@
   padding-top: clamp(3rem, 10vh, 7rem);
 }
 
+/* Duración: píldora con borde de degradado y un reloj cuya aguja da una vuelta al entrar. */
+.brief__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.brief__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(rgb(16 24 38), rgb(16 24 38)) padding-box,
+    linear-gradient(90deg, #7c3aed, #2f6bff 52%, #00e0d0) border-box;
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+}
+
+.brief__time strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.brief__clock {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: url(#brief-clock-g);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.brief__clock line {
+  stroke: var(--color-text);
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+}
+
+.brief__clock-dot {
+  fill: var(--color-text);
+  stroke: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brief__clock-min {
+    animation: brief-clock-min 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  }
+
+  .brief__clock-hour {
+    animation: brief-clock-hour 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  }
+}
+
+@keyframes brief-clock-min {
+  from { transform: rotate(-360deg); }
+}
+
+@keyframes brief-clock-hour {
+  from { transform: rotate(-30deg); }
+}
+
 .brief__title {
   margin-top: var(--space-3);
   font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4.25rem);

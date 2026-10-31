@@ -21,15 +21,13 @@ try {
 
 const root = new URL('../', import.meta.url)
 const file = (p) => new URL(p, root).href
-const paths = readFileSync(new URL('src/assets/brand/paths.ts', root), 'utf8')
-const WORDMARK = paths.match(/WORDMARK_PATH =\s*'([^']+)'/)[1]
 const DOMAIN = 'alivedigital.agency'
 const RIBBON = file('src/assets/visual/sculpture-closing.webp')
 // Punto (en coordenadas de la imagen de la cinta) donde la cinta pasa por delante del titular.
 const FRONT_OG = process.env.FRONT_OG ?? '330px 420px'
 const FRONT_SQ = process.env.FRONT_SQ ?? '900px 700px'
 
-const wordmark = `<svg viewBox="0 0 547 107"><path fill="#F5F7FA" fill-rule="evenodd" d="${WORDMARK}"/></svg>`
+const wordmark = readFileSync(new URL('src/assets/brand/alive-wordmark.svg', root), 'utf8')
 
 const css = (W, H) => `
 @font-face { font-family: Inter; src: url(${file('node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')}) format('woff2'); font-weight: 100 900; }
