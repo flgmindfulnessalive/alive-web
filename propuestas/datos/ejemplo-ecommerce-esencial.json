@@ -1,0 +1,49 @@
+{
+  "slug": "ejemplo-ecommerce-esencial",
+  "cliente": {
+    "nombre": "Nombre del cliente",
+    "detalle": "Sector o tipo de negocio"
+  },
+  "fecha": "2026-10-31",
+  "validezDias": 30,
+  "moneda": "USD",
+  "servicio": {
+    "nombre": "Ecommerce Esencial",
+    "tipo": "Tienda online · pago único",
+    "precio": 750,
+    "ecommerce": {
+      "productos": 40,
+      "bloquesExtra": 1,
+      "precioBloque": 100,
+      "pasarela": "Culqi",
+      "adicionales": [
+        {
+          "nombre": "Facturación electrónica SUNAT",
+          "detalle": "Conexión con tu proveedor de facturación",
+          "precio": 250
+        }
+      ]
+    }
+  },
+  "pago": {
+    "adelanto": 70,
+    "saldo": 30
+  },
+  "plazo": "hasta 20 días hábiles",
+  "rondasDeAjustes": 2,
+  "acompanamientoDias": 15,
+  "alojamiento": {
+    "mensual": 20
+  },
+  "pausa": {
+    "diasSinRespuesta": 10,
+    "diasCierre": 30
+  },
+  "portada": {
+    "titulo": [
+      "Tu tienda online, con diseño propio",
+      "y lista para vender."
+    ],
+    "bajada": "Catálogo, pago seguro desde el celular y un panel para llevar pedidos y stock, sin licencias mensuales de plataforma."
+  }
+}

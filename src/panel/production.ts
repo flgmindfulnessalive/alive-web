@@ -2,7 +2,7 @@
 // viernes), avisos por falta de respuesta (días 3, 7 y 10) y plantillas de WhatsApp.
 // Lógica pura, sin React ni Supabase, para poder probarla aparte.
 
-export type Service = 'we' | 'wep' | 'otro'
+export type Service = 'we' | 'wep' | 'eco' | 'otro'
 export type Owner = 'alive' | 'cliente'
 export type HistoryItem = { i: number; s: string; e: string }
 
@@ -26,6 +26,7 @@ export type Project = {
 export const SERVICES: Record<Service, string> = {
   we: 'Web Esencial',
   wep: 'Web Esencial + Panel',
+  eco: 'Ecommerce Esencial',
   otro: 'Otro servicio',
 }
 export const projectName = (p: Pick<Project, 'service' | 'title'>) =>
@@ -95,42 +96,78 @@ export const STAGES_WE: { n: string; f: Phase[] }[] = [
   { n: 'Entrega', f: [{ o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' }, { o: 'alive', d: 1, l: 'Publicar y entregar accesos y guía' }] },
   { n: 'Cierre', f: [{ o: 'alive', d: 8, l: 'Acompañamiento (10 días naturales)' }] },
 ]
-export const PHASES = STAGES_WE.flatMap((s, stage) => s.f.map((f) => ({ ...f, stage })))
-export const LAST_STAGE = STAGES_WE.length - 1
+
+// ——— Etapas de la ficha Ecommerce Esencial ———
+export const STAGES_ECO: { n: string; f: Phase[] }[] = [
+  { n: 'Inicio', f: [{ o: 'cliente', d: 5, l: 'Pago del 70 %, materiales y planilla de productos', pago: 'deposit' }] },
+  { n: 'Dirección visual', f: [{ o: 'alive', d: 2, l: 'Diseñar la portada y la ficha de producto' }, { o: 'cliente', d: 2, l: 'Aprobar la dirección visual' }] },
+  { n: 'Construcción', f: [{ o: 'alive', d: 8, l: 'Catálogo, carrito, checkout, pedidos, envíos y legales' }] },
+  { n: 'Carga del catálogo', f: [{ o: 'alive', d: 3, l: 'Fichas de producto con IA' }] },
+  { n: 'Ronda de cambios 1', f: [{ o: 'cliente', d: 3, l: 'Revisar tienda y fichas en una sola lista' }, { o: 'alive', d: 2, l: 'Aplicar cambios' }] },
+  { n: 'Ronda de cambios 2', f: [{ o: 'cliente', d: 3, l: 'Cambios o aprobación final' }, { o: 'alive', d: 1, l: 'Aplicar cambios' }] },
+  { n: 'Pruebas de pago', f: [{ o: 'alive', d: 1, l: 'Compra real, reembolso, correo y stock' }] },
+  { n: 'Entrega', f: [{ o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' }, { o: 'alive', d: 1, l: 'Publicar y entregar accesos y guía de pedidos' }] },
+  { n: 'Cierre', f: [{ o: 'alive', d: 11, l: 'Acompañamiento hasta el primer pedido (15 días naturales)' }] },
+]
+
+const flatten = (stages: { n: string; f: Phase[] }[]) => stages.flatMap((s, stage) => s.f.map((f) => ({ ...f, stage })))
+export type FlowPhase = Phase & { stage: number }
+export type Flow = {
+  stages: { n: string; f: Phase[] }[]
+  phases: FlowPhase[]
+  last: number
+  support: number // días naturales de acompañamiento
+  plazo: number // días hábiles de trabajo prometidos
+  thing: string // «tu web» o «tu tienda» en los mensajes
+}
+const mkFlow = (stages: Flow['stages'], support: number, plazo: number, thing: string): Flow => ({
+  stages,
+  phases: flatten(stages),
+  last: stages.length - 1,
+  support,
+  plazo,
+  thing,
+})
+const FLOW_WE = mkFlow(STAGES_WE, 10, 10, 'tu web')
+const FLOW_ECO = mkFlow(STAGES_ECO, 15, 20, 'tu tienda')
+export const flowOf = (service: Service) => (service === 'eco' ? FLOW_ECO : FLOW_WE)
 
 // ——— Plantillas (documento operativo · Común 7) ———
 export type TemplateKey =
   | 'inicio' | 'materiales' | 'revision' | 'recordatorio' | 'aviso' | 'pausa'
   | 'cierreAdm' | 'reactivacion' | 'final' | 'cierre'
 type Ctx = { nombre: string; project: Project }
+const F = (c: Ctx) => flowOf(c.project.service)
+const panelGuide = (c: Ctx) => (c.project.service === 'wep' ? ' y la guía de tu panel' : c.project.service === 'eco' ? ' y la guía de tu panel de pedidos' : '')
 export const TEMPLATES: Record<TemplateKey, { t: string; m: (c: Ctx) => string }> = {
-  inicio: { t: 'Inicio del proyecto', m: (c) => `Hola ${c.nombre}, confirmamos tu pago, ¡empezamos! Para avanzar necesito estos materiales: [lista corta o enlace al brief]. En cuanto los tenga completos, el plazo es de hasta 10 días hábiles de trabajo (no cuentan los días en que esperamos tu respuesta). Cualquier duda, escríbeme por aquí.` },
+  inicio: { t: 'Inicio del proyecto', m: (c) => `Hola ${c.nombre}, confirmamos tu pago, ¡empezamos! Para avanzar necesito estos materiales: [lista corta o enlace al brief]. En cuanto los tenga completos, el plazo es de hasta ${F(c).plazo} días hábiles de trabajo (no cuentan los días en que esperamos tu respuesta). Cualquier duda, escríbeme por aquí.` },
   materiales: { t: 'Materiales pendientes', m: (c) => `Hola ${c.nombre}, ya revisé lo que enviaste, gracias. Para arrancar me falta: [lista]. Si alguno no lo tienes, dime y vemos una alternativa.` },
-  revision: { t: 'Entrega para revisión', m: (c) => `Hola ${c.nombre}, ya puedes ver tu web aquí: [enlace]. Revísala con calma y envíame todos tus comentarios juntos en un solo mensaje, así lo resolvemos en una ronda. Quedo atento en los próximos días.` },
-  recordatorio: { t: 'Recordatorio (día 3)', m: (c) => `Hola ${c.nombre}, te escribo por si se te pasó: tu web está lista para revisar en [enlace]. ¿Pudiste verla?` },
-  aviso: { t: 'Aviso de pausa (día 7)', m: (c) => `Hola ${c.nombre}, sigo atento a tus comentarios sobre la web. Si no tengo respuesta hasta el ${shortDate(addBusinessDays(c.project.phase_started, 10))}, pondré el proyecto en pausa para no dejarlo a medias. Podrás retomarlo cuando quieras.` },
+  revision: { t: 'Entrega para revisión', m: (c) => `Hola ${c.nombre}, ya puedes ver ${F(c).thing} aquí: [enlace]. Revísala con calma y envíame todos tus comentarios juntos en un solo mensaje, así lo resolvemos en una ronda. Quedo atento en los próximos días.` },
+  recordatorio: { t: 'Recordatorio (día 3)', m: (c) => `Hola ${c.nombre}, te escribo por si se te pasó: ${F(c).thing} está lista para revisar en [enlace]. ¿Pudiste verla?` },
+  aviso: { t: 'Aviso de pausa (día 7)', m: (c) => `Hola ${c.nombre}, sigo atento a tus comentarios sobre ${F(c).thing}. Si no tengo respuesta hasta el ${shortDate(addBusinessDays(c.project.phase_started, 10))}, pondré el proyecto en pausa para no dejarlo a medias. Podrás retomarlo cuando quieras.` },
   pausa: { t: 'Proyecto en pausa (día 10)', m: (c) => `Hola ${c.nombre}, como no he recibido respuesta, el proyecto queda en pausa desde hoy. Cuando quieras retomarlo, escríbeme y lo reactivamos. Si pasan 30 días sin novedades, lo daré por cerrado.` },
   cierreAdm: { t: 'Cierre administrativo', m: (c) => `Hola ${c.nombre}, tal como te comenté, el proyecto queda cerrado. Si más adelante quieres retomarlo, se reactiva con el pago del 30 % pendiente y seguimos desde donde lo dejamos.` },
   reactivacion: { t: 'Reactivación', m: (c) => `¡Qué bueno saber de ti, ${c.nombre}! Retomamos. En cuanto lo tenga todo, te comparto las fechas.` },
-  final: { t: 'Entrega final', m: (c) => `Hola ${c.nombre}, ¡tu web está aprobada! Para publicarla en tu dominio, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, la publico y te envío los accesos${c.project.service === 'wep' ? ' y la guía de tu panel' : ''}.` },
-  cierre: { t: 'Cierre del proyecto', m: (c) => `Hola ${c.nombre}, tu web ya está publicada en [dominio]. Te envío los accesos${c.project.service === 'wep' ? ' y la guía corta del panel' : ''}. Tienes 10 días de acompañamiento para dudas o ajustes menores. Gracias por confiar en ALIVE.` },
+  final: { t: 'Entrega final', m: (c) => `Hola ${c.nombre}, ¡${F(c).thing} está aprobada! Para publicarla en tu dominio, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, la publico y te envío los accesos${panelGuide(c)}.` },
+  cierre: { t: 'Cierre del proyecto', m: (c) => `Hola ${c.nombre}, ${F(c).thing} ya está publicada en [dominio]. Te envío los accesos${panelGuide(c)}. Tienes ${F(c).support} días de acompañamiento para dudas o ajustes menores${c.project.service === 'eco' ? ', y vemos juntos tu primer pedido real' : ''}. Gracias por confiar en ALIVE.` },
 }
 
 // ——— Estado de un proyecto ———
 export type Status =
   | { kind: 'sinficha' }
   | { kind: 'terminado' }
-  | { kind: 'pausa'; phase: (typeof PHASES)[number]; days: number; pausedDays: number }
-  | { kind: 'acompanamiento'; phase: (typeof PHASES)[number]; days: number; calendar: number }
-  | { kind: Owner; phase: (typeof PHASES)[number]; days: number; late: boolean }
+  | { kind: 'pausa'; phase: FlowPhase; days: number; pausedDays: number }
+  | { kind: 'acompanamiento'; phase: FlowPhase; days: number; calendar: number }
+  | { kind: Owner; phase: FlowPhase; days: number; late: boolean }
 
 export function statusOf(p: Project, today = businessToday()): Status {
   if (p.service === 'otro') return { kind: 'sinficha' }
-  if (p.phase >= PHASES.length) return { kind: 'terminado' }
-  const phase = PHASES[p.phase]
+  const fl = flowOf(p.service)
+  if (p.phase >= fl.phases.length) return { kind: 'terminado' }
+  const phase = fl.phases[p.phase]
   const days = Math.max(0, businessDaysBetween(p.phase_started, today))
   if (p.paused_since) return { kind: 'pausa', phase, days, pausedDays: calendarDaysBetween(p.paused_since, new Date()) }
-  if (phase.stage === LAST_STAGE) return { kind: 'acompanamiento', phase, days, calendar: calendarDaysBetween(p.phase_started, new Date()) }
+  if (phase.stage === fl.last) return { kind: 'acompanamiento', phase, days, calendar: calendarDaysBetween(p.phase_started, new Date()) }
   return { kind: phase.o, phase, days, late: days >= phase.d }
 }
 
@@ -163,10 +200,10 @@ export function statusLabel(p: Project, s = statusOf(p)): { tone: '' | 'ok' | 'w
   if (s.kind === 'sinficha') return { tone: '', text: 'Sin ficha' }
   if (s.kind === 'terminado') return { tone: 'ok', text: p.closed_admin ? 'Cierre administrativo' : 'Cerrado' }
   if (s.kind === 'pausa') return { tone: 'pause', text: `En pausa · ${s.pausedDays} de 30 días` }
-  if (s.kind === 'acompanamiento') return { tone: 'ok', text: `Acompañamiento · día ${s.calendar} de 10` }
+  if (s.kind === 'acompanamiento') return { tone: 'ok', text: `Acompañamiento · día ${s.calendar} de ${flowOf(p.service).support}` }
   const who = s.kind === 'alive' ? 'ALIVE' : 'Cliente'
   const tone = !s.late ? '' : s.days >= 7 ? 'crit' : 'warn'
-  return { tone, text: `${STAGES_WE[s.phase.stage].n} · ${who} · día ${s.days}/${s.phase.d}` }
+  return { tone, text: `${flowOf(p.service).stages[s.phase.stage].n} · ${who} · día ${s.days}/${s.phase.d}` }
 }
 
 // Cambios al marcar la fase actual como hecha.
@@ -183,10 +220,11 @@ export function afterMessage(p: Project, k: TemplateKey, today = iso(businessTod
   const patch: Partial<Project> = { sent: p.sent.includes(`${p.phase}:${k}`) ? p.sent : [...p.sent, `${p.phase}:${k}`] }
   if (k === 'pausa' && p.service !== 'otro') patch.paused_since = today
   if (k === 'reactivacion' && p.paused_since) Object.assign(patch, { paused_since: null, phase_started: today })
-  if (k === 'cierreAdm' && p.service !== 'otro' && p.phase < PHASES.length)
+  const total = flowOf(p.service).phases.length
+  if (k === 'cierreAdm' && p.service !== 'otro' && p.phase < total)
     Object.assign(patch, {
       history: [...p.history, { i: p.phase, s: p.phase_started, e: p.paused_since ?? today }],
-      phase: PHASES.length,
+      phase: total,
       paused_since: null,
       closed_admin: true,
     })

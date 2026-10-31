@@ -12,12 +12,10 @@ import {
   firstName,
   iso,
   isBusinessDay,
-  LAST_STAGE,
-  PHASES,
   projectName,
   SERVICES,
   shortDate,
-  STAGES_WE,
+  flowOf,
   statusLabel,
   statusOf,
   tasksOf,
@@ -319,8 +317,10 @@ function TimelineGrid({
               const s = statusOf(p, today)
               const bars: ReactNode[] = []
               if (s.kind !== 'sinficha') {
+                const fl = flowOf(p.service)
+                const STAGES_WE = fl.stages
                 for (const h of p.history) {
-                  const f = PHASES[h.i]
+                  const f = fl.phases[h.i]
                   bars.push(seg(h.s, h.e, `is-${f.o}`, STAGES_WE[f.stage].n, `${STAGES_WE[f.stage].n} · ${f.l}`))
                 }
                 if (s.kind !== 'terminado') {
@@ -335,8 +335,8 @@ function TimelineGrid({
                     bars.push(seg(p.phase_started, tomorrow, `is-${f.o}${late}`, STAGES_WE[f.stage].n, `${STAGES_WE[f.stage].n} · ${f.l} · día ${s.days} de ${f.d}`))
                     let cursor = end > tomorrow ? end : tomorrow
                     if (end > tomorrow) bars.push(seg(tomorrow, end, `is-plan is-${f.o}`, '', 'Planeado'))
-                    for (let i = p.phase + 1; i < PHASES.length; i++) {
-                      const g = PHASES[i]
+                    for (let i = p.phase + 1; i < fl.phases.length; i++) {
+                      const g = fl.phases[i]
                       const next = addBusinessDays(cursor, g.d)
                       bars.push(seg(cursor, next, `is-plan is-${g.o}`, '', `Planeado · ${STAGES_WE[g.stage].n} · ${g.l}`))
                       cursor = next
@@ -406,6 +406,8 @@ function ProjectDetail({
   const s = statusOf(p)
   const label = statusLabel(p, s)
   const tasks = tasksOf(p)
+  const fl = flowOf(p.service)
+  const { stages: STAGES_WE, phases: PHASES, last: LAST_STAGE } = fl
 
   let now: ReactNode
   if (s.kind === 'sinficha') {
@@ -438,7 +440,7 @@ function ProjectDetail({
       s.kind === 'pausa'
         ? `En pausa desde el ${shortDate(p.paused_since!)} · ${s.pausedDays} de 30 días naturales antes del cierre administrativo`
         : s.kind === 'acompanamiento'
-          ? `Día ${s.calendar} de 10 naturales de acompañamiento`
+          ? `Día ${s.calendar} de ${fl.support} naturales de acompañamiento`
           : `Día ${s.days} de ${f.d} hábiles acordados${s.late ? ' · fuera de plazo' : ''} · desde el ${shortDate(p.phase_started)}`
     const waiting = s.kind === 'cliente' || s.kind === 'pausa'
     const filled = Math.min(s.days, 10)
@@ -776,6 +778,7 @@ function NewProject({ clients, preset, onClose, onCreated }: { clients: Client[]
           <select className="prod-select" value={service} onChange={(e) => setService(e.target.value as Service)}>
             <option value="we">{SERVICES.we} · desde US$ 350</option>
             <option value="wep">{SERVICES.wep} · desde US$ 450</option>
+            <option value="eco">{SERVICES.eco} · desde US$ 750</option>
             <option value="otro">Otro servicio (sin ficha aún)</option>
           </select>
         </label>
