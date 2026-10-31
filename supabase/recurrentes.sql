@@ -24,3 +24,6 @@ alter table public.recurring enable row level security;
 drop policy if exists "admins gestionan recurrentes" on public.recurring;
 create policy "admins gestionan recurrentes" on public.recurring
   for all to authenticated using (public.is_panel_admin()) with check (public.is_panel_admin());
+
+-- Avisos de cobro ya enviados por mes (se suma a tablas creadas antes de esta columna).
+alter table public.recurring add column if not exists sent jsonb not null default '[]'::jsonb;

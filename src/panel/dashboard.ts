@@ -1,7 +1,7 @@
 // Cálculos del Resumen: cobros, por cobrar, ventas, embudo, producción y prioridades.
 // Todo sale de los datos del panel (clientes y proyectos); nada se estima por fuera.
 import type { Client } from './data'
-import { activeIn, isPaid, monthName, mrr, recurringName, recurringPayments, type Recurring } from './recurring'
+import { activeIn, billingStatus, dueNotice, isPaid, monthName, mrr, overdue, recurringName, recurringPayments, type Recurring } from './recurring'
 import {
   businessDaysBetween,
   businessToday,
@@ -115,8 +115,12 @@ export function buildDashboard(
   // Cobros: pagos de proyectos y de servicios mensuales, por la fecha en que se marcaron.
   const payments: { date: string; amount: number }[] = [...projects.flatMap(paymentsOf), ...recurringPayments(recurring)]
   const recurrente = mrr(recurring, now)
-  const pendientesRecurrentes = recurring.filter((x) => activeIn(x, thisMonth) && !isPaid(x, thisMonth))
-  const porCobrarRecurrente = pendientesRecurrentes.reduce((a, x) => a + x.amount, 0)
+  // Por cobrar mensual: meses impagos ya vencidos más el mes en curso si aún no se pagó.
+  const porCobrarRecurrente = recurring.reduce((a, x) => {
+    const late = overdue(x, now)?.months ?? []
+    const current = activeIn(x, thisMonth) && !isPaid(x, thisMonth) && !late.includes(thisMonth) ? 1 : 0
+    return a + x.amount * (late.length + current)
+  }, 0)
   const cobradoMes = sum(payments.filter((x) => inPeriod(x.date)).map((x) => x.amount))
   const cobradoMesAnterior = sum(payments.filter((x) => inPrevious(x.date)).map((x) => x.amount))
   const endYear = period.months[period.months.length - 1].slice(0, 4)
@@ -299,16 +303,18 @@ export function buildDashboard(
       target: { kind: 'project', id: p.id },
     })
   const order = { crit: 0, warn: 1, info: 2 }
-  // Cobros mensuales del mes en curso, desde su día de cobro.
-  for (const x of pendientesRecurrentes) {
-    const late = now.getDate() - x.billing_day
-    if (late < 0) continue
+  // Cobros mensuales impagos, con el aviso que toca según los días desde el día de cobro (ficha SEO · S4).
+  for (const x of recurring) {
+    const o = overdue(x, now)
+    if (!o) continue
+    const n = dueNotice(x, now)
+    const status = billingStatus(x, now)
     priorities.push({
-      id: `${x.id}-mes`,
-      level: late > 7 ? 'warn' : 'info',
-      title: `Cobrar ${recurringName(x).toLowerCase()} de ${monthName(thisMonth)}`,
-      detail: `${label(x.client_id)} · ${late === 0 ? 'vence hoy' : `vencía el día ${x.billing_day}`}`,
-      amount: x.amount,
+      id: `${x.id}-cobro-${o.month}`,
+      level: status.tone === 'crit' ? 'crit' : status.tone === 'warn' ? 'warn' : 'info',
+      title: n ? `${n.title}: ${recurringName(x).toLowerCase()}` : `Cobrar ${recurringName(x).toLowerCase()} de ${monthName(o.month)}`,
+      detail: `${label(x.client_id)} · ${status.text}${n ? ' · mensaje listo en su ficha' : ''}`,
+      amount: x.amount * o.months.length,
       target: { kind: 'client', id: x.client_id },
     })
   }

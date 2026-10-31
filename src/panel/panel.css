@@ -2139,3 +2139,18 @@ label.prod-pays {
   font-size: 13px;
   color: var(--color-text-muted);
 }
+
+.rec-row__status {
+  margin-left: 8px;
+  font-weight: 400;
+  vertical-align: 1px;
+}
+
+.rec-row__notice {
+  grid-column: 1 / -1;
+}
+
+.rec-msg {
+  display: grid;
+  gap: 8px;
+}

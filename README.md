@@ -85,7 +85,7 @@ Acceso con correo y contraseña (o enlace al correo si se olvida), solo para cue
 
 **Resumen** (pestaña inicial): cobrado en el mes y en el año, por cobrar, ingreso mensual recurrente con su margen, vendido y en negociación; prioridades del día; estado de producción; cobros y consultas por mes; embudo con tasa de cierre; servicios vendidos. Los cálculos están en `src/panel/dashboard.ts`.
 
-**Servicios mensuales** (alojamiento, SEO, retainer): se cargan en la ficha del cliente con su cobro, su costo para ALIVE y su día de cobro, y se marca cada mes pagado (también desde el Resumen). Requiere `supabase/recurrentes.sql`.
+**Servicios mensuales** (alojamiento, SEO, retainer): se cargan en la ficha del cliente con su cobro, su costo para ALIVE y su día de cobro, y se marca cada mes pagado (también desde el Resumen). Si un mes queda impago, la ficha y el Resumen muestran el aviso que toca (días 5, 10, 15, 25 y 35 desde el día de cobro, según la ficha de SEO Mensual) con el mensaje de WhatsApp listo; cada envío queda en las notas. Los planes con SEO muestran su permanencia mínima de 6 meses. Requiere `supabase/recurrentes.sql`.
 
 ## Propuestas comerciales
 

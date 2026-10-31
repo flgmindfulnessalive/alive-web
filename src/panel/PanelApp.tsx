@@ -6,7 +6,7 @@ import { parseBriefEmail, type ImportedBrief } from './importBrief'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
 import { Production } from './Production'
 import { Dashboard } from './Dashboard'
-import { RecurringSection } from './Recurring'
+import { RecurringSection, type NoteHelpers } from './Recurring'
 import type { Recurring } from './recurring'
 import { projectName, statusLabel, waNumber, type Project } from './production'
 
@@ -442,9 +442,16 @@ function Workspace({ session }: { session: Session }) {
           client={open}
           author={session.user.email ?? ''}
           projects={projects.filter((p) => p.client_id === open.id)}
-          recurringSection={
-            <RecurringSection clientId={open.id} items={recurring.filter((x) => x.client_id === open.id)} onAdd={addRecurring} onUpdate={updateRecurring} />
-          }
+          recurringSection={(notes) => (
+            <RecurringSection
+              clientId={open.id}
+              client={{ name: open.name, phone: open.phone }}
+              notes={notes}
+              items={recurring.filter((x) => x.client_id === open.id)}
+              onAdd={addRecurring}
+              onUpdate={updateRecurring}
+            />
+          )}
           onNewProject={() => {
             setOpenId(null)
             go('produccion')
@@ -598,7 +605,7 @@ function Detail({
   author: string
   projects: Project[]
   onNewProject: () => void
-  recurringSection: ReactNode
+  recurringSection: (notes: NoteHelpers) => ReactNode
   onOpenProject: (id: string) => void
   onClose: () => void
   onUpdate: (id: string, patch: Partial<Client>) => Promise<boolean>
@@ -758,7 +765,17 @@ function Detail({
           </button>
         </section>
 
-        {recurringSection}
+        {recurringSection({
+          logNote: async (body) => {
+            const { data } = await supabase!.from('notes').insert({ client_id: c.id, body, author }).select().single()
+            if (data) setNotes((n) => [data as Note, ...n])
+            return (data?.id as string | undefined) ?? null
+          },
+          removeNote: async (id) => {
+            const { error } = await supabase!.from('notes').delete().eq('id', id)
+            if (!error) setNotes((n) => n.filter((x) => x.id !== id))
+          },
+        })}
 
         {c.message && (
           <section className="detail__section">
