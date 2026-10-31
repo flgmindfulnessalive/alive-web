@@ -160,9 +160,9 @@
     will-change: transform;
   }
 
+  /* Solo un leve desplazamiento al hacer scroll: el texto y los CTA siempre a plena opacidad. */
   .hero__copy {
     transform: translate3d(0, calc(var(--p, 0) * -6%), 0);
-    opacity: clamp(0, calc(1.35 - var(--p, 0) * 1.6), 1);
   }
 }
 
