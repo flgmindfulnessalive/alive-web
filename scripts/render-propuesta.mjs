@@ -256,7 +256,7 @@ p + p { margin-top: 8px; }
 <section class="page">
   <p class="eyebrow">03 · Cómo trabajamos</p>
   <h2>De la primera reunión<br />a tu web publicada</h2>
-  <p class="lead" style="margin-bottom:16px">${esc(Plazo)} en total, contados desde que tenemos el material y los accesos.</p>
+  <p class="lead" style="margin-bottom:16px">${esc(Plazo)} de trabajo, contados desde que tenemos el material y los accesos. No cuentan los días en que esperamos tu respuesta.</p>
   ${fases.map(([cuando, titulo, texto], i) => `
   <div class="fase">
     <div><div class="n">0${i + 1}</div><div class="cuando">${cuando}</div></div>
@@ -284,7 +284,7 @@ p + p { margin-top: 8px; }
   <p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>
   <h3 style="margin-top:20px">Condiciones</h3>
   <div class="condiciones">
-    <div><h3>Plazos</h3><p>${esc(Plazo)}. El reloj empieza cuando tenemos el material y los accesos, no el día que se contrata.</p></div>
+    <div><h3>Plazos</h3><p>${esc(Plazo)} de trabajo desde que tenemos el material. No cuentan los días que esperamos tu respuesta.</p></div>
     <div><h3>Cambios</h3><p>${d.rondasDeAjustes} rondas, cada una con una sola lista. Lo que no está en esta propuesta se cotiza aparte, antes de hacerlo.</p></div>
     <div><h3>Si no hay respuesta</h3><p>A los ${pausa.diasSinRespuesta} días hábiles sin respuesta el proyecto se pausa, y a los ${pausa.diasCierre} días de pausa se cierra. Para retomarlo, se paga el saldo.</p></div>
     <div><h3>Dominio y alojamiento</h3><p>Se pagan aparte y quedan a tu nombre. El alojamiento con nosotros es opcional.</p></div>

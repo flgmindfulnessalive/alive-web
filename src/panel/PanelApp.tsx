@@ -4,6 +4,8 @@ import wordmarkUrl from '../assets/brand/alive-wordmark.svg'
 import { PROJECT_TYPES, steps } from '../brief/questions'
 import { parseBriefEmail, type ImportedBrief } from './importBrief'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
+import { Production } from './Production'
+import { projectName, statusLabel, type Project } from './production'
 
 const money = (n: number | null) =>
   n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
@@ -28,11 +30,19 @@ const waLink = (phone: string) => `https://wa.me/${phone.replace(/\D/g, '')}`
 
 // ¿Es administrador? (panel_admins solo devuelve filas a quien lo es) y la lista de clientes.
 async function fetchWorkspace() {
-  const [{ data: admins }, { data, error }] = await Promise.all([
+  const [{ data: admins }, { data, error }, projects] = await Promise.all([
     supabase!.from('panel_admins').select('email').limit(1),
     supabase!.from('clients').select('*').order('created_at', { ascending: false }),
+    supabase!.from('projects').select('*').order('created_at', { ascending: true }),
   ])
-  return { admin: (admins?.length ?? 0) > 0, clients: (data ?? []) as Client[], failed: Boolean(error) }
+  return {
+    admin: (admins?.length ?? 0) > 0,
+    clients: (data ?? []) as Client[],
+    failed: Boolean(error),
+    // Si la tabla de proyectos aún no existe (falta ejecutar supabase/proyectos.sql), se avisa en Producción.
+    projects: (projects.data ?? []) as Project[],
+    projectsMissing: Boolean(projects.error),
+  }
 }
 
 export function PanelApp() {
@@ -167,6 +177,12 @@ function Login() {
 
 function Workspace({ session }: { session: Session }) {
   const [clients, setClients] = useState<Client[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
+  const [projectsMissing, setProjectsMissing] = useState(false)
+  const [section, setSection] = useState<'clientes' | 'produccion'>(() =>
+    location.hash === '#produccion' ? 'produccion' : 'clientes',
+  )
+  const [newProjectFor, setNewProjectFor] = useState<string | null>(null)
   const [admin, setAdmin] = useState<boolean | null>(null)
   const [view, setView] = useState<'tablero' | 'lista'>('tablero')
   const [query, setQuery] = useState('')
@@ -186,10 +202,12 @@ function Workspace({ session }: { session: Session }) {
 
   const load = useCallback(
     () =>
-      fetchWorkspace().then(({ admin, clients, failed }) => {
+      fetchWorkspace().then(({ admin, clients, failed, projects, projectsMissing }) => {
         setAdmin(admin)
         if (failed) setError('No se pudieron cargar los clientes.')
         else setClients(clients)
+        setProjects(projects)
+        setProjectsMissing(projectsMissing)
       }),
     [],
   )
@@ -209,6 +227,21 @@ function Workspace({ session }: { session: Session }) {
       load()
     }
     return !error
+  }
+
+  async function updateProject(id: string, patch: Partial<Project>) {
+    setProjects((list) => list.map((p) => (p.id === id ? { ...p, ...patch } : p)))
+    const { error } = await supabase!.from('projects').update(patch).eq('id', id)
+    if (error) {
+      setError('No se pudo guardar el cambio del proyecto.')
+      load()
+    }
+    return !error
+  }
+
+  function go(next: 'clientes' | 'produccion') {
+    setSection(next)
+    history.replaceState(null, '', next === 'produccion' ? '#produccion' : location.pathname)
   }
 
   async function remove(id: string) {
@@ -231,6 +264,7 @@ function Workspace({ session }: { session: Session }) {
   }, [clients, query, type])
 
   const open = clients.find((c) => c.id === openId) ?? null
+  const clearNewProject = useCallback(() => setNewProjectFor(null), [])
   const nuevos = clients.filter((c) => c.stage === 'nuevo').length
   const signOut = () => supabase!.auth.signOut()
 
@@ -259,6 +293,45 @@ function Workspace({ session }: { session: Session }) {
       }
     >
       <main className="panel-main">
+        <nav className="panel-tabs prod-nav" aria-label="Secciones">
+          {(['clientes', 'produccion'] as const).map((v) => (
+            <button key={v} aria-current={section === v ? 'page' : undefined} aria-selected={section === v} onClick={() => go(v)}>
+              {v === 'clientes' ? 'Clientes' : 'Producción'}
+            </button>
+          ))}
+        </nav>
+        {error && (
+          <p className="panel-error" role="alert">
+            {error}{' '}
+            <button className="panel-link" onClick={() => setError(null)}>
+              Cerrar
+            </button>
+          </p>
+        )}
+        {section === 'produccion' ? (
+          <>
+            {projectsMissing && (
+              <div className="panel-alert" role="alert">
+                <strong>Falta crear la tabla de proyectos.</strong> En Supabase → SQL Editor, pega el contenido de supabase/proyectos.sql y pulsa Run. Después recarga esta página.
+              </div>
+            )}
+            <Production
+              clients={clients}
+              projects={projects}
+              author={session.user.email ?? ''}
+              newFor={newProjectFor}
+              onNewHandled={clearNewProject}
+              onUpdate={updateProject}
+              onCreated={(p) => setProjects((list) => [...list, p])}
+              onDeleted={(id) => setProjects((list) => list.filter((p) => p.id !== id))}
+              onOpenClient={(id) => {
+                go('clientes')
+                setOpenId(id)
+              }}
+            />
+          </>
+        ) : (
+        <>
         <div className="panel-toolbar">
           <div>
             <h1 className="panel-h1">Clientes</h1>
@@ -301,21 +374,33 @@ function Workspace({ session }: { session: Session }) {
             <span>Mientras tanto siguen llegando por correo; puedes añadirlos con «Importar brief».</span>
           </div>
         )}
-        {error && (
-          <p className="panel-error" role="alert">
-            {error}{' '}
-            <button className="panel-link" onClick={() => setError(null)}>
-              Cerrar
-            </button>
-          </p>
-        )}
         {view === 'tablero' ? (
           <Board clients={filtered} onOpen={setOpenId} onMove={(id, stage) => update(id, { stage })} />
         ) : (
           <List clients={filtered} onOpen={setOpenId} />
         )}
+        </>
+        )}
       </main>
-      {open && <Detail client={open} author={session.user.email ?? ''} onClose={() => setOpenId(null)} onUpdate={update} onRemove={remove} />}
+      {open && (
+        <Detail
+          client={open}
+          author={session.user.email ?? ''}
+          projects={projects.filter((p) => p.client_id === open.id)}
+          onNewProject={() => {
+            setOpenId(null)
+            go('produccion')
+            setNewProjectFor(open.id)
+          }}
+          onOpenProjects={() => {
+            setOpenId(null)
+            go('produccion')
+          }}
+          onClose={() => setOpenId(null)}
+          onUpdate={update}
+          onRemove={remove}
+        />
+      )}
       {importing && (
         <ImportBrief
           onClose={() => setImporting(false)}
@@ -443,12 +528,18 @@ function List({ clients, onOpen }: { clients: Client[]; onOpen: (id: string) => 
 function Detail({
   client: c,
   author,
+  projects,
+  onNewProject,
+  onOpenProjects,
   onClose,
   onUpdate,
   onRemove,
 }: {
   client: Client
   author: string
+  projects: Project[]
+  onNewProject: () => void
+  onOpenProjects: () => void
   onClose: () => void
   onUpdate: (id: string, patch: Partial<Client>) => Promise<boolean>
   onRemove: (id: string) => void
@@ -584,6 +675,25 @@ function Detail({
             <dd>{date(c.created_at)}</dd>
           </div>
         </dl>
+
+        <section className="detail__section">
+          <h3>Proyectos</h3>
+          {projects.length > 0 && (
+            <ul className="detail__files">
+              {projects.map((p) => (
+                <li key={p.id}>
+                  <button className="panel-link" onClick={onOpenProjects}>
+                    {projectName(p)}
+                  </button>
+                  <span>{statusLabel(p).text}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <button className="btn btn-ghost btn-sm prod-start" onClick={onNewProject}>
+            + Crear proyecto
+          </button>
+        </section>
 
         {c.message && (
           <section className="detail__section">

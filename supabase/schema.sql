@@ -1,5 +1,6 @@
 -- Esquema del panel de ALIVE. Pégalo una vez en Supabase → SQL Editor → Run.
 -- Clientes (briefs y consultas), notas internas y lista de correos con acceso al panel.
+-- Los proyectos de producción están en proyectos.sql (ejecútalo después de este).
 -- Seguridad por filas: solo los correos de panel_admins pueden leer o editar. Las funciones de
 -- Vercel insertan con la clave secreta (service role), que no pasa por estas reglas.
 
