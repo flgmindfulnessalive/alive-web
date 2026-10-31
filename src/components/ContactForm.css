@@ -3,11 +3,11 @@
   overflow: clip;
 }
 
-.contact__orb {
+.contact__fluid {
   position: absolute;
-  top: var(--space-2);
-  right: -6%;
-  width: min(78vw, 26rem);
+  top: 0;
+  right: -10%;
+  width: min(100vw, 30rem);
 }
 
 .contact__inner {
@@ -167,9 +167,9 @@
 }
 
 @media (min-width: 768px) {
-  .contact__orb {
-    right: 4%;
-    width: min(44vw, 24rem);
+  .contact__fluid {
+    right: -2%;
+    width: min(56vw, 30rem);
   }
 
   .contact__head {
@@ -187,10 +187,17 @@
 }
 
 @media (min-width: 1024px) {
-  .contact__orb {
-    top: var(--space-4);
-    right: 7%;
-    width: min(32vw, 30rem);
+  .contact__fluid {
+    top: 0;
+    right: 2%;
+    width: min(38vw, 36rem);
+    /* Se disuelve antes del formulario para no restar legibilidad a los campos. */
+    -webkit-mask-image:
+      linear-gradient(to right, transparent, #000 22%),
+      linear-gradient(to bottom, transparent, #000 24%, #000 52%, transparent 78%);
+    mask-image:
+      linear-gradient(to right, transparent, #000 22%),
+      linear-gradient(to bottom, transparent, #000 24%, #000 52%, transparent 78%);
   }
 
   .contact__inner {

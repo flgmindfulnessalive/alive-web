@@ -9,7 +9,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 | Favicon e iconos | `public/favicon.svg` (A sola, adaptable claro/oscuro), `favicon.ico` (16/32/48), `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | A del logotipo: `npm run icons` | Listos |
 | Escultura (hero) | `src/assets/visual/sculpture-hero.webp` 920×741, 149 KB | Banner oficial, textos eliminados, fondo transparente | Para pantallas retina conviene un original de 2400 px o más |
 | Escultura (cierre) | `src/assets/visual/sculpture-closing.webp` 1560×741, 182 KB | Igual que el anterior | Ya no se usa en la web (sigue en la propuesta PDF) |
-| Orbe líquido (contacto) | `src/components/Orb.tsx` + `Orb.css` | Solo CSS: forma que se deforma y flota con estrellas, degradado de marca | Listo; estático con movimiento reducido |
+| Forma fluida (contacto) | `src/components/FluidForm.tsx` + `.css` | SVG: ola de seda con pliegues de luz que se deforma y flota, fundida arriba y abajo como la cinta del hero | Lista; estática con movimiento reducido |
 | Imagen Open Graph | `public/og-image.jpg` 1200×630 | Composición con titular, cinta real y dominio: `npm run social` | Lista |
 | Publicación cuadrada | `docs/social/alive-post-1080.jpg` 1080×1080 | Igual que la anterior | Lista |
 | Proyecto FLOW Talent HUB | `src/assets/visual/project-flow-{1000,1497}.webp` y `project-flow-{dispositivos,papeleria}-*.webp` (originales en `brand-source/proyectos/`) | Mockups entregados por ALIVE: plataforma, plataforma en dispositivos y papelería | Listo; destacado en mosaico (plataforma grande + dos piezas), sin enlace |

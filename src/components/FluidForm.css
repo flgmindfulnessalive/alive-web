@@ -1,0 +1,33 @@
+/* Forma fluida del cierre: mismo tratamiento que la cinta del hero (fundida arriba, abajo y a la izquierda). */
+.fluid {
+  pointer-events: none;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 22%),
+    linear-gradient(to bottom, transparent, #000 28%, #000 74%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 22%),
+    linear-gradient(to bottom, transparent, #000 28%, #000 74%, transparent);
+  mask-composite: intersect;
+}
+
+.fluid__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fluid__svg {
+    animation: fluid-float 12s ease-in-out infinite;
+    transform-origin: 60% 80%;
+  }
+}
+
+/* Flota despacio, como suspendida. */
+@keyframes fluid-float {
+  0%,
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(-1.5%, -3%, 0) rotate(-2deg); }
+}
