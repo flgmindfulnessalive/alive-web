@@ -34,11 +34,9 @@ export const SERVICES: Record<Service, string> = {
 }
 // Precio «desde» de cada servicio con ficha: se propone al crear el proyecto y se puede cambiar.
 export const PRICE_FROM: Partial<Record<Service, number>> = { we: 350, wep: 450, eco: 750 }
-export const money = (n: number | null | undefined) =>
-  n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
+export const money = (n: number | null | undefined) => (n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`)
 
-export const projectName = (p: Pick<Project, 'service' | 'title'>) =>
-  p.service === 'otro' ? p.title || 'Proyecto' : SERVICES[p.service]
+export const projectName = (p: Pick<Project, 'service' | 'title'>) => (p.service === 'otro' ? p.title || 'Proyecto' : SERVICES[p.service])
 
 // ——— Días hábiles ———
 const noon = (d: string | Date) => {
@@ -47,8 +45,7 @@ const noon = (d: string | Date) => {
   return x
 }
 export const isBusinessDay = (d: Date) => d.getDay() % 6 !== 0
-export const iso = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+export const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
 export function addBusinessDays(d: string | Date, n: number) {
   const x = noon(d)
@@ -97,24 +94,72 @@ export const dayLabel = (d: Date) => DAYS[d.getDay()].slice(0, 2)
 export type Phase = { o: Owner; d: number; l: string; pago?: 'deposit' | 'balance' }
 export const STAGES_WE: { n: string; f: Phase[] }[] = [
   { n: 'Inicio', f: [{ o: 'cliente', d: 5, l: 'Pago del 70 % y materiales', pago: 'deposit' }] },
-  { n: 'Dirección visual', f: [{ o: 'alive', d: 1, l: 'Diseñar la portada' }, { o: 'cliente', d: 2, l: 'Aprobar la portada' }] },
+  {
+    n: 'Dirección visual',
+    f: [
+      { o: 'alive', d: 1, l: 'Diseñar la portada' },
+      { o: 'cliente', d: 2, l: 'Aprobar la portada' },
+    ],
+  },
   { n: 'Construcción', f: [{ o: 'alive', d: 2, l: 'Secciones, formulario, WhatsApp, SEO y panel si aplica' }] },
-  { n: 'Ronda de cambios 1', f: [{ o: 'cliente', d: 3, l: 'Enviar la lista de cambios' }, { o: 'alive', d: 1, l: 'Aplicar cambios' }] },
-  { n: 'Ronda de cambios 2', f: [{ o: 'cliente', d: 3, l: 'Cambios o aprobación final' }, { o: 'alive', d: 1, l: 'Aplicar cambios' }] },
-  { n: 'Entrega', f: [{ o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' }, { o: 'alive', d: 1, l: 'Publicar y entregar accesos y guía' }] },
+  {
+    n: 'Ronda de cambios 1',
+    f: [
+      { o: 'cliente', d: 3, l: 'Enviar la lista de cambios' },
+      { o: 'alive', d: 1, l: 'Aplicar cambios' },
+    ],
+  },
+  {
+    n: 'Ronda de cambios 2',
+    f: [
+      { o: 'cliente', d: 3, l: 'Cambios o aprobación final' },
+      { o: 'alive', d: 1, l: 'Aplicar cambios' },
+    ],
+  },
+  {
+    n: 'Entrega',
+    f: [
+      { o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' },
+      { o: 'alive', d: 1, l: 'Publicar y entregar accesos y guía' },
+    ],
+  },
   { n: 'Cierre', f: [{ o: 'alive', d: 8, l: 'Acompañamiento (10 días naturales)' }] },
 ]
 
 // ——— Etapas de la ficha Ecommerce Esencial ———
 export const STAGES_ECO: { n: string; f: Phase[] }[] = [
   { n: 'Inicio', f: [{ o: 'cliente', d: 5, l: 'Pago del 70 %, materiales y planilla de productos', pago: 'deposit' }] },
-  { n: 'Dirección visual', f: [{ o: 'alive', d: 2, l: 'Diseñar la portada y la ficha de producto' }, { o: 'cliente', d: 2, l: 'Aprobar la dirección visual' }] },
+  {
+    n: 'Dirección visual',
+    f: [
+      { o: 'alive', d: 2, l: 'Diseñar la portada y la ficha de producto' },
+      { o: 'cliente', d: 2, l: 'Aprobar la dirección visual' },
+    ],
+  },
   { n: 'Construcción', f: [{ o: 'alive', d: 8, l: 'Catálogo, carrito, checkout, pedidos, envíos y legales' }] },
   { n: 'Carga del catálogo', f: [{ o: 'alive', d: 3, l: 'Fichas de producto con IA' }] },
-  { n: 'Ronda de cambios 1', f: [{ o: 'cliente', d: 3, l: 'Revisar tienda y fichas en una sola lista' }, { o: 'alive', d: 2, l: 'Aplicar cambios' }] },
-  { n: 'Ronda de cambios 2', f: [{ o: 'cliente', d: 3, l: 'Cambios o aprobación final' }, { o: 'alive', d: 1, l: 'Aplicar cambios' }] },
+  {
+    n: 'Ronda de cambios 1',
+    f: [
+      { o: 'cliente', d: 3, l: 'Revisar tienda y fichas en una sola lista' },
+      { o: 'alive', d: 2, l: 'Aplicar cambios' },
+    ],
+  },
+  {
+    n: 'Ronda de cambios 2',
+    f: [
+      { o: 'cliente', d: 3, l: 'Cambios o aprobación final' },
+      { o: 'alive', d: 1, l: 'Aplicar cambios' },
+    ],
+  },
   { n: 'Pruebas de pago', f: [{ o: 'alive', d: 1, l: 'Compra real, reembolso, correo y stock' }] },
-  { n: 'Entrega', f: [{ o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' }, { o: 'alive', d: 1, l: 'Publicar y entregar accesos y guía de pedidos' }] },
+  {
+    n: 'Entrega',
+    f: [
+      { o: 'cliente', d: 2, l: 'Pago del 30 %', pago: 'balance' },
+      { o: 'alive', d: 1, l: 'Publicar y entregar accesos y guía de pedidos' },
+    ],
+  },
   { n: 'Cierre', f: [{ o: 'alive', d: 11, l: 'Acompañamiento hasta el primer pedido (15 días naturales)' }] },
 ]
 
@@ -142,22 +187,69 @@ export const flowOf = (service: Service) => (service === 'eco' ? FLOW_ECO : FLOW
 
 // ——— Plantillas (documento operativo · Común 7) ———
 export type TemplateKey =
-  | 'inicio' | 'materiales' | 'revision' | 'recordatorio' | 'aviso' | 'pausa'
-  | 'cierreAdm' | 'reactivacion' | 'final' | 'cierre'
+  | 'inicio'
+  | 'materiales'
+  | 'revision'
+  | 'recordatorio'
+  | 'aviso'
+  | 'pausa'
+  | 'cierreAdm'
+  | 'reactivacion'
+  | 'final'
+  | 'cierre'
 type Ctx = { nombre: string; project: Project }
 const F = (c: Ctx) => flowOf(c.project.service)
-const panelGuide = (c: Ctx) => (c.project.service === 'wep' ? ' y la guía de tu panel' : c.project.service === 'eco' ? ' y la guía de tu panel de pedidos' : '')
+const panelGuide = (c: Ctx) =>
+  c.project.service === 'wep' ? ' y la guía de tu panel' : c.project.service === 'eco' ? ' y la guía de tu panel de pedidos' : ''
 export const TEMPLATES: Record<TemplateKey, { t: string; m: (c: Ctx) => string }> = {
-  inicio: { t: 'Inicio del proyecto', m: (c) => `Hola ${c.nombre}, confirmamos tu pago, ¡empezamos! Para avanzar necesito estos materiales: [lista corta o enlace al brief]. En cuanto los tenga completos, el plazo es de hasta ${F(c).plazo} días hábiles de trabajo (no cuentan los días en que esperamos tu respuesta). Cualquier duda, escríbeme por aquí.` },
-  materiales: { t: 'Materiales pendientes', m: (c) => `Hola ${c.nombre}, ya revisé lo que enviaste, gracias. Para arrancar me falta: [lista]. Si alguno no lo tienes, dime y vemos una alternativa.` },
-  revision: { t: 'Entrega para revisión', m: (c) => `Hola ${c.nombre}, ya puedes ver ${F(c).thing} aquí: [enlace]. Revísala con calma y envíame todos tus comentarios juntos en un solo mensaje, así lo resolvemos en una ronda. Quedo atento en los próximos días.` },
-  recordatorio: { t: 'Recordatorio (día 3)', m: (c) => `Hola ${c.nombre}, te escribo por si se te pasó: ${F(c).thing} está lista para revisar en [enlace]. ¿Pudiste verla?` },
-  aviso: { t: 'Aviso de pausa (día 7)', m: (c) => `Hola ${c.nombre}, sigo atento a tus comentarios sobre ${F(c).thing}. Si no tengo respuesta hasta el ${shortDate(addBusinessDays(c.project.phase_started, 10))}, pondré el proyecto en pausa para no dejarlo a medias. Podrás retomarlo cuando quieras.` },
-  pausa: { t: 'Proyecto en pausa (día 10)', m: (c) => `Hola ${c.nombre}, como no he recibido respuesta, el proyecto queda en pausa desde hoy. Cuando quieras retomarlo, escríbeme y lo reactivamos. Si pasan 30 días sin novedades, lo daré por cerrado.` },
-  cierreAdm: { t: 'Cierre administrativo', m: (c) => `Hola ${c.nombre}, tal como te comenté, el proyecto queda cerrado. Si más adelante quieres retomarlo, se reactiva con el pago del 30 % pendiente y seguimos desde donde lo dejamos.` },
-  reactivacion: { t: 'Reactivación', m: (c) => `¡Qué bueno saber de ti, ${c.nombre}! Retomamos. En cuanto lo tenga todo, te comparto las fechas.` },
-  final: { t: 'Entrega final', m: (c) => `Hola ${c.nombre}, ¡${F(c).thing} está aprobada! Para publicarla en tu dominio, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, la publico y te envío los accesos${panelGuide(c)}.` },
-  cierre: { t: 'Cierre del proyecto', m: (c) => `Hola ${c.nombre}, ${F(c).thing} ya está publicada en [dominio]. Te envío los accesos${panelGuide(c)}. Tienes ${F(c).support} días de acompañamiento para dudas o ajustes menores${c.project.service === 'eco' ? ', y vemos juntos tu primer pedido real' : ''}. Gracias por confiar en ALIVE.` },
+  inicio: {
+    t: 'Inicio del proyecto',
+    m: (c) =>
+      `Hola ${c.nombre}, confirmamos tu pago, ¡empezamos! Para avanzar necesito estos materiales: [lista corta o enlace al brief]. En cuanto los tenga completos, el plazo es de hasta ${F(c).plazo} días hábiles de trabajo (no cuentan los días en que esperamos tu respuesta). Cualquier duda, escríbeme por aquí.`,
+  },
+  materiales: {
+    t: 'Materiales pendientes',
+    m: (c) =>
+      `Hola ${c.nombre}, ya revisé lo que enviaste, gracias. Para arrancar me falta: [lista]. Si alguno no lo tienes, dime y vemos una alternativa.`,
+  },
+  revision: {
+    t: 'Entrega para revisión',
+    m: (c) =>
+      `Hola ${c.nombre}, ya puedes ver ${F(c).thing} aquí: [enlace]. Revísala con calma y envíame todos tus comentarios juntos en un solo mensaje, así lo resolvemos en una ronda. Quedo atento en los próximos días.`,
+  },
+  recordatorio: {
+    t: 'Recordatorio (día 3)',
+    m: (c) => `Hola ${c.nombre}, te escribo por si se te pasó: ${F(c).thing} está lista para revisar en [enlace]. ¿Pudiste verla?`,
+  },
+  aviso: {
+    t: 'Aviso de pausa (día 7)',
+    m: (c) =>
+      `Hola ${c.nombre}, sigo atento a tus comentarios sobre ${F(c).thing}. Si no tengo respuesta hasta el ${shortDate(addBusinessDays(c.project.phase_started, 10))}, pondré el proyecto en pausa para no dejarlo a medias. Podrás retomarlo cuando quieras.`,
+  },
+  pausa: {
+    t: 'Proyecto en pausa (día 10)',
+    m: (c) =>
+      `Hola ${c.nombre}, como no he recibido respuesta, el proyecto queda en pausa desde hoy. Cuando quieras retomarlo, escríbeme y lo reactivamos. Si pasan 30 días sin novedades, lo daré por cerrado.`,
+  },
+  cierreAdm: {
+    t: 'Cierre administrativo',
+    m: (c) =>
+      `Hola ${c.nombre}, tal como te comenté, el proyecto queda cerrado. Si más adelante quieres retomarlo, se reactiva con el pago del 30 % pendiente y seguimos desde donde lo dejamos.`,
+  },
+  reactivacion: {
+    t: 'Reactivación',
+    m: (c) => `¡Qué bueno saber de ti, ${c.nombre}! Retomamos. En cuanto lo tenga todo, te comparto las fechas.`,
+  },
+  final: {
+    t: 'Entrega final',
+    m: (c) =>
+      `Hola ${c.nombre}, ¡${F(c).thing} está aprobada! Para publicarla en tu dominio, el siguiente paso es el pago del 30 % restante: [enlace]. Apenas se confirme, la publico y te envío los accesos${panelGuide(c)}.`,
+  },
+  cierre: {
+    t: 'Cierre del proyecto',
+    m: (c) =>
+      `Hola ${c.nombre}, ${F(c).thing} ya está publicada en [dominio]. Te envío los accesos${panelGuide(c)}. Tienes ${F(c).support} días de acompañamiento para dudas o ajustes menores${c.project.service === 'eco' ? ', y vemos juntos tu primer pedido real' : ''}. Gracias por confiar en ALIVE.`,
+  },
 }
 
 // ——— Estado de un proyecto ———
@@ -195,9 +287,12 @@ export function tasksOf(p: Project, today = businessToday()): Task[] {
   if (s.kind === 'cliente') {
     const base: TemplateKey = s.phase.stage === 0 ? 'inicio' : s.phase.pago === 'balance' ? 'final' : 'revision'
     if (!wasSent(p, base)) out.push({ key: base, level: 'info', text: `Etapa nueva: enviar «${TEMPLATES[base].t}»` })
-    if (s.days >= 10 && !wasSent(p, 'pausa')) out.push({ key: 'pausa', level: 'crit', text: `Día ${s.days} sin respuesta: pausar el proyecto` })
-    else if (s.days >= 7 && !wasSent(p, 'aviso')) out.push({ key: 'aviso', level: 'warn', text: `Día ${s.days} sin respuesta: avisar la pausa` })
-    else if (s.days >= 3 && !wasSent(p, 'recordatorio')) out.push({ key: 'recordatorio', level: 'warn', text: `Día ${s.days} sin respuesta: enviar recordatorio` })
+    if (s.days >= 10 && !wasSent(p, 'pausa'))
+      out.push({ key: 'pausa', level: 'crit', text: `Día ${s.days} sin respuesta: pausar el proyecto` })
+    else if (s.days >= 7 && !wasSent(p, 'aviso'))
+      out.push({ key: 'aviso', level: 'warn', text: `Día ${s.days} sin respuesta: avisar la pausa` })
+    else if (s.days >= 3 && !wasSent(p, 'recordatorio'))
+      out.push({ key: 'recordatorio', level: 'warn', text: `Día ${s.days} sin respuesta: enviar recordatorio` })
   }
   if (s.kind === 'acompanamiento' && !wasSent(p, 'cierre'))
     out.push({ key: 'cierre', level: 'info', text: 'Publicado: enviar «Cierre del proyecto»' })

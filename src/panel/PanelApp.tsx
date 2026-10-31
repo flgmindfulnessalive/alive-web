@@ -6,6 +6,8 @@ import { parseBriefEmail, type ImportedBrief } from './importBrief'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
 import { Production } from './Production'
 import { Dashboard } from './Dashboard'
+import { RecurringSection } from './Recurring'
+import type { Recurring } from './recurring'
 import { projectName, statusLabel, waNumber, type Project } from './production'
 
 const money = (n: number | null) =>
@@ -31,10 +33,11 @@ const waLink = (phone: string) => `https://wa.me/${waNumber(phone)}`
 
 // ¿Es administrador? (panel_admins solo devuelve filas a quien lo es) y la lista de clientes.
 async function fetchWorkspace() {
-  const [{ data: admins }, { data, error }, projects] = await Promise.all([
+  const [{ data: admins }, { data, error }, projects, recurring] = await Promise.all([
     supabase!.from('panel_admins').select('email').limit(1),
     supabase!.from('clients').select('*').order('created_at', { ascending: false }),
     supabase!.from('projects').select('*').order('created_at', { ascending: true }),
+    supabase!.from('recurring').select('*').order('created_at', { ascending: true }),
   ])
   return {
     admin: (admins?.length ?? 0) > 0,
@@ -43,6 +46,9 @@ async function fetchWorkspace() {
     // Si la tabla de proyectos aún no existe (falta ejecutar supabase/proyectos.sql), se avisa en Producción.
     projects: (projects.data ?? []) as Project[],
     projectsMissing: Boolean(projects.error),
+    // Igual con los servicios mensuales (supabase/recurrentes.sql).
+    recurring: ((recurring.data ?? []) as Recurring[]).map((x) => ({ ...x, amount: Number(x.amount), cost: Number(x.cost) })),
+    recurringMissing: Boolean(recurring.error),
   }
 }
 
@@ -180,6 +186,8 @@ function Workspace({ session }: { session: Session }) {
   const [clients, setClients] = useState<Client[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [projectsMissing, setProjectsMissing] = useState(false)
+  const [recurring, setRecurring] = useState<Recurring[]>([])
+  const [recurringMissing, setRecurringMissing] = useState(false)
   type Section = 'resumen' | 'clientes' | 'produccion'
   const [section, setSection] = useState<Section>(() =>
     location.hash === '#produccion' ? 'produccion' : location.hash === '#clientes' ? 'clientes' : 'resumen',
@@ -205,7 +213,9 @@ function Workspace({ session }: { session: Session }) {
 
   const load = useCallback(
     () =>
-      fetchWorkspace().then(({ admin, clients, failed, projects, projectsMissing }) => {
+      fetchWorkspace().then(({ admin, clients, failed, projects, projectsMissing, recurring, recurringMissing }) => {
+        setRecurring(recurring)
+        setRecurringMissing(recurringMissing)
         setAdmin(admin)
         if (failed) setError('No se pudieron cargar los clientes.')
         else setClients(clients)
@@ -227,6 +237,27 @@ function Workspace({ session }: { session: Session }) {
     const { error } = await supabase!.from('clients').update(patch).eq('id', id)
     if (error) {
       setError('No se pudo guardar el cambio.')
+      load()
+    }
+    return !error
+  }
+
+  async function addRecurring(row: Omit<Recurring, 'id' | 'created_at'>) {
+    const { data, error } = await supabase!.from('recurring').insert(row).select().single()
+    if (error || !data) {
+      setError(recurringMissing ? 'Falta crear la tabla de servicios mensuales: ejecuta supabase/recurrentes.sql en Supabase.' : 'No se pudo guardar el servicio mensual.')
+      return false
+    }
+    const x = data as Recurring
+    setRecurring((list) => [...list, { ...x, amount: Number(x.amount), cost: Number(x.cost) }])
+    return true
+  }
+
+  async function updateRecurring(id: string, patch: Partial<Recurring>) {
+    setRecurring((list) => list.map((x) => (x.id === id ? { ...x, ...patch } : x)))
+    const { error } = await supabase!.from('recurring').update(patch).eq('id', id)
+    if (error) {
+      setError('No se pudo guardar el servicio mensual.')
       load()
     }
     return !error
@@ -254,6 +285,7 @@ function Workspace({ session }: { session: Session }) {
     setClients((list) => list.filter((c) => c.id !== id))
     // Sus proyectos se borran en cascada en Supabase; aquí también, para que no queden huérfanos en Producción.
     setProjects((list) => list.filter((p) => p.client_id !== id))
+    setRecurring((list) => list.filter((x) => x.client_id !== id))
     const { error } = await supabase!.from('clients').delete().eq('id', id)
     if (error) {
       setError('No se pudo eliminar.')
@@ -319,6 +351,9 @@ function Workspace({ session }: { session: Session }) {
           <Dashboard
             clients={clients}
             projects={projects}
+            recurring={recurring}
+            recurringMissing={recurringMissing}
+            onToggleRecurring={updateRecurring}
             onGo={(s) => go(s)}
             onOpenClient={(id) => {
               go('clientes')
@@ -407,6 +442,9 @@ function Workspace({ session }: { session: Session }) {
           client={open}
           author={session.user.email ?? ''}
           projects={projects.filter((p) => p.client_id === open.id)}
+          recurringSection={
+            <RecurringSection clientId={open.id} items={recurring.filter((x) => x.client_id === open.id)} onAdd={addRecurring} onUpdate={updateRecurring} />
+          }
           onNewProject={() => {
             setOpenId(null)
             go('produccion')
@@ -549,6 +587,7 @@ function Detail({
   client: c,
   author,
   projects,
+  recurringSection,
   onNewProject,
   onOpenProject,
   onClose,
@@ -559,6 +598,7 @@ function Detail({
   author: string
   projects: Project[]
   onNewProject: () => void
+  recurringSection: ReactNode
   onOpenProject: (id: string) => void
   onClose: () => void
   onUpdate: (id: string, patch: Partial<Client>) => Promise<boolean>
@@ -717,6 +757,8 @@ function Detail({
             + Crear proyecto
           </button>
         </section>
+
+        {recurringSection}
 
         {c.message && (
           <section className="detail__section">
