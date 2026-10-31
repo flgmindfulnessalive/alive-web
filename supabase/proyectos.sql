@@ -22,6 +22,9 @@ create table if not exists public.projects (
   paid_balance boolean not null default false
 );
 
+-- Monto del proyecto en US$ (se suma a tablas creadas antes de esta columna).
+alter table public.projects add column if not exists amount numeric(12, 2);
+
 -- Servicios con ficha: we (Web Esencial), wep (Web Esencial + Panel), eco (Ecommerce Esencial); otro = sin ficha.
 -- Al sumar un servicio nuevo, se actualiza esta lista y se vuelve a ejecutar el archivo.
 alter table public.projects drop constraint if exists projects_service_check;

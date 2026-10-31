@@ -1437,3 +1437,54 @@ label.prod-pays {
   font-size: 12px;
   color: var(--color-text-muted);
 }
+
+/* «¿Lo enviaste?» tras abrir WhatsApp: queda hasta que se responde */
+.prod-sent {
+  position: fixed;
+  z-index: 90;
+  left: 50%;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  width: min(40rem, calc(100% - 32px));
+  padding: 12px 14px 12px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: #101a22;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.45);
+  font-size: var(--fs-small);
+}
+
+.prod-sent b {
+  font-weight: 600;
+}
+
+.prod-sent ~ .prod-toast {
+  bottom: calc(110px + env(safe-area-inset-bottom, 0px));
+}
+
+.prod-amount {
+  max-width: 16rem;
+  margin-bottom: 12px;
+}
+
+.prod-sent.is-inline {
+  position: static;
+  transform: none;
+  width: auto;
+  box-shadow: none;
+  border-color: rgb(26 168 97 / 0.5);
+  background: rgb(26 168 97 / 0.08);
+}
+
+.prod-undo {
+  text-align: left;
+}
+
+.prod-undo__to {
+  text-decoration: none;
+}

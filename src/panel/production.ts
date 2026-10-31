@@ -21,6 +21,7 @@ export type Project = {
   closed_admin: boolean
   paid_deposit: boolean
   paid_balance: boolean
+  amount: number | null
 }
 
 export const SERVICES: Record<Service, string> = {
@@ -29,6 +30,11 @@ export const SERVICES: Record<Service, string> = {
   eco: 'Ecommerce Esencial',
   otro: 'Otro servicio',
 }
+// Precio «desde» de cada servicio con ficha: se propone al crear el proyecto y se puede cambiar.
+export const PRICE_FROM: Partial<Record<Service, number>> = { we: 350, wep: 450, eco: 750 }
+export const money = (n: number | null | undefined) =>
+  n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
+
 export const projectName = (p: Pick<Project, 'service' | 'title'>) =>
   p.service === 'otro' ? p.title || 'Proyecto' : SERVICES[p.service]
 

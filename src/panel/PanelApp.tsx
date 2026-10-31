@@ -685,10 +685,16 @@ function Detail({
                   <button className="panel-link" onClick={() => onOpenProject(p.id)}>
                     {projectName(p)}
                   </button>
-                  <span>{statusLabel(p).text}</span>
+                  <span>
+                    {p.amount != null ? `${money(p.amount)} · ` : ''}
+                    {statusLabel(p).text}
+                  </span>
                 </li>
               ))}
             </ul>
+          )}
+          {projects.filter((p) => p.amount != null).length > 1 && (
+            <p className="panel-muted prod-small">Total en proyectos: {money(projects.reduce((t, p) => t + (p.amount ?? 0), 0))}</p>
           )}
           {c.stage === 'ganado' && !projects.length && (
             <p className="prod-hint">Cliente ganado: crea su proyecto para seguir sus etapas en Producción.</p>

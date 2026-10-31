@@ -12,6 +12,8 @@ import {
   firstName,
   iso,
   isBusinessDay,
+  money,
+  PRICE_FROM,
   projectName,
   SERVICES,
   shortDate,
@@ -43,14 +45,19 @@ type Props = {
 const clientLabel = (c?: Client) => (c ? c.company || c.name : 'Cliente eliminado')
 
 async function logNote(client_id: string, body: string, author: string) {
-  await supabase!.from('notes').insert({ client_id, body, author })
+  const { data } = await supabase!.from('notes').insert({ client_id, body, author }).select('id').single()
+  return (data?.id as string | undefined) ?? null
 }
+
+// Último mensaje anotado, para poder deshacerlo con «No lo envié»: nota creada y estado anterior del proyecto.
+type LastSent = { projectId: string; noteId: string | null; title: string; client: string; before: Partial<Project> }
 
 export function Production({ clients, projects, author, newFor, onNewHandled, onUpdate, onCreated, onOpenClient, onDeleted, initialOpenId = null }: Props) {
   const [openId, setOpenId] = useState<string | null>(initialOpenId)
   const [message, setMessage] = useState<{ id: string; key: TemplateKey } | null>(null)
   const [creating, setCreating] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
+  const [lastSent, setLastSent] = useState<LastSent | null>(null)
   const today = businessToday()
   const byId = useMemo(() => new Map(clients.map((c) => [c.id, c])), [clients])
 
@@ -80,6 +87,15 @@ export function Production({ clients, projects, author, newFor, onNewHandled, on
     .sort((a, b) => order[a.level] - order[b.level])
 
   const open = projects.find((p) => p.id === openId) ?? null
+
+  async function undoSent() {
+    const l = lastSent
+    if (!l) return
+    setLastSent(null)
+    await onUpdate(l.projectId, l.before)
+    if (l.noteId) await supabase!.from('notes').delete().eq('id', l.noteId)
+    setToast('Listo: se borró la nota y el proyecto quedó como estaba')
+  }
   const msgProject = message ? projects.find((p) => p.id === message.id) : null
 
   return (
@@ -172,6 +188,8 @@ export function Production({ clients, projects, author, newFor, onNewHandled, on
           onDeleted={onDeleted}
           onUpdate={onUpdate}
           onMessage={(key) => setMessage({ id: open.id, key })}
+          toastText={toast}
+          banner={lastSent ? <SentBanner inline sent={lastSent} onDone={() => setLastSent(null)} onUndo={undoSent} /> : null}
           toast={setToast}
         />
       )}
@@ -183,10 +201,14 @@ export function Production({ clients, projects, author, newFor, onNewHandled, on
           onClose={() => setMessage(null)}
           onSent={async (text) => {
             const c = byId.get(msgProject.client_id)
+            const key = message.key
             setMessage(null)
-            await onUpdate(msgProject.id, afterMessage(msgProject, message.key))
-            if (c) await logNote(c.id, `WhatsApp · ${TEMPLATES[message.key].t} (${projectName(msgProject)})\n${text}`, author)
-            setToast(`Anotado en las notas de ${clientLabel(c)}`)
+            const patch = afterMessage(msgProject, key)
+            // Copia de lo que el mensaje cambia, para restaurarlo si no se llegó a enviar.
+            const before = Object.fromEntries(Object.keys(patch).map((k) => [k, msgProject[k as keyof Project]])) as Partial<Project>
+            await onUpdate(msgProject.id, patch)
+            const noteId = c ? await logNote(c.id, `WhatsApp · ${TEMPLATES[key].t} (${projectName(msgProject)})\n${text}`, author) : null
+            setLastSent({ projectId: msgProject.id, noteId, title: TEMPLATES[key].t, client: clientLabel(c), before })
           }}
         />
       )}
@@ -203,7 +225,8 @@ export function Production({ clients, projects, author, newFor, onNewHandled, on
           }}
         />
       )}
-      {toast && (
+      {lastSent && !open && <SentBanner sent={lastSent} onDone={() => setLastSent(null)} onUndo={undoSent} />}
+      {toast && !open && (
         <div className="prod-toast" role="status">
           {toast}
         </div>
@@ -410,6 +433,8 @@ function ProjectDetail({
   onUpdate,
   onMessage,
   toast,
+  banner,
+  toastText,
 }: {
   project: Project
   client?: Client
@@ -421,6 +446,8 @@ function ProjectDetail({
   onUpdate: (id: string, patch: Partial<Project>) => Promise<boolean>
   onMessage: (k: TemplateKey) => void
   toast: (t: string) => void
+  banner: ReactNode
+  toastText: string | null
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -559,6 +586,13 @@ function ProjectDetail({
           </button>
         </header>
 
+        {banner}
+        {/* Dentro del diálogo, para que el aviso quede por encima de él y no detrás. */}
+        {toastText && (
+          <div className="prod-toast" role="status">
+            {toastText}
+          </div>
+        )}
         {now}
         {previous && (
           <button
@@ -568,25 +602,27 @@ function ProjectDetail({
               if (patch && (await onUpdate(p.id, patch))) toast(`Volviste a: ${previous.l}`)
             }}
           >
-            ↶ Deshacer el último paso (volver a «{previous.l}»)
+            ↶ Deshacer el último paso
+            <span className="prod-undo__to"> · vuelve a {STAGES_WE[previous.stage].n}</span>
           </button>
         )}
 
-        {p.service !== 'otro' && (
-          <section className="detail__section">
-            <h3>Pagos</h3>
+        <section className="detail__section">
+          <h3>{p.service === 'otro' ? 'Monto' : 'Monto y pagos'}</h3>
+          <AmountField value={p.amount} onSave={(amount) => onUpdate(p.id, { amount })} />
+          {p.service !== 'otro' && (
             <div className="prod-pays">
               <label>
                 <input type="checkbox" checked={p.paid_deposit} onChange={(e) => onUpdate(p.id, { paid_deposit: e.target.checked })} />
-                70 % al confirmar
+                70 % al confirmar{p.amount ? ` · ${money(Math.round(p.amount * 70) / 100)}` : ''}
               </label>
               <label>
                 <input type="checkbox" checked={p.paid_balance} onChange={(e) => onUpdate(p.id, { paid_balance: e.target.checked })} />
-                30 % al aprobar
+                30 % al aprobar{p.amount ? ` · ${money(Math.round(p.amount * 30) / 100)}` : ''}
               </label>
             </div>
-          </section>
-        )}
+          )}
+        </section>
 
         <section className="detail__section">
           <h3>Cliente</h3>
@@ -670,6 +706,53 @@ function ProjectDetail({
         </footer>
       </div>
     </dialog>
+  )
+}
+
+// «¿Lo enviaste?»: queda hasta que se responde. Dentro de la ficha abierta va en línea (un aviso fijo
+// quedaría detrás del diálogo y no se podría pulsar).
+function SentBanner({ sent, onDone, onUndo, inline = false }: { sent: LastSent; onDone: () => void; onUndo: () => void; inline?: boolean }) {
+  return (
+    <div className={`prod-sent${inline ? ' is-inline' : ''}`} role="status">
+      <span>
+        Anotado: <b>{sent.title}</b> a {sent.client}. ¿Lo enviaste?
+      </span>
+      <span className="prod-actions">
+        <button className="btn btn-ghost btn-sm" onClick={onDone}>
+          Sí, lo envié
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={onUndo}>
+          No lo envié
+        </button>
+      </span>
+    </div>
+  )
+}
+
+// Monto del proyecto en US$: se guarda al salir del campo, con Enter o al cerrar la ficha.
+function AmountField({ value, onSave }: { value: number | null; onSave: (v: number | null) => void }) {
+  const [draft, setDraft] = useState(value?.toString() ?? '')
+  const commit = () => {
+    const next = draft ? Number(draft) : null
+    if (next !== value && (next === null || Number.isFinite(next))) onSave(next)
+  }
+  const commitRef = useRef(commit)
+  useEffect(() => {
+    commitRef.current = commit
+  })
+  useEffect(() => () => commitRef.current(), [])
+  return (
+    <label className="panel-field prod-amount">
+      <span>Monto del proyecto (US$)</span>
+      <input
+        inputMode="decimal"
+        value={draft}
+        placeholder="Ej.: 750"
+        onChange={(e) => setDraft(e.target.value.replace(/[^\d.]/g, ''))}
+        onBlur={commit}
+        onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+      />
+    </label>
   )
 }
 
@@ -773,6 +856,9 @@ function NewProject({ clients, preset, onClose, onCreated }: { clients: Client[]
   const [title, setTitle] = useState('')
   const [start, setStart] = useState(() => iso(new Date()))
   const [deposit, setDeposit] = useState(false)
+  // Se propone el precio «desde» del servicio; si se escribe otro, se respeta.
+  const [amount, setAmount] = useState<string | null>(null)
+  const amountValue = amount ?? (PRICE_FROM[service]?.toString() ?? '')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   useEffect(() => {
@@ -788,7 +874,14 @@ function NewProject({ clients, preset, onClose, onCreated }: { clients: Client[]
     setBusy(true)
     const { data, error } = await supabase!
       .from('projects')
-      .insert({ client_id: clientId, service, title: service === 'otro' ? title.trim() : null, phase_started: iso(d), paid_deposit: deposit })
+      .insert({
+        client_id: clientId,
+        service,
+        title: service === 'otro' ? title.trim() : null,
+        phase_started: iso(d),
+        paid_deposit: deposit,
+        amount: amountValue ? Number(amountValue) : null,
+      })
       .select()
       .single()
     setBusy(false)
@@ -834,6 +927,10 @@ function NewProject({ clients, preset, onClose, onCreated }: { clients: Client[]
         <label className="panel-field">
           <span>Propuesta aceptada el</span>
           <input type="date" value={start} onChange={(e) => setStart(e.target.value)} />
+        </label>
+        <label className="panel-field">
+          <span>Monto del proyecto (US$)</span>
+          <input inputMode="decimal" value={amountValue} placeholder="Ej.: 1100" onChange={(e) => setAmount(e.target.value.replace(/[^\d.]/g, ''))} />
         </label>
         {service !== 'otro' && (
           <label className="prod-pays">
