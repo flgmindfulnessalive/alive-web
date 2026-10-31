@@ -33,6 +33,10 @@ const dinero = (n) => {
 const parte = (pct) => (d.servicio.precio == null ? null : Math.round(d.servicio.precio * pct) / 100)
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const cliente = esc(d.cliente.nombre)
+const Plazo = d.plazo.charAt(0).toUpperCase() + d.plazo.slice(1)
+const panel = d.servicio.panel !== false
+const pausa = { diasSinRespuesta: 10, diasCierre: 30, ...d.pausa }
+const alojamiento = d.alojamiento?.mensual == null ? '<mark>[alojamiento]</mark>' : `${dinero(d.alojamiento.mensual)} / mes`
 
 const wordmark = readFileSync(resolve(root, 'src/assets/brand/alive-wordmark.svg'), 'utf8')
   .replace(/<\?xml[^>]*>/, '')
@@ -43,18 +47,20 @@ const wordmark = readFileSync(resolve(root, 'src/assets/brand/alive-wordmark.svg
 const incluye = [
   'Dirección visual propia: color, tipografía, composición y tono',
   'Hasta 5 secciones a medida de tu negocio',
-  'Panel propio para editar textos, fotos y secciones desde el móvil, sin WordPress ni plugins',
+  ...(panel ? ['Panel propio para editar textos, imágenes, precios y bloques ya diseñados desde el móvil, sin WordPress ni plugins'] : []),
   'Diseño adaptado a móvil, tableta y escritorio',
   'Formulario de contacto funcionando y WhatsApp conectado',
   'SEO técnico de base: títulos, descripciones, datos estructurados y sitemap',
   'Imágenes optimizadas para que la web cargue rápido',
   'Seguridad con HTTPS y aviso de privacidad adaptado',
+  `${d.rondasDeAjustes} rondas de cambios y ${d.acompanamientoDias} días de acompañamiento después de publicar`,
 ]
 const noIncluye = [
   'Redacción de textos largos y sesión de fotos profesional',
   'Tienda online, reservas o pagos dentro de la web',
   'Campañas de publicidad y gestión de redes sociales',
-  'El dominio, que se paga aparte y queda a tu nombre',
+  ...(panel ? [] : ['Panel para editar la web tú mismo (disponible en la versión con panel)']),
+  'El dominio y el alojamiento, que se pagan aparte y quedan a tu nombre',
 ]
 const necesitamos = [
   'Logotipo en un archivo utilizable',
@@ -63,10 +69,10 @@ const necesitamos = [
   'Acceso al dominio, o lo registramos contigo',
 ]
 const fases = [
-  ['Día 1', 'Descubrimiento', 'Una reunión para entender tu negocio, a quién le hablas y qué tiene que conseguir la web. Te pedimos el material de la página anterior.'],
-  ['Días 2 a 4', 'Dirección visual', 'Te mostramos cómo se va a ver tu web: color, tipografía y la portada diseñada. La apruebas antes de construir nada.'],
-  ['Días 5 a 12', 'Diseño y desarrollo', `Construimos las secciones, el panel y las conexiones. Incluye ${d.rondasDeAjustes} rondas de ajustes sobre la web en un enlace de prueba.`],
-  ['Entrega', 'Publicación', 'Publicamos en tu dominio, revisamos que todo funcione y te enseñamos a usar el panel en una sesión breve.'],
+  ['Al confirmar', 'Inicio', `Con el adelanto del ${d.pago.adelanto} % revisamos tu brief y el material de la página anterior. El plazo empieza a contar cuando el material está completo.`],
+  ['Primeros días', 'Dirección visual', 'Te mostramos la portada diseñada en un enlace de prueba: color, tipografía y tono. La apruebas antes de construir el resto.'],
+  ['Construcción', 'Web completa', `Construimos las secciones, el formulario, WhatsApp${panel ? ', el panel' : ''} y el SEO de base. Tienes ${d.rondasDeAjustes} rondas de cambios: en cada una nos envías todos tus comentarios juntos en una sola lista.`],
+  ['Entrega', 'Publicación', `Con la web aprobada y el ${d.pago.saldo} % restante, la publicamos en tu dominio, revisamos que todo funcione y te entregamos los accesos${panel ? ' y una guía corta del panel' : ''}.`],
 ]
 const trabajos = [
   ['src/assets/visual/project-flow-dispositivos-800.webp', 'Producto digital y marca', 'FLOW Talent HUB'],
@@ -215,15 +221,17 @@ p + p { margin-top: 8px; }
 <section class="page">
   <p class="eyebrow">01 · Resumen</p>
   <h2>Tu web es lo primero que ven.<br />Tiene que estar a tu altura.</h2>
-  <p class="lead">Antes de escribirte, la gente busca tu nombre, entra en tu web y decide en segundos si confía en ti. Esta propuesta es para que esa primera impresión trabaje a tu favor: una web con diseño propio, que puedes actualizar tú y que Google entiende desde el primer día.</p>
+  <p class="lead">Antes de escribirte, la gente busca tu nombre, entra en tu web y decide en segundos si confía en ti. Esta propuesta es para que esa primera impresión trabaje a tu favor: una web con diseño propio, ${panel ? 'que puedes actualizar tú' : 'pensada para que te escriban'} y que Google entiende desde el primer día.</p>
   <div class="grid3" style="margin-top:18px">
     <div class="card pilar"><h3 class="grad">Diseño propio</h3><p>Una dirección visual pensada para ${cliente}, no una plantilla. La apruebas antes de construir.</p></div>
-    <div class="card pilar"><h3 class="grad">Panel propio</h3><p>Cambias textos, fotos y secciones desde el móvil, sin WordPress y sin pedir ayuda.</p></div>
+    ${panel
+      ? '<div class="card pilar"><h3 class="grad">Panel propio</h3><p>Cambias textos, fotos y precios desde el móvil, sin WordPress y sin pedir ayuda.</p></div>'
+      : '<div class="card pilar"><h3 class="grad">Contacto directo</h3><p>Formulario y WhatsApp conectados para que quien te visita te escriba en un toque.</p></div>'}
     <div class="card pilar"><h3 class="grad">Lista para Google</h3><p>Rápida, adaptada a móvil y con el SEO técnico de base hecho desde el primer día.</p></div>
   </div>
   <h3 style="margin-top:22px">Cómo empezamos</h3>
-  <p style="margin-top:6px; max-width:160mm">Una reunión para entender tu negocio y, en pocos días, una dirección visual que apruebas antes de construir nada. Después, la web completa con su panel, publicada en tu dominio en ${esc(d.plazo)} desde que tenemos el material.</p>
-  <p class="nota"><strong>En una frase:</strong> una web propia, que se paga una vez, se publica en ${esc(d.plazo)} y que actualizas tú.</p>
+  <p style="margin-top:6px; max-width:160mm">Una reunión para entender tu negocio y, en pocos días, una dirección visual que apruebas antes de construir nada. Después, la web completa${panel ? ' con su panel' : ''}, publicada en tu dominio en ${esc(d.plazo)} desde que tenemos el material.</p>
+  <p class="nota"><strong>En una frase:</strong> una web propia, que se paga una vez, se publica en ${esc(d.plazo)}${panel ? ' y que actualizas tú' : ' y trabaja para ti desde el primer día'}.</p>
   ${pie(2)}
 </section>
 
@@ -248,7 +256,7 @@ p + p { margin-top: 8px; }
 <section class="page">
   <p class="eyebrow">03 · Cómo trabajamos</p>
   <h2>De la primera reunión<br />a tu web publicada</h2>
-  <p class="lead" style="margin-bottom:16px">${esc(d.plazo)} en total, contados desde que tenemos el material y los accesos.</p>
+  <p class="lead" style="margin-bottom:16px">${esc(Plazo)} en total, contados desde que tenemos el material y los accesos.</p>
   ${fases.map(([cuando, titulo, texto], i) => `
   <div class="fase">
     <div><div class="n">0${i + 1}</div><div class="cuando">${cuando}</div></div>
@@ -264,22 +272,23 @@ p + p { margin-top: 8px; }
   <h2>Lo que cuesta, sin letra pequeña</h2>
   <div class="tabla">
     <div class="fila etiqueta">Una vez</div>
-    <div class="fila"><div>${esc(d.servicio.nombre)}<small>Diseño, desarrollo, panel y puesta en marcha</small></div><div class="importe">${dinero(d.servicio.precio)}</div></div>
-    <div class="fila"><div>Alojamiento y SSL<small>Servidor y certificado de seguridad</small></div><div class="importe">${esc(d.alojamiento)}</div></div>
+    <div class="fila"><div>${esc(d.servicio.nombre)}<small>Diseño, desarrollo${panel ? ', panel' : ''} y puesta en marcha</small></div><div class="importe">${dinero(d.servicio.precio)}</div></div>
     <div class="fila"><div>Acompañamiento tras la publicación<small>Dudas y pequeños ajustes</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
+    <div class="fila etiqueta">Mensual · opcional</div>
+    <div class="fila"><div>Alojamiento<small>Servidor y certificado de seguridad, o la publicamos en una cuenta tuya</small></div><div class="importe">${alojamiento}</div></div>
   </div>
   <div class="total">
     <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>Adelanto para reservar el inicio del proyecto.</small></div>
-    <div class="card"><span>Al publicar · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>Saldo, con la web lista para salir.</small></div>
+    <div class="card"><span>Al aprobar la web · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>Saldo, antes de publicarla en tu dominio.</small></div>
   </div>
-  <p class="nota">Pagos seguros con Whop, con tarjeta u otros medios disponibles. No vemos ni guardamos los datos de tu tarjeta.</p>
+  <p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>
   <h3 style="margin-top:20px">Condiciones</h3>
   <div class="condiciones">
-    <div><h3>Plazos</h3><p>${esc(d.plazo)}. El reloj empieza cuando tenemos el material y los accesos, no el día que se contrata.</p></div>
-    <div><h3>Ajustes</h3><p>${d.rondasDeAjustes} rondas de ajustes sobre la web. Los cambios de alcance se cotizan aparte.</p></div>
-    <div><h3>Dominio</h3><p>Se paga aparte y queda siempre a tu nombre.</p></div>
+    <div><h3>Plazos</h3><p>${esc(Plazo)}. El reloj empieza cuando tenemos el material y los accesos, no el día que se contrata.</p></div>
+    <div><h3>Cambios</h3><p>${d.rondasDeAjustes} rondas, cada una con una sola lista. Lo que no está en esta propuesta se cotiza aparte, antes de hacerlo.</p></div>
+    <div><h3>Si no hay respuesta</h3><p>A los ${pausa.diasSinRespuesta} días hábiles sin respuesta el proyecto se pausa, y a los ${pausa.diasCierre} días de pausa se cierra. Para retomarlo, se paga el saldo.</p></div>
+    <div><h3>Dominio y alojamiento</h3><p>Se pagan aparte y quedan a tu nombre. El alojamiento con nosotros es opcional.</p></div>
     <div><h3>Propiedad</h3><p>Con el pago completo, la web y sus contenidos son tuyos.</p></div>
-    <div><h3>Validez</h3><p>Esta propuesta es válida hasta el ${larga(vence)}.</p></div>
     <div><h3>Contratas con</h3><p>Francesco Lulli Guzmán (ALIVE), Lima, Perú.</p></div>
   </div>
   ${pie(5)}

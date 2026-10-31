@@ -83,7 +83,7 @@ Acceso con correo y contraseña (o enlace al correo si se olvida), solo para cue
 
 ## Propuestas comerciales
 
-Cada propuesta es un archivo de datos en `propuestas/datos/` (copia `ejemplo-web-esencial.json`): cliente, fecha, validez, moneda (`USD`, `PEN` o `EUR`), precio, porcentajes de adelanto y saldo, plazo, rondas de ajustes, acompañamiento y alojamiento. `npm run propuesta -- propuestas/datos/<archivo>.json` genera `propuestas/salida/<slug>.pdf` (A4, 7 páginas) con la identidad de ALIVE. Lo que falte (por ejemplo, `precio: null`) sale marcado en amarillo para que no se envíe incompleto. Los PDF generados no se suben al repositorio.
+Cada propuesta es un archivo de datos en `propuestas/datos/` (copia `ejemplo-web-esencial.json` para Web Esencial o `ejemplo-web-esencial-panel.json` para la versión con panel): cliente, fecha, validez, moneda (`USD`, `PEN` o `EUR`), precio, `panel` (true/false), porcentajes de adelanto y saldo, plazo, rondas de cambios, acompañamiento, alojamiento mensual opcional y regla de pausa (días sin respuesta y días hasta el cierre). Las condiciones por defecto siguen la ficha operativa de Web Esencial: 70/30, hasta 10 días hábiles desde el material completo, 2 rondas, 10 días de acompañamiento, alojamiento aparte (US$ 10/mes) y pausa a los 10 días hábiles sin respuesta con cierre a los 30 días. `npm run propuesta -- propuestas/datos/<archivo>.json` genera `propuestas/salida/<slug>.pdf` (A4, 7 páginas) con la identidad de ALIVE. Lo que falte (por ejemplo, `precio: null`) sale marcado en amarillo para que no se envíe incompleto. Los PDF generados no se suben al repositorio.
 
 ## Verificación realizada
 
