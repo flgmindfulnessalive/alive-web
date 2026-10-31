@@ -206,6 +206,7 @@ p + p { margin-top: 8px; }
 .cover .body { margin-top: auto; position: relative; z-index: 1; }
 .cover h1 { font-size: 35pt; font-weight: 450; letter-spacing: -0.035em; line-height: 1.08; margin: 14px 0 16px; }
 .cover h1 span:first-child::after { content: ''; display: block; }
+.cover h1.en-linea span:first-child::after { display: none; }
 .cover .bajada { font-size: 14pt; color: var(--text-muted); max-width: 120mm; }
 .meta { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 26px; margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line-dark); }
 .meta dt { font-size: 8.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
@@ -274,7 +275,7 @@ p + p { margin-top: 8px; }
   <div class="top">${wordmark}<span class="tag">Confidencial</span></div>
   <div class="body">
     <p class="eyebrow">Propuesta de servicios</p>
-    <h1><span>${esc(d.portada.titulo[0])}</span><span class="grad">${esc(d.portada.titulo[1])}</span></h1>
+    <h1${d.portada.enLinea ? ' class="en-linea"' : ''}><span>${esc(d.portada.titulo[0])}${d.portada.enLinea ? ' ' : ''}</span><span class="grad">${esc(d.portada.titulo[1])}</span></h1>
     <p class="bajada">${esc(d.portada.bajada)}</p>
     <dl class="meta">
       <div><dt>Preparada para</dt><dd>${cliente}<small>${esc(d.cliente.detalle)}</small></dd></div>
@@ -456,8 +457,11 @@ await page.evaluate((capturas) => {
     const img = new Image()
     img.src = `data:image/png;base64,${capturas[n]}`
     img.alt = el.textContent
-    img.style.cssText = `display:block;width:${r.width}px;height:${r.height}px`
+    // En una línea con otro texto (portada.enLinea), la imagen va en línea; si no, en bloque.
+    const inline = el.closest('h1.en-linea')
+    img.style.cssText = `display:${inline ? 'inline-block;vertical-align:bottom' : 'block'};width:${r.width}px;height:${r.height}px`
     el.replaceChildren(img)
+    el.style.background = 'none' // sin texto, el degradado del contenedor se pintaría como un rectángulo
   })
   document.body.classList.remove('captura')
 }, capturas)
