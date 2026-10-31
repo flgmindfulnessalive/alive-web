@@ -174,7 +174,7 @@ function Workspace({ session }: { session: Session }) {
   const [adding, setAdding] = useState(false)
   const [error, setError] = useState<string | null>(null)
   // ¿Pueden las funciones de la web guardar en Supabase? Si no, se avisa con el motivo.
-  const [health, setHealth] = useState<{ ok: boolean; reason?: string; warning?: string; detail?: string } | null>(null)
+  const [health, setHealth] = useState<{ ok: boolean; reason?: string; warning?: string; note?: string; detail?: string } | null>(null)
   useEffect(() => {
     fetch('/api/panel-health', { headers: { Authorization: `Bearer ${session.access_token}` } })
       .then((r) => r.json())
@@ -283,6 +283,11 @@ function Workspace({ session }: { session: Session }) {
             </button>
           </div>
         </div>
+        {health?.ok && health.note && !health.warning && (
+          <p className="panel-note" role="status">
+            Los briefs entran al panel. {health.note}
+          </p>
+        )}
         {health && (!health.ok || health.warning) && (
           <div className="panel-alert" role="alert">
             <strong>Los briefs y consultas nuevos no están entrando al panel.</strong> {health.reason ?? health.warning}

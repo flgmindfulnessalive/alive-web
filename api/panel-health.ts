@@ -2,16 +2,18 @@
 // Diagnóstico para el panel: ¿pueden las funciones de la web guardar briefs y consultas en Supabase?
 // Solo responde a un administrador conectado (token de sesión del panel) y no devuelve datos de clientes.
 import { json } from './_brief-auth.js'
-
-const clean = (raw?: string) => raw?.trim().replace(/\/(rest|auth)\/v1.*$/, '').replace(/\/+$/, '')
+import { describeSupabaseUrl, normalizeSupabaseUrl, supabaseUrl } from './_supabase-url.js'
 
 export async function GET(request: Request): Promise<Response> {
-  const url = clean(process.env.SUPABASE_URL)
-  const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY
-  const publicUrl = clean(process.env.VITE_SUPABASE_URL)
+  const url = supabaseUrl()
+  const key = process.env.SUPABASE_SECRET_KEY?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
+  const publicUrl = normalizeSupabaseUrl(process.env.VITE_SUPABASE_URL)
+  const ownUrl = normalizeSupabaseUrl(process.env.SUPABASE_URL)
   if (!url || !key) {
     return json(200, { ok: false, reason: `Faltan en Vercel: ${[!url && 'SUPABASE_URL', !key && 'SUPABASE_SECRET_KEY'].filter(Boolean).join(' y ')}.` })
   }
+  // Aviso suave si SUPABASE_URL está mal pero se pudo usar VITE_SUPABASE_URL.
+  const urlNote = !ownUrl ? `${describeSupabaseUrl(process.env.SUPABASE_URL)} Se usa VITE_SUPABASE_URL en su lugar; conviene corregirla.` : undefined
   const headers: Record<string, string> = { apikey: key }
   if (key.startsWith('eyJ')) headers.Authorization = `Bearer ${key}`
 
@@ -24,7 +26,7 @@ export async function GET(request: Request): Promise<Response> {
       ok: false,
       reason: who
         ? 'No autorizado.'
-        : 'Las funciones de la web no llegan a Supabase: revisa SUPABASE_URL en Vercel.',
+        : `Las funciones de la web no llegan a Supabase. ${describeSupabaseUrl(process.env.SUPABASE_URL)}`,
       ...(publicUrl && publicUrl !== url ? { hint: 'SUPABASE_URL y VITE_SUPABASE_URL apuntan a proyectos distintos.' } : {}),
     })
   }
@@ -50,6 +52,7 @@ export async function GET(request: Request): Promise<Response> {
   }
   return json(200, {
     ok: true,
+    ...(urlNote ? { note: urlNote } : {}),
     ...(publicUrl && publicUrl !== url ? { warning: 'SUPABASE_URL y VITE_SUPABASE_URL apuntan a proyectos distintos: los briefs se guardan en un proyecto y el panel lee otro.' } : {}),
   })
 }

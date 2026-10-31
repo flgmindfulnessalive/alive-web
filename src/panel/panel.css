@@ -679,3 +679,12 @@
 .panel-alert span {
   color: var(--color-text-muted);
 }
+
+.panel-note {
+  margin-bottom: var(--space-3);
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  font-size: var(--fs-small);
+  color: var(--color-text-muted);
+}

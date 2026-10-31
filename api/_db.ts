@@ -2,7 +2,9 @@
 // Usa la API REST con la clave secreta (no pasa por las reglas de seguridad por filas).
 // Si Supabase no está configurado o falla, no bloquea: el correo se envía igual.
 //
-// Variables: SUPABASE_URL y SUPABASE_SECRET_KEY (clave «secret» o la antigua «service_role»).
+// Variables: SUPABASE_URL (o, si falta o no es válida, VITE_SUPABASE_URL) y SUPABASE_SECRET_KEY.
+
+import { supabaseUrl } from './_supabase-url.js'
 
 export type ClientRow = {
   source: 'brief' | 'contacto'
@@ -18,9 +20,8 @@ export type ClientRow = {
 }
 
 export async function saveClient(row: ClientRow): Promise<boolean> {
-  // Solo el origen del proyecto: si se copió con /rest/v1 u otra ruta, se quita.
-  const url = process.env.SUPABASE_URL?.trim().replace(/\/(rest|auth)\/v1.*$/, '').replace(/\/+$/, '')
-  const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY
+  const url = supabaseUrl()
+  const key = process.env.SUPABASE_SECRET_KEY?.trim() || process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
   if (!url || !key) return false
   const headers: Record<string, string> = {
     apikey: key,
