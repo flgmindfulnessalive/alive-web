@@ -688,3 +688,22 @@
   font-size: var(--fs-small);
   color: var(--color-text-muted);
 }
+
+.import__paste {
+  min-height: 96px;
+  padding: 16px;
+  border: 1px dashed rgb(245 247 250 / 0.3);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--fs-small);
+  cursor: text;
+}
+
+.import__paste:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  background: rgb(47 107 255 / 0.06);
+}

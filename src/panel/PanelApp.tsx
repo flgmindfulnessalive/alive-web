@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ClipboardEvent, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import wordmarkUrl from '../assets/brand/alive-wordmark.svg'
 import { PROJECT_TYPES, steps } from '../brief/questions'
+import { parseBriefEmail, type ImportedBrief } from './importBrief'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
 
 const money = (n: number | null) =>
@@ -172,6 +173,7 @@ function Workspace({ session }: { session: Session }) {
   const [type, setType] = useState('')
   const [openId, setOpenId] = useState<string | null>(null)
   const [adding, setAdding] = useState(false)
+  const [importing, setImporting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   // ¿Pueden las funciones de la web guardar en Supabase? Si no, se avisa con el motivo.
   const [health, setHealth] = useState<{ ok: boolean; reason?: string; warning?: string; note?: string; detail?: string } | null>(null)
@@ -278,6 +280,9 @@ function Workspace({ session }: { session: Session }) {
                 </button>
               ))}
             </div>
+            <button className="btn btn-ghost btn-sm" onClick={() => setImporting(true)}>
+              Importar brief
+            </button>
             <button className="btn btn-primary btn-sm" onClick={() => setAdding(true)}>
               + Cliente
             </button>
@@ -292,7 +297,7 @@ function Workspace({ session }: { session: Session }) {
           <div className="panel-alert" role="alert">
             <strong>Los briefs y consultas nuevos no están entrando al panel.</strong> {health.reason ?? health.warning}
             {health.detail && <code>{health.detail}</code>}
-            <span>Mientras tanto siguen llegando por correo; puedes añadirlos con «+ Cliente».</span>
+            <span>Mientras tanto siguen llegando por correo; puedes añadirlos con «Importar brief».</span>
           </div>
         )}
         {error && (
@@ -310,6 +315,16 @@ function Workspace({ session }: { session: Session }) {
         )}
       </main>
       {open && <Detail client={open} author={session.user.email ?? ''} onClose={() => setOpenId(null)} onUpdate={update} onRemove={remove} />}
+      {importing && (
+        <ImportBrief
+          onClose={() => setImporting(false)}
+          onAdded={(c) => {
+            setClients((list) => [c, ...list])
+            setImporting(false)
+            setOpenId(c.id)
+          }}
+        />
+      )}
       {adding && (
         <AddClient
           onClose={() => setAdding(false)}
@@ -575,6 +590,22 @@ function Detail({
             )
           })}
 
+        {Array.isArray(answers._extra) && answers._extra.length > 0 && (
+          <section className="detail__section">
+            <h3>Otras respuestas</h3>
+            <dl className="detail__answers">
+              {(answers._extra as { section: string; label: string; value: string }[]).map((r, i) => (
+                <div key={i}>
+                  <dt>
+                    {r.section} · {r.label}
+                  </dt>
+                  <dd>{r.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
         {c.files.length > 0 && (
           <section className="detail__section">
             <h3>Archivos</h3>
@@ -624,6 +655,100 @@ function Detail({
             Eliminar cliente
           </button>
         </footer>
+      </div>
+    </dialog>
+  )
+}
+
+function ImportBrief({ onClose, onAdded }: { onClose: () => void; onAdded: (c: Client) => void }) {
+  const dialog = useRef<HTMLDialogElement>(null)
+  const [parsed, setParsed] = useState<ImportedBrief | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    dialog.current?.showModal()
+  }, [])
+
+  function onPaste(e: ClipboardEvent<HTMLDivElement>) {
+    e.preventDefault()
+    const result = parseBriefEmail(e.clipboardData.getData('text/html'), e.clipboardData.getData('text/plain'))
+    setParsed(result)
+    setError(result ? null : 'No encontramos un brief en lo pegado. Copia el correo «Brief: …» completo y vuelve a pegarlo.')
+  }
+
+  async function save() {
+    if (!parsed) return
+    setBusy(true)
+    const { data, error } = await supabase!
+      .from('clients')
+      .insert({
+        source: 'brief',
+        brief_id: parsed.briefId,
+        name: parsed.name,
+        email: parsed.email,
+        phone: parsed.phone,
+        company: parsed.company,
+        sector: parsed.sector,
+        answers: parsed.answers,
+        files: parsed.files,
+      })
+      .select()
+      .single()
+    setBusy(false)
+    if (error?.code === '23505') return setError('Este brief ya está en el panel.')
+    if (error || !data) return setError('No se pudo importar. Inténtalo de nuevo.')
+    onAdded(data as Client)
+  }
+
+  return (
+    <dialog ref={dialog} className="detail detail--small" aria-labelledby="import-title" onClose={onClose}>
+      <div className="detail__body">
+        <header className="detail__head">
+          <h2 id="import-title">Importar brief</h2>
+          <button type="button" className="detail__close" onClick={() => dialog.current?.close()} aria-label="Cerrar">
+            ×
+          </button>
+        </header>
+        <p className="panel-muted">
+          Abre el correo «Brief: …», selecciona todo su contenido (Ctrl + A), cópialo (Ctrl + C) y pégalo aquí (Ctrl + V).
+        </p>
+        <div
+          className="import__paste"
+          contentEditable
+          suppressContentEditableWarning
+          role="textbox"
+          aria-label="Pega aquí el correo del brief"
+          onPaste={onPaste}
+        >
+          {parsed ? '✓ Correo leído' : 'Pega aquí el correo del brief'}
+        </div>
+        {parsed && (
+          <dl className="detail__contact">
+            <div>
+              <dt>Marca</dt>
+              <dd>{parsed.company ?? '—'}</dd>
+            </div>
+            <div>
+              <dt>Cliente</dt>
+              <dd>{parsed.name}</dd>
+            </div>
+            <div>
+              <dt>Correo</dt>
+              <dd>{parsed.email ?? '—'}</dd>
+            </div>
+            <div>
+              <dt>Contenido</dt>
+              <dd>
+                {parsed.answered} respuestas · {parsed.files.length} archivos
+              </dd>
+            </div>
+          </dl>
+        )}
+        {error && <p className="panel-error">{error}</p>}
+        <button className="btn btn-primary" disabled={!parsed || busy} onClick={save}>
+          {busy ? 'Importando…' : 'Importar al panel'}
+        </button>
       </div>
     </dialog>
   )
