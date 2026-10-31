@@ -5,6 +5,7 @@ Originales entregados (en `brand-source/`): banner de marca 2000×741 y símbolo
 | Recurso | Archivo | Origen | Estado |
 |---|---|---|---|
 | Wordmark ALIVE con ® | `src/assets/brand/paths.ts`, `alive-wordmark.svg` | Vectorizado del banner oficial (potrace, ×4) | Fiel al original; sustituir por el SVG maestro de la guía si existe |
+| Wordmark ALIVE (SVG limpio) | `brand-source/logo/alive-logo.svg` (`currentColor`), `-negro.svg`, `-blanco.svg` | Reconstruido con geometría (rectas y arcos) desde el logotipo oficial: 99,4 % de coincidencia; 5 trazos + ® | Listo; aún no reemplaza al de la web |
 | Símbolo A | `src/assets/brand/paths.ts`, `alive-symbol.svg` | Vectorizado del icono de app, sin ® | Igual que el anterior |
 | Favicon e iconos | `public/favicon.svg` (A sola, adaptable claro/oscuro), `favicon.ico` (16/32/48), `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` | A del logotipo: `npm run icons` | Listos |
 | Escultura (hero) | `src/assets/visual/sculpture-hero.webp` 920×741, 149 KB | Banner oficial, textos eliminados, fondo transparente | Para pantallas retina conviene un original de 2400 px o más |

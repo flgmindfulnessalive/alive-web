@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1814 325" role="img" aria-label="ALIVE">
+  <path fill="currentColor" d="M0.45 325L174.85 40.09A80 80 0 0 1 313.46 43.82L465.44 325L381.29 325L259.92 94.94A24 24 0 0 0 217.9 94.15L84.76 325Z"/>
+  <path fill="currentColor" d="M489 2H570V256H784V325H489Z"/>
+  <path fill="currentColor" d="M830 2H909V325H830Z"/>
+  <path fill="currentColor" d="M950.89 2L1094.13 284.15A74.6 74.6 0 0 0 1225.85 286.64L1384.17 2L1298.17 2L1179.46 223.23A20 20 0 0 1 1143.83 222.49L1037.11 2Z"/>
+  <path fill="currentColor" d="M1416 2H1720V67H1493V125H1720V191H1493V256H1720V325H1416Z"/>
+  <g fill="none" stroke="currentColor">
+    <circle cx="1783.5" cy="30.2" r="27.47" stroke-width="5.53"/>
+    <path d="M1773.97 46.9V16.05H1786.7A7.38 7.38 0 0 1 1786.7 30.8H1773.97M1786.3 30.8L1796.1 46.9" stroke-width="5.9"/>
+  </g>
+</svg>
