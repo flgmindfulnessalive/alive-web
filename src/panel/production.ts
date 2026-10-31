@@ -22,6 +22,8 @@ export type Project = {
   paid_deposit: boolean
   paid_balance: boolean
   amount: number | null
+  paid_deposit_at: string | null
+  paid_balance_at: string | null
 }
 
 export const SERVICES: Record<Service, string> = {

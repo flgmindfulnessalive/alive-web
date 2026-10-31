@@ -5,6 +5,7 @@ import { PROJECT_TYPES, steps } from '../brief/questions'
 import { parseBriefEmail, type ImportedBrief } from './importBrief'
 import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
 import { Production } from './Production'
+import { Dashboard } from './Dashboard'
 import { projectName, statusLabel, waNumber, type Project } from './production'
 
 const money = (n: number | null) =>
@@ -179,8 +180,9 @@ function Workspace({ session }: { session: Session }) {
   const [clients, setClients] = useState<Client[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [projectsMissing, setProjectsMissing] = useState(false)
-  const [section, setSection] = useState<'clientes' | 'produccion'>(() =>
-    location.hash === '#produccion' ? 'produccion' : 'clientes',
+  type Section = 'resumen' | 'clientes' | 'produccion'
+  const [section, setSection] = useState<Section>(() =>
+    location.hash === '#produccion' ? 'produccion' : location.hash === '#clientes' ? 'clientes' : 'resumen',
   )
   const [newProjectFor, setNewProjectFor] = useState<string | null>(null)
   const [focusProject, setFocusProject] = useState<string | null>(null)
@@ -240,9 +242,11 @@ function Workspace({ session }: { session: Session }) {
     return !error
   }
 
-  function go(next: 'clientes' | 'produccion') {
+  // Al cambiar de sección se olvida el proyecto a abrir, salvo que se pida uno (focus).
+  function go(next: Section, focus: string | null = null) {
     setSection(next)
-    history.replaceState(null, '', next === 'produccion' ? '#produccion' : location.pathname)
+    setFocusProject(focus)
+    history.replaceState(null, '', next === 'resumen' ? location.pathname : `#${next}`)
   }
 
   async function remove(id: string) {
@@ -297,9 +301,9 @@ function Workspace({ session }: { session: Session }) {
     >
       <main className="panel-main">
         <nav className="panel-tabs prod-nav" aria-label="Secciones">
-          {(['clientes', 'produccion'] as const).map((v) => (
+          {(['resumen', 'clientes', 'produccion'] as const).map((v) => (
             <button key={v} aria-current={section === v ? 'page' : undefined} aria-selected={section === v} onClick={() => go(v)}>
-              {v === 'clientes' ? 'Clientes' : 'Producción'}
+              {v === 'resumen' ? 'Resumen' : v === 'clientes' ? 'Clientes' : 'Producción'}
             </button>
           ))}
         </nav>
@@ -311,7 +315,18 @@ function Workspace({ session }: { session: Session }) {
             </button>
           </p>
         )}
-        {section === 'produccion' ? (
+        {section === 'resumen' ? (
+          <Dashboard
+            clients={clients}
+            projects={projects}
+            onGo={(s) => go(s)}
+            onOpenClient={(id) => {
+              go('clientes')
+              setOpenId(id)
+            }}
+            onOpenProject={(id) => go('produccion', id)}
+          />
+        ) : section === 'produccion' ? (
           <>
             {projectsMissing && (
               <div className="panel-alert" role="alert">
@@ -399,8 +414,7 @@ function Workspace({ session }: { session: Session }) {
           }}
           onOpenProject={(id) => {
             setOpenId(null)
-            setFocusProject(id)
-            go('produccion')
+            go('produccion', id)
           }}
           onClose={() => setOpenId(null)}
           onUpdate={update}

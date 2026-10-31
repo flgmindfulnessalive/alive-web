@@ -24,6 +24,9 @@ create table if not exists public.projects (
 
 -- Monto del proyecto en US$ (se suma a tablas creadas antes de esta columna).
 alter table public.projects add column if not exists amount numeric(12, 2);
+-- Fecha de cada pago (para el Resumen: cuánto se cobra por mes).
+alter table public.projects add column if not exists paid_deposit_at date;
+alter table public.projects add column if not exists paid_balance_at date;
 
 -- Servicios con ficha: we (Web Esencial), wep (Web Esencial + Panel), eco (Ecommerce Esencial); otro = sin ficha.
 -- Al sumar un servicio nuevo, se actualiza esta lista y se vuelve a ejecutar el archivo.
