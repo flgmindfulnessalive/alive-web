@@ -19,7 +19,7 @@ export type Recurring = {
 
 // Montos sugeridos según las fichas (el costo es lo que paga ALIVE por prestarlo).
 export const KINDS: Record<RecurringKind, { label: string; amount?: number; cost?: number }> = {
-  aloj_web: { label: 'Alojamiento Web Esencial', amount: 10, cost: 10 },
+  aloj_web: { label: 'Alojamiento web', amount: 10 }, // lo gestiona Francesco directamente
   aloj_eco: { label: 'Alojamiento Ecommerce', amount: 20, cost: 10 }, // proyecto adicional en Supabase Pro
   seo: { label: 'SEO mensual' },
   aloj_seo: { label: 'Alojamiento + SEO' },

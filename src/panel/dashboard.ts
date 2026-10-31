@@ -50,17 +50,39 @@ export function paymentsOf(p: Project): Payment[] {
 
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0)
 
-// Últimos n meses, del más antiguo al actual.
-function lastMonths(n: number, now = new Date()) {
-  return Array.from({ length: n }, (_, i) => {
-    const d = new Date(now.getFullYear(), now.getMonth() - (n - 1 - i), 1)
-    return {
-      key: keyOf(d),
-      label: MONTHS[d.getMonth()],
-      year: d.getFullYear(),
-    }
-  })
+// ——— Periodo del Resumen ———
+const MONTHS_LONG = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+export type PeriodChoice = { kind: 'last'; n: number } | { kind: 'month'; key: string }
+export type Period = { months: string[]; previous: string[]; label: string; short: string }
+
+const shiftMonth = (key: string, delta: number) => {
+  const d = new Date(Number(key.slice(0, 4)), Number(key.slice(5, 7)) - 1 + delta, 1)
+  return keyOf(d)
 }
+const monthLabel = (key: string, long = true) => `${(long ? MONTHS_LONG : MONTHS)[Number(key.slice(5, 7)) - 1]} ${key.slice(0, 4)}`
+
+// Meses que abarca la elección (del más antiguo al más reciente) y el periodo anterior de igual largo.
+export function periodOf(choice: PeriodChoice, now = new Date()): Period {
+  const current = keyOf(now)
+  const end = choice.kind === 'month' ? choice.key : current
+  const n = choice.kind === 'month' ? 1 : choice.n
+  const months = Array.from({ length: n }, (_, i) => shiftMonth(end, i - (n - 1)))
+  const previous = months.map((m) => shiftMonth(m, -n))
+  const label =
+    choice.kind === 'month'
+      ? monthLabel(choice.key)
+      : n === 1
+        ? `este mes (${monthLabel(current)})`
+        : n === 12
+          ? 'el último año'
+          : `los últimos ${n} meses`
+  const short = choice.kind === 'month' || n === 1 ? MONTHS[Number(end.slice(5, 7)) - 1] : n === 12 ? '12 meses' : `${n} meses`
+  return { months, previous, label, short }
+}
+
+// Meses para elegir uno en concreto: los últimos 24.
+export const monthOptions = (now = new Date()) =>
+  Array.from({ length: 24 }, (_, i) => shiftMonth(keyOf(now), -i)).map((key) => ({ key, label: monthLabel(key) }))
 
 export type Priority = {
   id: string
@@ -72,11 +94,17 @@ export type Priority = {
   message?: TemplateKey
 }
 
-export function buildDashboard(clients: Client[], projects: Project[], now = new Date(), recurring: Recurring[] = []) {
+export function buildDashboard(
+  clients: Client[],
+  projects: Project[],
+  now = new Date(),
+  recurring: Recurring[] = [],
+  period: Period = periodOf({ kind: 'last', n: 1 }, now),
+) {
   const today = businessToday(now)
   const thisMonth = keyOf(now)
-  const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  const prevMonth = keyOf(prev)
+  const inPeriod = (d: string) => period.months.includes(monthKey(d))
+  const inPrevious = (d: string) => period.previous.includes(monthKey(d))
   const clientById = new Map(clients.map((c) => [c.id, c]))
   const label = (id: string) => {
     const c = clientById.get(id)
@@ -89,28 +117,43 @@ export function buildDashboard(clients: Client[], projects: Project[], now = new
   const recurrente = mrr(recurring, now)
   const pendientesRecurrentes = recurring.filter((x) => activeIn(x, thisMonth) && !isPaid(x, thisMonth))
   const porCobrarRecurrente = pendientesRecurrentes.reduce((a, x) => a + x.amount, 0)
-  const cobradoMes = sum(payments.filter((x) => monthKey(x.date) === thisMonth).map((x) => x.amount))
-  const cobradoMesAnterior = sum(payments.filter((x) => monthKey(x.date) === prevMonth).map((x) => x.amount))
-  const cobradoAnio = sum(payments.filter((x) => x.date.startsWith(String(now.getFullYear()))).map((x) => x.amount))
+  const cobradoMes = sum(payments.filter((x) => inPeriod(x.date)).map((x) => x.amount))
+  const cobradoMesAnterior = sum(payments.filter((x) => inPrevious(x.date)).map((x) => x.amount))
+  const endYear = period.months[period.months.length - 1].slice(0, 4)
+  const cobradoAnio = sum(payments.filter((x) => x.date.startsWith(endYear)).map((x) => x.amount))
 
   const open = projects.filter((p) => !p.closed_admin && p.amount)
   const pendingDeposit = sum(open.filter((p) => !p.paid_deposit).map((p) => Math.round(p.amount! * 70) / 100))
   const pendingBalance = sum(open.filter((p) => !p.paid_balance).map((p) => Math.round(p.amount! * 30) / 100))
   const porCobrar = pendingDeposit + pendingBalance + porCobrarRecurrente
 
-  const vendidoMes = sum(projects.filter((p) => monthKey(p.created_at) === thisMonth).map((p) => p.amount ?? 0))
-  const proyectosMes = projects.filter((p) => monthKey(p.created_at) === thisMonth).length
-  const withAmount = projects.filter((p) => p.amount)
+  const vendidos = projects.filter((p) => inPeriod(p.created_at))
+  const vendidoMes = sum(vendidos.map((p) => p.amount ?? 0))
+  const vendidoAnterior = sum(projects.filter((p) => inPrevious(p.created_at)).map((p) => p.amount ?? 0))
+  const proyectosMes = vendidos.length
+  const withAmount = vendidos.filter((p) => p.amount)
   const ticket = withAmount.length ? sum(withAmount.map((p) => p.amount!)) / withAmount.length : null
   const sinMonto = projects.filter((p) => p.amount == null && !p.closed_admin)
 
-  const cobradoPorMes = lastMonths(6, now).map((m) => ({
+  // Gráficos: los meses del periodo; si son menos de 6, los 6 que terminan en el último del periodo.
+  const endKey = period.months[period.months.length - 1]
+  const chartMonths =
+    period.months.length >= 6
+      ? period.months.map((key) => ({ key, label: MONTHS[Number(key.slice(5, 7)) - 1], year: Number(key.slice(0, 4)) }))
+      : Array.from({ length: 6 }, (_, i) => shiftMonth(endKey, i - 5)).map((key) => ({
+          key,
+          label: MONTHS[Number(key.slice(5, 7)) - 1],
+          year: Number(key.slice(0, 4)),
+        }))
+  const cobradoPorMes = chartMonths.map((m) => ({
     ...m,
+    inPeriod: period.months.includes(m.key),
     value: sum(payments.filter((x) => monthKey(x.date) === m.key).map((x) => x.amount)),
   }))
 
   // ——— Comercial ———
-  const stageCount = (s: Client['stage']) => clients.filter((c) => c.stage === s).length
+  const periodClients = clients.filter((c) => inPeriod(c.created_at))
+  const stageCount = (s: Client['stage']) => periodClients.filter((c) => c.stage === s).length
   const funnel = (
     [
       ['nuevo', 'Nuevos'],
@@ -123,27 +166,29 @@ export function buildDashboard(clients: Client[], projects: Project[], now = new
     id,
     name,
     count: stageCount(id),
-    value: sum(clients.filter((c) => c.stage === id).map((c) => c.value ?? 0)),
+    value: sum(periodClients.filter((c) => c.stage === id).map((c) => c.value ?? 0)),
   }))
   const negociacion = clients.filter((c) => c.stage === 'conversacion' || c.stage === 'propuesta')
   const enNegociacion = sum(negociacion.map((c) => c.value ?? 0))
   const negociacionSinValor = negociacion.filter((c) => c.value == null).length
   const decididos = stageCount('ganado') + stageCount('perdido')
   const conversion = decididos ? Math.round((stageCount('ganado') / decididos) * 100) : null
-  const leadsPorMes = lastMonths(6, now).map((m) => ({
+  const leadsPorMes = chartMonths.map((m) => ({
     ...m,
+    inPeriod: period.months.includes(m.key),
     value: clients.filter((c) => monthKey(c.created_at) === m.key).length,
   }))
-  const leadsMes = clients.filter((c) => monthKey(c.created_at) === thisMonth).length
+  const leadsMes = periodClients.length
+  const leadsAnterior = clients.filter((c) => inPrevious(c.created_at)).length
   const origen = (['brief', 'contacto', 'manual'] as const).map((s) => ({
     id: s,
-    count: clients.filter((c) => c.source === s).length,
+    count: periodClients.filter((c) => c.source === s).length,
   }))
 
   // ——— Servicios ———
   const servicios = (['we', 'wep', 'eco', 'otro'] as const)
     .map((s) => {
-      const ps = projects.filter((p) => p.service === s)
+      const ps = vendidos.filter((p) => p.service === s)
       return {
         id: s,
         count: ps.length,
@@ -270,6 +315,9 @@ export function buildDashboard(clients: Client[], projects: Project[], now = new
   priorities.sort((a, b) => order[a.level] - order[b.level])
 
   return {
+    period,
+    vendidoAnterior,
+    leadsAnterior,
     recurrente,
     porCobrarRecurrente,
     recurringList: recurring.filter((x) => activeIn(x, thisMonth)),
@@ -304,7 +352,6 @@ export function buildDashboard(clients: Client[], projects: Project[], now = new
     esperaPromedio,
     priorities,
     monthLabel: MONTHS[now.getMonth()],
-    prevLabel: MONTHS[prev.getMonth()],
-    year: now.getFullYear(),
+    year: Number(endYear),
   }
 }

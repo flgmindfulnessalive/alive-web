@@ -1,7 +1,7 @@
 // Resumen del panel: cuánto se cobra y se vende, qué hay por cobrar, qué toca hoy y cómo va el negocio.
 import { useMemo, useState } from 'react'
 import type { Client } from './data'
-import { buildDashboard, type Priority } from './dashboard'
+import { buildDashboard, monthOptions, periodOf, type PeriodChoice, type Priority } from './dashboard'
 import { money, SERVICES, shortDate, type Project } from './production'
 import { isPaid, monthName, recurringName, togglePaid, type Recurring } from './recurring'
 
@@ -30,13 +30,36 @@ function greeting(now: Date) {
 
 export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo, recurring, recurringMissing, onToggleRecurring }: Props) {
   const [now] = useState(() => new Date())
-  const d = useMemo(() => buildDashboard(clients, projects, now, recurring), [clients, projects, now, recurring])
+  // Periodo elegido (se recuerda en este navegador).
+  const [choice, setChoice] = useState<PeriodChoice>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('alive-panel-periodo') ?? 'null') as PeriodChoice | null
+      if (saved && (saved.kind === 'last' || saved.kind === 'month')) return saved
+    } catch {
+      // sin almacenamiento: se usa el mes actual
+    }
+    return { kind: 'last', n: 1 }
+  })
+  const pick = (c: PeriodChoice) => {
+    setChoice(c)
+    try {
+      localStorage.setItem('alive-panel-periodo', JSON.stringify(c))
+    } catch {
+      // no se pudo recordar; no pasa nada
+    }
+  }
+  const period = useMemo(() => periodOf(choice, now), [choice, now])
+  const months = useMemo(() => monthOptions(now), [now])
+  const d = useMemo(() => buildDashboard(clients, projects, now, recurring, period), [clients, projects, now, recurring, period])
+  const pct = (a: number, b: number) => (b ? Math.round(((a - b) / b) * 100) : null)
   const clientName = (id: string) => {
     const c = clients.find((x) => x.id === id)
     return c ? c.company || c.name : 'Cliente'
   }
   const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-  const delta = d.cobradoMesAnterior ? Math.round(((d.cobradoMes - d.cobradoMesAnterior) / d.cobradoMesAnterior) * 100) : null
+  const delta = pct(d.cobradoMes, d.cobradoMesAnterior)
+  const deltaVendido = pct(d.vendidoMes, d.vendidoAnterior)
+  const before = choice.kind === 'last' && choice.n === 1 ? 'al mes anterior' : 'al periodo anterior'
   const open = (p: Priority) => (p.target.kind === 'project' ? onOpenProject(p.target.id) : onOpenClient(p.target.id))
   const top = d.priorities.slice(0, 8)
 
@@ -45,7 +68,7 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
       <header className="dash-head">
         <div>
           <p className="eyebrow">
-            {shortDate(now)} · {d.monthLabel} {d.year}
+            Hoy · {shortDate(now)}
           </p>
           <h1 className="panel-h1">{greeting(now)}.</h1>
           <p className="panel-muted">
@@ -54,12 +77,42 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
               : 'Todo al día. Nada urgente por atender.'}
           </p>
         </div>
+        <div className="dash-period" role="group" aria-label="Periodo">
+          {(
+            [
+              [1, 'Este mes'],
+              [3, '3 meses'],
+              [6, '6 meses'],
+              [12, '1 año'],
+            ] as const
+          ).map(([n, label]) => (
+            <button key={n} aria-pressed={choice.kind === 'last' && choice.n === n} onClick={() => pick({ kind: 'last', n })}>
+              {label}
+            </button>
+          ))}
+          <select
+            aria-label="Elegir un mes"
+            className={`prod-select${choice.kind === 'month' ? ' is-active' : ''}`}
+            value={choice.kind === 'month' ? choice.key : ''}
+            onChange={(e) => (e.target.value ? pick({ kind: 'month', key: e.target.value }) : pick({ kind: 'last', n: 1 }))}
+          >
+            <option value="">Otro mes…</option>
+            {months.map((m) => (
+              <option key={m.key} value={m.key}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </header>
+      <p className="dash-scope">
+        Cobrado, vendido, consultas, embudo y servicios: <b>{period.label}</b>. Por cobrar, ingreso mensual, negociación y producción: hoy.
+      </p>
 
       {/* ——— Dinero ——— */}
       <section className="dash-kpis" aria-label="Dinero">
         <article className="dash-kpi dash-kpi--hero">
-          <span className="dash-kpi__label">Cobrado en {d.monthLabel}</span>
+          <span className="dash-kpi__label">Cobrado · {period.short}</span>
           <b className="dash-kpi__value">{usd(d.cobradoMes)}</b>
           <span className="dash-kpi__sub">
             {delta === null ? (
@@ -69,7 +122,7 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
                 <span className={delta >= 0 ? 'is-up' : 'is-down'}>
                   {delta >= 0 ? '▲' : '▼'} {Math.abs(delta)} %
                 </span>{' '}
-                frente a {d.prevLabel} · en {d.year}: {usd(d.cobradoAnio)}
+                frente {before} · en {d.year}: {usd(d.cobradoAnio)}
               </>
             )}
           </span>
@@ -92,9 +145,16 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
           </span>
         </article>
         <article className="dash-kpi">
-          <span className="dash-kpi__label">Vendido en {d.monthLabel}</span>
+          <span className="dash-kpi__label">Vendido · {period.short}</span>
           <b className="dash-kpi__value">{usd(d.vendidoMes)}</b>
           <span className="dash-kpi__sub">
+            {deltaVendido !== null && (
+              <>
+                <span className={deltaVendido >= 0 ? 'is-up' : 'is-down'}>
+                  {deltaVendido >= 0 ? '▲' : '▼'} {Math.abs(deltaVendido)} %
+                </span>{' '}
+              </>
+            )}
             {d.proyectosMes} {d.proyectosMes === 1 ? 'proyecto nuevo' : 'proyectos nuevos'}
             {d.ticket ? ` · ticket promedio ${usd(Math.round(d.ticket))}` : ''}
           </span>
@@ -187,7 +247,7 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
         <section className="dash-card" aria-labelledby="dash-cob">
           <header className="dash-card__head">
             <h2 id="dash-cob">Cobrado por mes</h2>
-            <span>Últimos 6 meses · US$</span>
+            <span>{d.cobradoPorMes.length} meses · US$ · resaltado: {period.short}</span>
           </header>
           <Bars
             data={d.cobradoPorMes}
@@ -201,7 +261,8 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
           <header className="dash-card__head">
             <h2 id="dash-leads">Consultas por mes</h2>
             <span>
-              {d.leadsMes} en {d.monthLabel}
+              {d.leadsMes} · {period.short}
+              {d.leadsAnterior ? ` (antes ${d.leadsAnterior})` : ''}
             </span>
           </header>
           <Bars data={d.leadsPorMes} format={(n) => String(n)} empty="Aún no hay consultas registradas." />
@@ -217,7 +278,7 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
         {/* ——— Embudo ——— */}
         <section className="dash-card" aria-labelledby="dash-fun">
           <header className="dash-card__head">
-            <h2 id="dash-fun">Embudo comercial</h2>
+            <h2 id="dash-fun">Embudo · {period.short}</h2>
             <button className="panel-link" onClick={() => onGo('clientes')}>
               Clientes
             </button>
@@ -267,7 +328,7 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
         <section className="dash-card dash-card--wide" aria-labelledby="dash-serv">
           <header className="dash-card__head">
             <h2 id="dash-serv">Servicios vendidos</h2>
-            <span>Todos los proyectos</span>
+            <span>Proyectos de {period.label}</span>
           </header>
           {d.servicios.length ? (
             <div className="table-wrap">
@@ -316,21 +377,22 @@ function Bars({
   format,
   empty,
 }: {
-  data: { key: string; label: string; value: number; year: number }[]
+  data: { key: string; label: string; value: number; year: number; inPeriod?: boolean }[]
   format: (n: number) => string
   empty: string
 }) {
   const [hover, setHover] = useState<number | null>(null)
   const max = Math.max(...data.map((x) => x.value), 0)
   if (!max) return <p className="dash-empty">{empty}</p>
-  const shown = hover ?? data.length - 1
+  const lastIn = data.map((x) => x.inPeriod).lastIndexOf(true)
+  const shown = hover ?? (lastIn >= 0 ? lastIn : data.length - 1)
   return (
     <div className="dash-bars" onMouseLeave={() => setHover(null)}>
       <div className="dash-bars__plot">
         {data.map((x, i) => (
           <div
             key={x.key}
-            className={`dash-bars__col${i === shown ? ' is-shown' : ''}`}
+            className={`dash-bars__col${i === shown ? ' is-shown' : ''}${x.inPeriod ? ' is-in' : ''}`}
             tabIndex={0}
             aria-label={`${x.label} ${x.year}: ${format(x.value)}`}
             onMouseEnter={() => setHover(i)}

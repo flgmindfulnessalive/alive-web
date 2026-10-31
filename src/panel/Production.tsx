@@ -993,6 +993,97 @@ function MessageDialog({
   )
 }
 
+// Buscador de clientes: escribe parte del nombre, la marca, el correo o el teléfono y elige de la lista.
+const fold = (t: string) =>
+  t
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+function ClientPicker({ clients, value, onChange }: { clients: Client[]; value: string; onChange: (id: string) => void }) {
+  const selected = clients.find((c) => c.id === value)
+  const show = (c: Client) => (c.company ? `${c.company} · ${c.name}` : c.name)
+  const [query, setQuery] = useState(selected ? show(selected) : '')
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState(0)
+  const q = fold(query.trim())
+  const typing = !selected || query !== show(selected)
+  const matches = (typing && q ? clients.filter((c) => [c.name, c.company, c.email, c.phone].some((v) => v && fold(v).includes(q))) : clients).slice(0, 8)
+  const choose = (c: Client) => {
+    onChange(c.id)
+    setQuery(show(c))
+    setOpen(false)
+  }
+  return (
+    <div className="panel-field prod-picker">
+      <label htmlFor="prod-picker-input">
+        <span>Cliente</span>
+      </label>
+      <input
+        id="prod-picker-input"
+        role="combobox"
+        aria-expanded={open}
+        aria-controls="prod-picker-list"
+        aria-autocomplete="list"
+        autoComplete="off"
+        placeholder="Busca por nombre, marca, correo o teléfono"
+        value={query}
+        onFocus={(e) => {
+          setOpen(true)
+          e.currentTarget.select()
+        }}
+        onBlur={() => setTimeout(() => setOpen(false), 120)}
+        onChange={(e) => {
+          setQuery(e.target.value)
+          setActive(0)
+          setOpen(true)
+          if (selected) onChange('')
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setOpen(true)
+            setActive((a) => Math.min(a + 1, matches.length - 1))
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault()
+            setActive((a) => Math.max(a - 1, 0))
+          } else if (e.key === 'Enter' && open && matches[active]) {
+            e.preventDefault()
+            choose(matches[active])
+          } else if (e.key === 'Escape' && open) {
+            e.preventDefault()
+            e.stopPropagation()
+            setOpen(false)
+          }
+        }}
+      />
+      {open && (
+        <ul id="prod-picker-list" role="listbox" className="prod-picker__list">
+          {matches.length ? (
+            matches.map((c, i) => (
+              <li
+                key={c.id}
+                role="option"
+                aria-selected={i === active}
+                className={i === active ? 'is-active' : ''}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  choose(c)
+                }}
+                onMouseEnter={() => setActive(i)}
+              >
+                <b>{c.company || c.name}</b>
+                <small>{[c.company ? c.name : null, c.email, c.phone].filter(Boolean).join(' · ')}</small>
+              </li>
+            ))
+          ) : (
+            <li className="prod-picker__none">Sin resultados. Si es nuevo, créalo antes en Clientes.</li>
+          )}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 // ——— Nuevo proyecto ———
 function NewProject({
   clients,
@@ -1055,16 +1146,7 @@ function NewProject({
             ×
           </button>
         </header>
-        <label className="panel-field">
-          <span>Cliente</span>
-          <select className="prod-select" value={clientId} onChange={(e) => setClientId(e.target.value)}>
-            {sorted.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.company ? `${c.company} · ${c.name}` : c.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <ClientPicker clients={sorted} value={clientId} onChange={setClientId} />
         <label className="panel-field">
           <span>Servicio</span>
           <select className="prod-select" value={service} onChange={(e) => setService(e.target.value as Service)}>
