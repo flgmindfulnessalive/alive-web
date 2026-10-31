@@ -24,6 +24,27 @@ export type Project = {
   amount: number | null
   paid_deposit_at: string | null
   paid_balance_at: string | null
+  // Oportunidad comercial: solo los ganados están en Producción.
+  deal_stage: Deal
+  deal_updated_at: string
+  won_at: string | null
+}
+
+export type Deal = 'conversacion' | 'propuesta' | 'ganado' | 'perdido'
+export const DEALS: { id: Deal; label: string }[] = [
+  { id: 'conversacion', label: 'En conversación' },
+  { id: 'propuesta', label: 'Propuesta enviada' },
+  { id: 'ganado', label: 'Ganado' },
+  { id: 'perdido', label: 'Perdido' },
+]
+export const dealLabel = (d: Deal) => DEALS.find((x) => x.id === d)?.label ?? d
+// Proyectos de tablas anteriores a las oportunidades no traen etapa: cuentan como ganados.
+export const isWon = (p: Pick<Project, 'deal_stage'>) => (p.deal_stage ?? 'ganado') === 'ganado'
+
+// Datos para marcar una oportunidad como ganada: entra a Producción y su plazo empieza hoy.
+export function winPatch(): Partial<Project> {
+  const today = iso(businessToday())
+  return { deal_stage: 'ganado', deal_updated_at: new Date().toISOString(), won_at: iso(new Date()), phase_started: today }
 }
 
 export const SERVICES: Record<Service, string> = {

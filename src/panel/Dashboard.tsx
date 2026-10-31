@@ -10,6 +10,7 @@ type Props = {
   projects: Project[]
   onOpenClient: (id: string) => void
   onOpenProject: (id: string) => void
+  onOpenDeal: (id: string) => void
   onGo: (section: 'clientes' | 'produccion') => void
   recurring: Recurring[]
   recurringMissing: boolean
@@ -28,7 +29,7 @@ function greeting(now: Date) {
   return h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches'
 }
 
-export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo, recurring, recurringMissing, onToggleRecurring }: Props) {
+export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onOpenDeal, onGo, recurring, recurringMissing, onToggleRecurring }: Props) {
   const [now] = useState(() => new Date())
   // Periodo elegido (se recuerda en este navegador).
   const [choice, setChoice] = useState<PeriodChoice>(() => {
@@ -60,7 +61,8 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
   const delta = pct(d.cobradoMes, d.cobradoMesAnterior)
   const deltaVendido = pct(d.vendidoMes, d.vendidoAnterior)
   const before = choice.kind === 'last' && choice.n === 1 ? 'al mes anterior' : 'al periodo anterior'
-  const open = (p: Priority) => (p.target.kind === 'project' ? onOpenProject(p.target.id) : onOpenClient(p.target.id))
+  const open = (p: Priority) =>
+    p.target.kind === 'project' ? onOpenProject(p.target.id) : p.target.kind === 'deal' ? onOpenDeal(p.target.id) : onOpenClient(p.target.id)
   const top = d.priorities.slice(0, 8)
 
   return (
@@ -163,7 +165,7 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
           <span className="dash-kpi__label">En negociación</span>
           <b className="dash-kpi__value">{usd(d.enNegociacion)}</b>
           <span className="dash-kpi__sub">
-            {d.negociacion} {d.negociacion === 1 ? 'cliente' : 'clientes'}
+            {d.negociacion} {d.negociacion === 1 ? 'oportunidad' : 'oportunidades'}
             {d.negociacionSinValor ? ` · ${d.negociacionSinValor} sin valor cargado` : ''}
           </span>
         </article>
@@ -286,8 +288,9 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onGo
           <Funnel rows={d.funnel} />
           <p className="dash-note">
             {d.conversion === null
-              ? 'La tasa de cierre aparece con el primer cliente ganado o perdido.'
-              : `Tasa de cierre: ${d.conversion} % (${d.funnel[3].count} de ${d.decididos} decididos).`}
+              ? 'La tasa de cierre aparece con la primera oportunidad ganada o perdida.'
+              : `Tasa de cierre: ${d.conversion} % (${d.funnel[3].count} de ${d.decididos} decididas).`}
+            {d.repiten ? ` ${d.repiten} ${d.repiten === 1 ? 'venta' : 'ventas'} de clientes que repiten.` : ''}
           </p>
         </section>
 

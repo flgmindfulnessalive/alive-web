@@ -3,21 +3,18 @@ import type { Session } from '@supabase/supabase-js'
 import wordmarkUrl from '../assets/brand/alive-wordmark.svg'
 import { PROJECT_TYPES, steps } from '../brief/questions'
 import { parseBriefEmail, type ImportedBrief } from './importBrief'
-import { configured, SOURCE_LABEL, STAGES, supabase, type Client, type Note, type Stage } from './data'
+import { configured, SOURCE_LABEL, supabase, type Client, type Note } from './data'
 import { Production } from './Production'
 import { Dashboard } from './Dashboard'
 import { RecurringSection, type NoteHelpers } from './Recurring'
 import type { Recurring } from './recurring'
-import { projectName, statusLabel, waNumber, type Project } from './production'
+import { dealLabel, isWon, projectName, statusLabel, waNumber, winPatch, type Deal, type Project } from './production'
+import { Board, DealDialog } from './Pipeline'
 
 const money = (n: number | null) =>
   n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
 const date = (iso: string) =>
   new Date(iso).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' })
-const ago = (iso: string) => {
-  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
-  return days === 0 ? 'hoy' : days === 1 ? 'ayer' : days < 30 ? `hace ${days} días` : date(iso)
-}
 // Etiquetas cortas de los tipos de proyecto marcados en el brief.
 const TYPE_SHORT: Record<string, string> = {
   [PROJECT_TYPES.web]: 'Web',
@@ -44,7 +41,13 @@ async function fetchWorkspace() {
     clients: (data ?? []) as Client[],
     failed: Boolean(error),
     // Si la tabla de proyectos aún no existe (falta ejecutar supabase/proyectos.sql), se avisa en Producción.
-    projects: (projects.data ?? []) as Project[],
+    projects: ((projects.data ?? []) as Project[]).map((p) => ({
+      ...p,
+      amount: p.amount == null ? null : Number(p.amount),
+      deal_stage: p.deal_stage ?? 'ganado',
+      deal_updated_at: p.deal_updated_at ?? p.updated_at,
+      won_at: p.won_at ?? null,
+    })),
     projectsMissing: Boolean(projects.error),
     // Igual con los servicios mensuales (supabase/recurrentes.sql).
     recurring: ((recurring.data ?? []) as Recurring[]).map((x) => ({ ...x, amount: Number(x.amount), cost: Number(x.cost) })),
@@ -194,6 +197,8 @@ function Workspace({ session }: { session: Session }) {
   )
   const [newProjectFor, setNewProjectFor] = useState<string | null>(null)
   const [focusProject, setFocusProject] = useState<string | null>(null)
+  // Oportunidad abierta: una existente (id) o una nueva para un cliente (presetClient).
+  const [dealOpen, setDealOpen] = useState<{ id?: string; presetClient?: string; presetStage?: Deal } | null>(null)
   const [admin, setAdmin] = useState<boolean | null>(null)
   const [view, setView] = useState<'tablero' | 'lista'>('tablero')
   const [query, setQuery] = useState('')
@@ -304,7 +309,20 @@ function Workspace({ session }: { session: Session }) {
 
   const open = clients.find((c) => c.id === openId) ?? null
   const clearNewProject = useCallback(() => setNewProjectFor(null), [])
-  const nuevos = clients.filter((c) => c.stage === 'nuevo').length
+  // Consultas nuevas: clientes en «Nuevo» que aún no tienen ninguna oportunidad ni proyecto.
+  const withProjects = new Set(projects.map((p) => p.client_id))
+  const leads = filtered.filter((c) => c.stage === 'nuevo' && !withProjects.has(c.id))
+  const nuevos = clients.filter((c) => c.stage === 'nuevo' && !withProjects.has(c.id)).length
+  const visibleIds = new Set(filtered.map((c) => c.id))
+  const opportunities = projects.filter((p) => visibleIds.has(p.client_id))
+  const won = projects.filter(isWon)
+  async function moveDeal(id: string, to: Deal) {
+    const p = projects.find((x) => x.id === id)
+    if (!p || p.deal_stage === to) return
+    if (p.deal_stage === 'ganado' && p.history.length)
+      return setError('Este proyecto ya está en producción. Para cambiarlo, hazlo desde Producción.')
+    await updateProject(id, to === 'ganado' ? winPatch() : { deal_stage: to, deal_updated_at: new Date().toISOString() })
+  }
   const signOut = () => supabase!.auth.signOut()
 
   if (admin === false) {
@@ -360,6 +378,7 @@ function Workspace({ session }: { session: Session }) {
               setOpenId(id)
             }}
             onOpenProject={(id) => go('produccion', id)}
+            onOpenDeal={(id) => setDealOpen({ id })}
           />
         ) : section === 'produccion' ? (
           <>
@@ -371,7 +390,7 @@ function Workspace({ session }: { session: Session }) {
             <Production
               initialOpenId={focusProject}
               clients={clients}
-              projects={projects}
+              projects={won}
               author={session.user.email ?? ''}
               newFor={newProjectFor}
               onNewHandled={clearNewProject}
@@ -429,16 +448,55 @@ function Workspace({ session }: { session: Session }) {
           </div>
         )}
         {view === 'tablero' ? (
-          <Board clients={filtered} onOpen={setOpenId} onMove={(id, stage) => update(id, { stage })} />
+          <Board
+            leads={leads}
+            opportunities={opportunities}
+            clients={clients}
+            types={typesOf}
+            onOpenClient={setOpenId}
+            onOpenDeal={(id) => setDealOpen({ id })}
+            onMoveDeal={moveDeal}
+            onMoveLead={(id, to) => (to === 'perdido' ? update(id, { stage: 'perdido' }) : setDealOpen({ presetClient: id, presetStage: to as Deal }))}
+          />
         ) : (
-          <List clients={filtered} onOpen={setOpenId} />
+          <List clients={filtered} projects={projects} onOpen={setOpenId} />
         )}
         </>
         )}
       </main>
+      {dealOpen && (
+        <DealDialog
+          key={dealOpen.id ?? `nuevo-${dealOpen.presetClient}`}
+          deal={dealOpen.id ? projects.find((p) => p.id === dealOpen.id) : undefined}
+          client={clients.find((c) => c.id === (dealOpen.id ? projects.find((p) => p.id === dealOpen.id)?.client_id : dealOpen.presetClient))}
+          clients={clients}
+          presetClient={dealOpen.presetClient}
+          presetStage={dealOpen.presetStage}
+          onClose={() => setDealOpen(null)}
+          onSaved={(p) => setProjects((list) => [...list, { ...p, amount: p.amount == null ? null : Number(p.amount) }])}
+          onUpdate={updateProject}
+          onOpenClient={(id) => {
+            setDealOpen(null)
+            go('clientes')
+            setOpenId(id)
+          }}
+          onOpenProject={(id) => {
+            setDealOpen(null)
+            go('produccion', id)
+          }}
+        />
+      )}
       {open && (
         <Detail
           key={open.id}
+          onOpenDeal={(id) => {
+            setOpenId(null)
+            setDealOpen({ id })
+          }}
+          onNewDeal={() => {
+            setOpenId(null)
+            setDealOpen({ presetClient: open.id })
+          }}
           client={open}
           author={session.user.email ?? ''}
           projects={projects.filter((p) => p.client_id === open.id)}
@@ -490,100 +548,53 @@ function Workspace({ session }: { session: Session }) {
   )
 }
 
-function Board({ clients, onOpen, onMove }: { clients: Client[]; onOpen: (id: string) => void; onMove: (id: string, stage: Stage) => void }) {
-  const [over, setOver] = useState<Stage | null>(null)
-  return (
-    <div className="board">
-      {STAGES.map((s) => {
-        const items = clients.filter((c) => c.stage === s.id)
-        const total = items.reduce((sum, c) => sum + (c.value ?? 0), 0)
-        return (
-          <section
-            key={s.id}
-            className={`board-col board-col--${s.id}${over === s.id ? ' is-over' : ''}`}
-            aria-label={s.label}
-            onDragOver={(e) => {
-              e.preventDefault()
-              setOver(s.id)
-            }}
-            onDragLeave={() => setOver(null)}
-            onDrop={(e) => {
-              e.preventDefault()
-              setOver(null)
-              const id = e.dataTransfer.getData('text/plain')
-              if (id) onMove(id, s.id)
-            }}
-          >
-            <header className="board-col__head">
-              <h2>{s.label}</h2>
-              <span className="board-col__count">{items.length}</span>
-              {total > 0 && <span className="board-col__total">{money(total)}</span>}
-            </header>
-            <div className="board-col__list">
-              {items.map((c) => (
-                <button
-                  key={c.id}
-                  className="card"
-                  draggable
-                  onDragStart={(e) => e.dataTransfer.setData('text/plain', c.id)}
-                  onClick={() => onOpen(c.id)}
-                >
-                  <span className="card__top">
-                    <span className={`tag tag--${c.source}`}>{SOURCE_LABEL[c.source]}</span>
-                    <span className="card__date">{ago(c.created_at)}</span>
-                  </span>
-                  <span className="card__company">{c.company || c.name}</span>
-                  {typesOf(c).length > 0 && (
-                    <span className="card__types">
-                      {typesOf(c).map((t) => (
-                        <span key={t}>{t}</span>
-                      ))}
-                    </span>
-                  )}
-                  {c.company && <span className="card__name">{c.name}</span>}
-                  {c.value != null && <span className="card__value">{money(c.value)}</span>}
-                </button>
-              ))}
-              {!items.length && <p className="board-col__empty">Arrastra aquí</p>}
-            </div>
-          </section>
-        )
-      })}
-    </div>
-  )
-}
-
-function List({ clients, onOpen }: { clients: Client[]; onOpen: (id: string) => void }) {
+// Directorio de clientes: estado comercial (lo más reciente) y lo ganado con cada uno.
+function List({ clients, projects, onOpen }: { clients: Client[]; projects: Project[]; onOpen: (id: string) => void }) {
   if (!clients.length) return <p className="panel-muted panel-empty">Todavía no hay clientes. Los briefs y consultas aparecerán aquí solos.</p>
+  const stateOf = (c: Client) => {
+    const ps = projects.filter((p) => p.client_id === c.id)
+    const open = ps.filter((p) => p.deal_stage === 'conversacion' || p.deal_stage === 'propuesta')
+    if (open.length) return { id: open[open.length - 1].deal_stage, label: `${dealLabel(open[open.length - 1].deal_stage)}${open.length > 1 ? ` (${open.length})` : ''}` }
+    if (ps.some(isWon)) return { id: 'ganado', label: 'Cliente' }
+    if (ps.length) return { id: 'perdido', label: 'Perdido' }
+    if (c.stage === 'perdido') return { id: 'perdido', label: 'Descartado' }
+    if (c.stage !== 'nuevo') return { id: c.stage, label: 'Sin oportunidad: crea una' }
+    return { id: 'nuevo', label: 'Nuevo' }
+  }
+  const wonTotal = (c: Client) => projects.filter((p) => p.client_id === c.id && isWon(p)).reduce((t, p) => t + (p.amount ?? 0), 0)
   return (
     <div className="table-wrap">
       <table className="table">
         <thead>
           <tr>
             <th scope="col">Cliente</th>
-            <th scope="col">Etapa</th>
+            <th scope="col">Estado</th>
             <th scope="col">Origen</th>
-            <th scope="col">Valor</th>
+            <th scope="col">Ganado</th>
             <th scope="col">Fecha</th>
           </tr>
         </thead>
         <tbody>
-          {clients.map((c) => (
-            <tr key={c.id} onClick={() => onOpen(c.id)}>
-              <td>
-                <button className="table__open" onClick={() => onOpen(c.id)}>
-                  <strong>{c.company || c.name}</strong>
-                  <span>{c.company ? c.name : c.email}</span>
-                </button>
-              </td>
-              <td>
-                <span className={`stage stage--${c.stage}`}>{STAGES.find((s) => s.id === c.stage)?.label}</span>
-              </td>
-              <td>{SOURCE_LABEL[c.source]}</td>
-              <td>{money(c.value)}</td>
-              <td>{date(c.created_at)}</td>
-            </tr>
-          ))}
+          {clients.map((c) => {
+            const st = stateOf(c)
+            const total = wonTotal(c)
+            return (
+              <tr key={c.id} onClick={() => onOpen(c.id)}>
+                <td>
+                  <button className="table__open" onClick={() => onOpen(c.id)}>
+                    <strong>{c.company || c.name}</strong>
+                    <span>{c.company ? c.name : c.email}</span>
+                  </button>
+                </td>
+                <td>
+                  <span className={`stage stage--${st.id}`}>{st.label}</span>
+                </td>
+                <td>{SOURCE_LABEL[c.source]}</td>
+                <td>{total ? money(total) : ''}</td>
+                <td>{date(c.created_at)}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>
@@ -594,6 +605,8 @@ function Detail({
   client: c,
   author,
   projects,
+  onOpenDeal,
+  onNewDeal,
   recurringSection,
   onNewProject,
   onOpenProject,
@@ -604,6 +617,8 @@ function Detail({
   client: Client
   author: string
   projects: Project[]
+  onOpenDeal: (id: string) => void
+  onNewDeal: () => void
   onNewProject: () => void
   recurringSection: (notes: NoteHelpers) => ReactNode
   onOpenProject: (id: string) => void
@@ -614,28 +629,12 @@ function Detail({
   const dialog = useRef<HTMLDialogElement>(null)
   const [notes, setNotes] = useState<Note[]>([])
   const [draft, setDraft] = useState('')
-  const [value, setValue] = useState(c.value?.toString() ?? '')
   // Todo se guarda solo; este aviso confirma cada cambio («Guardando…» → «Guardado ✓»).
   const [saved, setSaved] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   async function save(patch: Partial<Client>) {
     setSaved('saving')
     setSaved((await onUpdate(c.id, patch)) ? 'saved' : 'error')
   }
-  // El valor se guarda al salir del campo, con Enter o al cerrar la ficha, solo si cambió.
-  // Se lleva en refs (actualizadas en los eventos) para poder guardarlo también al desmontar.
-  const typed = useRef(value)
-  const stored = useRef(c.value)
-  function saveValue() {
-    const next = typed.current ? Number(typed.current) : null
-    if (next === stored.current) return
-    stored.current = next
-    void save({ value: next })
-  }
-  const saveOnClose = useRef(saveValue)
-  useEffect(() => {
-    saveOnClose.current = saveValue
-  })
-  useEffect(() => () => saveOnClose.current(), [])
 
   useEffect(() => {
     dialog.current?.showModal()
@@ -684,33 +683,27 @@ function Detail({
           </button>
         </header>
 
-        <div className="detail__grid">
-          <label>
-            <span>Etapa</span>
-            <select value={c.stage} onChange={(e) => save({ stage: e.target.value as Stage })}>
-              {STAGES.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span>Valor (US$)</span>
-            <input
-              inputMode="decimal"
-              value={value}
-              placeholder="450"
-              onChange={(e) => {
-                const v = e.target.value.replace(/[^\d.]/g, '')
-                typed.current = v
-                setValue(v)
-              }}
-              onBlur={saveValue}
-              onKeyDown={(e) => e.key === 'Enter' && saveValue()}
-            />
-          </label>
-        </div>
+        {c.stage === 'nuevo' && !projects.length && (
+          <div className="detail__lead">
+            <span>Consulta nueva. ¿Qué necesita?</span>
+            <span className="prod-actions">
+              <button className="btn btn-primary btn-sm" onClick={onNewDeal}>
+                Crear oportunidad
+              </button>
+              <button className="btn btn-ghost btn-sm" onClick={() => save({ stage: 'perdido' })}>
+                Descartar
+              </button>
+            </span>
+          </div>
+        )}
+        {c.stage === 'perdido' && !projects.length && (
+          <div className="detail__lead">
+            <span>Consulta descartada.</span>
+            <button className="btn btn-ghost btn-sm" onClick={() => save({ stage: 'nuevo' })}>
+              Volver a «Nuevo»
+            </button>
+          </div>
+        )}
 
         <div className="detail__grid detail__grid--contact">
           <ContactField label="Nombre" value={c.name} required onSave={(v) => save({ name: v! })} />
@@ -738,31 +731,38 @@ function Detail({
         </div>
 
         <section className="detail__section">
-          <h3>Proyectos</h3>
+          <h3>Oportunidades y proyectos</h3>
           {projects.length > 0 && (
             <ul className="detail__files">
               {projects.map((p) => (
                 <li key={p.id}>
-                  <button className="panel-link" onClick={() => onOpenProject(p.id)}>
+                  <button className="panel-link" onClick={() => (isWon(p) ? onOpenProject(p.id) : onOpenDeal(p.id))}>
                     {projectName(p)}
                   </button>
                   <span>
                     {p.amount != null ? `${money(p.amount)} · ` : ''}
-                    {statusLabel(p).text}
+                    {isWon(p) ? statusLabel(p).text : dealLabel(p.deal_stage)}
                   </span>
                 </li>
               ))}
             </ul>
           )}
-          {projects.filter((p) => p.amount != null).length > 1 && (
-            <p className="panel-muted prod-small">Total en proyectos: {money(projects.reduce((t, p) => t + (p.amount ?? 0), 0))}</p>
+          {projects.filter((p) => isWon(p) && p.amount != null).length > 1 && (
+            <p className="panel-muted prod-small">
+              Total ganado: {money(projects.filter(isWon).reduce((t, p) => t + (p.amount ?? 0), 0))}
+            </p>
           )}
           {c.stage === 'ganado' && !projects.length && (
             <p className="prod-hint">Cliente ganado: crea su proyecto para seguir sus etapas en Producción.</p>
           )}
-          <button className="btn btn-ghost btn-sm prod-start" onClick={onNewProject}>
-            + Crear proyecto
-          </button>
+          <span className="prod-actions prod-start">
+            <button className="btn btn-ghost btn-sm" onClick={onNewDeal}>
+              + Oportunidad
+            </button>
+            <button className="btn btn-ghost btn-sm" onClick={onNewProject}>
+              + Proyecto ya ganado
+            </button>
+          </span>
         </section>
 
         {recurringSection({

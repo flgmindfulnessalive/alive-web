@@ -11,6 +11,8 @@ import {
   statusOf,
   tasksOf,
   TEMPLATES,
+  isWon,
+  type Deal,
   type Project,
   type TemplateKey,
 } from './production'
@@ -90,19 +92,25 @@ export type Priority = {
   title: string
   detail: string
   amount?: number
-  target: { kind: 'project'; id: string } | { kind: 'client'; id: string }
+  target: { kind: 'project'; id: string } | { kind: 'client'; id: string } | { kind: 'deal'; id: string }
   message?: TemplateKey
 }
 
 export function buildDashboard(
   clients: Client[],
-  projects: Project[],
+  allProjects: Project[],
   now = new Date(),
   recurring: Recurring[] = [],
   period: Period = periodOf({ kind: 'last', n: 1 }, now),
 ) {
   const today = businessToday(now)
   const thisMonth = keyOf(now)
+  // Proyectos = oportunidades ganadas (Producción, cobros). Las demás son ventas en curso o perdidas.
+  const projects = allProjects.filter(isWon)
+  const deals = allProjects
+  const withDeals = new Set(allProjects.map((p) => p.client_id))
+  const leads = clients.filter((c) => c.stage === 'nuevo' && !withDeals.has(c.id))
+  const wonDate = (p: Project) => p.won_at ?? p.created_at.slice(0, 10)
   const inPeriod = (d: string) => period.months.includes(monthKey(d))
   const inPrevious = (d: string) => period.previous.includes(monthKey(d))
   const clientById = new Map(clients.map((c) => [c.id, c]))
@@ -131,9 +139,11 @@ export function buildDashboard(
   const pendingBalance = sum(open.filter((p) => !p.paid_balance).map((p) => Math.round(p.amount! * 30) / 100))
   const porCobrar = pendingDeposit + pendingBalance + porCobrarRecurrente
 
-  const vendidos = projects.filter((p) => inPeriod(p.created_at))
+  const vendidos = projects.filter((p) => inPeriod(wonDate(p)))
   const vendidoMes = sum(vendidos.map((p) => p.amount ?? 0))
-  const vendidoAnterior = sum(projects.filter((p) => inPrevious(p.created_at)).map((p) => p.amount ?? 0))
+  const vendidoAnterior = sum(projects.filter((p) => inPrevious(wonDate(p))).map((p) => p.amount ?? 0))
+  // Ventas a clientes que ya habían comprado antes.
+  const repiten = vendidos.filter((p) => projects.some((o) => o.client_id === p.client_id && o.id !== p.id && wonDate(o) < wonDate(p))).length
   const proyectosMes = vendidos.length
   const withAmount = vendidos.filter((p) => p.amount)
   const ticket = withAmount.length ? sum(withAmount.map((p) => p.amount!)) / withAmount.length : null
@@ -157,26 +167,30 @@ export function buildDashboard(
 
   // ——— Comercial ———
   const periodClients = clients.filter((c) => inPeriod(c.created_at))
-  const stageCount = (s: Client['stage']) => periodClients.filter((c) => c.stage === s).length
-  const funnel = (
-    [
-      ['nuevo', 'Nuevos'],
-      ['conversacion', 'En conversación'],
-      ['propuesta', 'Propuesta enviada'],
-      ['ganado', 'Ganados'],
-      ['perdido', 'Perdidos'],
-    ] as const
-  ).map(([id, name]) => ({
-    id,
-    name,
-    count: stageCount(id),
-    value: sum(periodClients.filter((c) => c.stage === id).map((c) => c.value ?? 0)),
-  }))
-  const negociacion = clients.filter((c) => c.stage === 'conversacion' || c.stage === 'propuesta')
-  const enNegociacion = sum(negociacion.map((c) => c.value ?? 0))
-  const negociacionSinValor = negociacion.filter((c) => c.value == null).length
-  const decididos = stageCount('ganado') + stageCount('perdido')
-  const conversion = decididos ? Math.round((stageCount('ganado') / decididos) * 100) : null
+  // Embudo del periodo: consultas nuevas sin oportunidad, y oportunidades abiertas en el periodo según su etapa actual.
+  const periodDeals = deals.filter((p) => inPeriod(p.created_at))
+  const dealCount = (s: Deal) => periodDeals.filter((p) => p.deal_stage === s).length
+  const funnel = [
+    { id: 'nuevo', name: 'Consultas sin oportunidad', count: leads.filter((c) => inPeriod(c.created_at)).length, value: 0 },
+    ...(
+      [
+        ['conversacion', 'En conversación'],
+        ['propuesta', 'Propuesta enviada'],
+        ['ganado', 'Ganadas'],
+        ['perdido', 'Perdidas'],
+      ] as const
+    ).map(([id, name]) => ({
+      id,
+      name,
+      count: dealCount(id),
+      value: sum(periodDeals.filter((p) => p.deal_stage === id).map((p) => p.amount ?? 0)),
+    })),
+  ]
+  const negociacion = deals.filter((p) => p.deal_stage === 'conversacion' || p.deal_stage === 'propuesta')
+  const enNegociacion = sum(negociacion.map((p) => p.amount ?? 0))
+  const negociacionSinValor = negociacion.filter((p) => p.amount == null).length
+  const decididos = dealCount('ganado') + dealCount('perdido')
+  const conversion = decididos ? Math.round((dealCount('ganado') / decididos) * 100) : null
   const leadsPorMes = chartMonths.map((m) => ({
     ...m,
     inPeriod: period.months.includes(m.key),
@@ -257,7 +271,7 @@ export function buildDashboard(
   for (const c of clients) {
     const who = c.company || c.name
     const age = businessDaysBetween(c.created_at.slice(0, 10), today)
-    if (c.stage === 'nuevo' && age >= 1)
+    if (c.stage === 'nuevo' && !withDeals.has(c.id) && age >= 1)
       priorities.push({
         id: `${c.id}-nuevo`,
         level: age >= 3 ? 'crit' : 'warn',
@@ -265,33 +279,36 @@ export function buildDashboard(
         detail: `${who} · ${age === 1 ? 'llegó hace 1 día hábil' : `llegó hace ${age} días hábiles`} (la ficha pide responder en 1)`,
         target: { kind: 'client', id: c.id },
       })
-    const quiet = calendarDaysBetween(c.updated_at.slice(0, 10), now)
-    if (c.stage === 'propuesta' && quiet >= 30)
+  }
+  // Clientes de antes de las oportunidades que quedaron sin ninguna (por ejemplo, «ganado» sin proyecto).
+  for (const c of clients.filter((x) => (x.stage === 'ganado' || x.stage === 'conversacion' || x.stage === 'propuesta') && !withDeals.has(x.id)))
+    priorities.push({
+      id: `${c.id}-sinoportunidad`,
+      level: 'info',
+      title: 'Crear su oportunidad',
+      detail: `${c.company || c.name} · no tiene oportunidad ni proyecto; sin ella no aparece en el tablero`,
+      target: { kind: 'client', id: c.id },
+    })
+  for (const p of deals.filter((x) => x.deal_stage === 'propuesta')) {
+    const who = label(p.client_id)
+    const quiet = calendarDaysBetween(p.deal_updated_at.slice(0, 10), now)
+    if (quiet >= 30)
       priorities.push({
-        id: `${c.id}-vencida`,
+        id: `${p.id}-vencida`,
         level: 'warn',
         title: 'Propuesta vencida',
-        detail: `${who} · sin cambios hace ${quiet} días; la propuesta vale 30. Renueva o marca como perdido`,
-        amount: c.value ?? undefined,
-        target: { kind: 'client', id: c.id },
+        detail: `${who} · ${projectName(p)} · enviada hace ${quiet} días; vale 30. Renueva o marca como perdida`,
+        amount: p.amount ?? undefined,
+        target: { kind: 'deal', id: p.id },
       })
-    else if (c.stage === 'propuesta' && quiet >= 5)
+    else if (quiet >= 5)
       priorities.push({
-        id: `${c.id}-seguimiento`,
+        id: `${p.id}-seguimiento`,
         level: 'info',
         title: 'Seguimiento de propuesta',
-        detail: `${who} · sin cambios hace ${quiet} días`,
-        amount: c.value ?? undefined,
-        target: { kind: 'client', id: c.id },
-      })
-    if (c.stage === 'ganado' && !projects.some((p) => p.client_id === c.id))
-      priorities.push({
-        id: `${c.id}-sinproyecto`,
-        level: 'info',
-        title: 'Crear su proyecto',
-        detail: `${who} · ganado y sin proyecto en Producción`,
-        amount: c.value ?? undefined,
-        target: { kind: 'client', id: c.id },
+        detail: `${who} · ${projectName(p)} · enviada hace ${quiet} días`,
+        amount: p.amount ?? undefined,
+        target: { kind: 'deal', id: p.id },
       })
   }
   for (const p of sinMonto)
@@ -321,6 +338,7 @@ export function buildDashboard(
   priorities.sort((a, b) => order[a.level] - order[b.level])
 
   return {
+    repiten,
     period,
     vendidoAnterior,
     leadsAnterior,

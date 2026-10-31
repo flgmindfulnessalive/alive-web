@@ -1127,6 +1127,8 @@ function NewProject({
         phase_started: iso(d),
         paid_deposit: deposit,
         paid_deposit_at: deposit ? start : null,
+        deal_stage: 'ganado',
+        won_at: start,
         amount: amountValue ? Number(amountValue) : null,
       })
       .select()
