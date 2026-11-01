@@ -107,9 +107,6 @@ export function Dashboard({ clients, projects, onOpenClient, onOpenProject, onOp
           </select>
         </div>
       </header>
-      <p className="dash-scope">
-        Cobrado, vendido, consultas, embudo y servicios: <b>{period.label}</b>. Por cobrar, ingreso mensual, negociación y producción: hoy.
-      </p>
 
       {/* ——— Dinero ——— */}
       <section className="dash-kpis" aria-label="Dinero">

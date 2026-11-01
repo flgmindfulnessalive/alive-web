@@ -2069,16 +2069,6 @@ label.prod-pays {
   border-color: var(--color-text);
 }
 
-.dash-scope {
-  margin-top: -8px;
-  font-size: 12px;
-  color: var(--color-text-muted);
-}
-
-.dash-scope b {
-  color: var(--color-text);
-  font-weight: 500;
-}
 
 .dash-bars__col.is-in i {
   background: rgb(76 125 255 / 0.75);
