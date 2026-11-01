@@ -6,7 +6,7 @@ create table if not exists public.recurring (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
   client_id uuid not null references public.clients (id) on delete cascade,
-  kind text not null check (kind in ('aloj_web', 'aloj_eco', 'seo', 'aloj_seo', 'otro')),
+  kind text not null,
   name text,
   amount numeric(12, 2) not null check (amount >= 0),
   cost numeric(12, 2) not null default 0 check (cost >= 0),
@@ -16,6 +16,11 @@ create table if not exists public.recurring (
   -- Meses pagados: [{ "month": "2026-11", "paid_at": "2026-11-03" }, …]
   paid_months jsonb not null default '[]'::jsonb
 );
+
+-- Tipos de servicio mensual (al sumar uno nuevo, se actualiza esta lista y se vuelve a ejecutar).
+alter table public.recurring drop constraint if exists recurring_kind_check;
+alter table public.recurring add constraint recurring_kind_check
+  check (kind in ('aloj_web', 'aloj_eco', 'seo', 'aloj_seo', 'cuidado', 'evoluciona', 'otro'));
 
 create index if not exists recurring_client_idx on public.recurring (client_id, created_at);
 

@@ -1,7 +1,7 @@
 // Servicios mensuales (alojamiento, SEO, retainer): lo que se cobra cada mes, su costo y qué meses
 // ya están pagados. Se usa en la ficha del cliente y en el Resumen (ingreso recurrente y cobros del mes).
 
-export type RecurringKind = 'aloj_web' | 'aloj_eco' | 'seo' | 'aloj_seo' | 'otro'
+export type RecurringKind = 'aloj_web' | 'aloj_eco' | 'seo' | 'aloj_seo' | 'cuidado' | 'evoluciona' | 'otro'
 
 export type Recurring = {
   id: string
@@ -25,6 +25,8 @@ export const KINDS: Record<RecurringKind, { label: string; amount?: number; cost
   aloj_eco: { label: 'Alojamiento Ecommerce', amount: 20, cost: 10 }, // proyecto adicional en Supabase Pro
   seo: { label: 'SEO mensual (sin alojamiento)', amount: 140 },
   aloj_seo: { label: 'SEO + alojamiento', amount: 150 }, // 160 si el alojamiento es de Ecommerce
+  cuidado: { label: 'Plan Cuidado (proyecto a medida)', amount: 120 },
+  evoluciona: { label: 'Plan Evoluciona (proyecto a medida)', amount: 390 },
   otro: { label: 'Otro servicio mensual' },
 }
 
@@ -62,7 +64,7 @@ export const recurringPayments = (list: Recurring[]) => list.flatMap((r) => r.pa
 // Los días se cuentan desde el día de cobro del mes impago más antiguo.
 export type NoticeKey = 'aviso' | 'pausa' | 'riesgo' | 'ultimo' | 'suspension' | 'gracias'
 export const isSeo = (r: Pick<Recurring, 'kind'>) => r.kind === 'seo' || r.kind === 'aloj_seo'
-export const hasHosting = (r: Pick<Recurring, 'kind'>) => r.kind !== 'seo'
+export const hasHosting = (r: Pick<Recurring, 'kind'>) => r.kind === 'aloj_web' || r.kind === 'aloj_eco' || r.kind === 'aloj_seo'
 
 const dayMs = 864e5
 const noon = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12)

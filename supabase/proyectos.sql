@@ -28,10 +28,10 @@ alter table public.projects add column if not exists amount numeric(12, 2);
 alter table public.projects add column if not exists paid_deposit_at date;
 alter table public.projects add column if not exists paid_balance_at date;
 
--- Servicios con ficha: we (Web Esencial), wep (Web Esencial + Panel), eco (Ecommerce Esencial), mar (Marca Esencial), mid (Identidad Completa); otro = sin ficha.
+-- Servicios con ficha: we (Web Esencial), wep (Web Esencial + Panel), eco (Ecommerce Esencial), mar (Marca Esencial), mid (Identidad Completa), med (Proyecto a medida); otro = sin ficha.
 -- Al sumar un servicio nuevo, se actualiza esta lista y se vuelve a ejecutar el archivo.
 alter table public.projects drop constraint if exists projects_service_check;
-alter table public.projects add constraint projects_service_check check (service in ('we', 'wep', 'eco', 'mar', 'mid', 'otro'));
+alter table public.projects add constraint projects_service_check check (service in ('we', 'wep', 'eco', 'mar', 'mid', 'med', 'otro'));
 
 create index if not exists projects_client_idx on public.projects (client_id, created_at);
 
