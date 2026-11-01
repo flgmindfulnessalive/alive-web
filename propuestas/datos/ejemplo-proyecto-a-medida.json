@@ -1,0 +1,54 @@
+{
+  "slug": "ejemplo-proyecto-a-medida",
+  "cliente": {
+    "nombre": "Nombre del cliente",
+    "detalle": "Sector o tipo de negocio"
+  },
+  "fecha": "2026-10-31",
+  "validezDias": 30,
+  "moneda": "USD",
+  "servicio": {
+    "nombre": "Proyecto a medida · Versión 1",
+    "tipo": "Producto digital · pago único",
+    "precio": 1500,
+    "medida": {
+      "producto": "tu plataforma",
+      "plataforma": "instalable",
+      "funciones": [
+        "Los usuarios se registran y crean su perfil",
+        "Las empresas publican ofertas",
+        "Los usuarios postulan con un clic",
+        "Las empresas ven y filtran a sus candidatos"
+      ],
+      "despues": [
+        "Pagos y planes de suscripción",
+        "App en las tiendas",
+        "Mensajes dentro de la plataforma"
+      ],
+      "terceros": [
+        "Supabase",
+        "Vercel",
+        "Resend"
+      ],
+      "adicionales": []
+    }
+  },
+  "pago": {
+    "adelanto": 70,
+    "saldo": 30
+  },
+  "plazo": "hasta 6 semanas",
+  "rondasDeAjustes": 2,
+  "acompanamientoDias": 30,
+  "pausa": {
+    "diasSinRespuesta": 10,
+    "diasCierre": 30
+  },
+  "portada": {
+    "titulo": [
+      "Tu producto digital,",
+      "en manos de usuarios reales."
+    ],
+    "bajada": "Una Versión 1 enfocada, con demos cada semana y lista para crecer con lo que aprendas."
+  }
+}

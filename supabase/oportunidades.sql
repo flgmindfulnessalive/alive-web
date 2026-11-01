@@ -22,3 +22,6 @@ where c.stage in ('conversacion', 'propuesta', 'perdido')
   and not exists (select 1 from public.projects p where p.client_id = c.id and p.deal_stage <> 'ganado');
 
 create index if not exists projects_deal_idx on public.projects (deal_stage, deal_updated_at desc);
+
+-- Propuesta comercial guardada en cada oportunidad (la arma y la descarga el panel).
+alter table public.projects add column if not exists proposal jsonb;

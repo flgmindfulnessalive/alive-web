@@ -1,3 +1,4 @@
+import type { ProposalData } from '../proposal/template.js'
 // Producción: etapas de cada proyecto (ficha operativa de Web Esencial), días hábiles (lunes a
 // viernes), avisos por falta de respuesta (días 3, 7 y 10) y plantillas de WhatsApp.
 // Lógica pura, sin React ni Supabase, para poder probarla aparte.
@@ -28,6 +29,8 @@ export type Project = {
   deal_stage: Deal
   deal_updated_at: string
   won_at: string | null
+  // Datos de la propuesta comercial guardada (ver src/proposal/template.d.ts).
+  proposal?: ProposalData | null
 }
 
 export type Deal = 'conversacion' | 'propuesta' | 'ganado' | 'perdido'

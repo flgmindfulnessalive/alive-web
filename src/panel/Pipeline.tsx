@@ -3,6 +3,7 @@
 // vuelve a comprar suma una oportunidad nueva sin tocar lo anterior. Al ganarla, entra a Producción.
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { SOURCE_LABEL, supabase, type Client } from './data'
+import { hasProposalTemplate } from '../proposal/browser'
 import { DEALS, businessToday, iso, money, PRICE_FROM, projectName, SERVICES, winPatch, type Deal, type Project, type Service } from './production'
 
 type Column = 'nuevo' | Deal
@@ -136,6 +137,7 @@ export function DealDialog({
   onUpdate,
   onOpenClient,
   onOpenProject,
+  onProposal,
 }: {
   deal?: Project
   client?: Client
@@ -147,6 +149,7 @@ export function DealDialog({
   onUpdate: (id: string, patch: Partial<Project>) => Promise<boolean>
   onOpenClient: (id: string) => void
   onOpenProject: (id: string) => void
+  onProposal?: (id: string) => void
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const [service, setService] = useState<Service>(deal?.service ?? 'we')
@@ -274,6 +277,11 @@ export function DealDialog({
           <button className="btn btn-primary btn-sm" disabled={busy}>
             {busy ? 'Guardando…' : deal ? 'Guardar' : 'Crear oportunidad'}
           </button>
+          {deal && onProposal && hasProposalTemplate(deal) && (
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => onProposal(deal.id)}>
+              {deal.proposal ? 'Ver propuesta' : 'Crear propuesta'}
+            </button>
+          )}
           {deal && deal.deal_stage === 'ganado' && (
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => onOpenProject(deal.id)}>
               Ver en Producción

@@ -10,6 +10,7 @@ import { RecurringSection, type NoteHelpers } from './Recurring'
 import type { Recurring } from './recurring'
 import { dealLabel, isWon, projectName, statusLabel, waNumber, winPatch, type Deal, type Project } from './production'
 import { Board, DealDialog } from './Pipeline'
+import { ProposalEditor } from './ProposalEditor'
 
 const money = (n: number | null) =>
   n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
@@ -199,6 +200,7 @@ function Workspace({ session }: { session: Session }) {
   const [focusProject, setFocusProject] = useState<string | null>(null)
   // Oportunidad abierta: una existente (id) o una nueva para un cliente (presetClient).
   const [dealOpen, setDealOpen] = useState<{ id?: string; presetClient?: string; presetStage?: Deal } | null>(null)
+  const [proposalFor, setProposalFor] = useState<string | null>(null)
   const [admin, setAdmin] = useState<boolean | null>(null)
   const [view, setView] = useState<'tablero' | 'lista'>('tablero')
   const [query, setQuery] = useState('')
@@ -484,8 +486,33 @@ function Workspace({ session }: { session: Session }) {
             setDealOpen(null)
             go('produccion', id)
           }}
+          onProposal={(id) => {
+            setDealOpen(null)
+            setProposalFor(id)
+          }}
         />
       )}
+      {proposalFor &&
+        (() => {
+          const deal = projects.find((p) => p.id === proposalFor)
+          if (!deal) return null
+          return (
+            <ProposalEditor
+              deal={deal}
+              client={clients.find((c) => c.id === deal.client_id)}
+              onClose={() => setProposalFor(null)}
+              onSave={(proposal, sent) =>
+                updateProject(deal.id, {
+                  proposal,
+                  // Al descargarla, una oportunidad en conversación pasa a «Propuesta enviada» y se reinicia su seguimiento.
+                  ...(sent && (deal.deal_stage === 'conversacion' || deal.deal_stage === 'propuesta')
+                    ? { deal_stage: 'propuesta' as const, deal_updated_at: new Date().toISOString() }
+                    : {}),
+                })
+              }
+            />
+          )
+        })()}
       {open && (
         <Detail
           key={open.id}
