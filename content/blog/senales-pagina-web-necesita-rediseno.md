@@ -17,7 +17,7 @@ Si alguien entra a tu web y no sabe en pocos segundos qué ofreces, para quién 
 
 ## 2. En el móvil se ve o funciona peor
 
-La mayoría de visitas llegan desde el teléfono. Si en el móvil hay que hacer zoom, los botones quedan demasiado juntos, los menús no responden bien o los formularios son incómodos, estás dejando una mala experiencia justo donde más gente te visita. Y no basta con «encoger» la versión de escritorio: hay que recomponer el diseño para cada formato.
+En muchos negocios, buena parte de las visitas llega desde el teléfono; puedes comprobarlo en la analítica de tu web, en el reporte por dispositivo. Si en el móvil hay que hacer zoom, los botones quedan demasiado juntos, los menús no responden bien o los formularios son incómodos, estás dejando una mala experiencia justo donde más gente te visita. Y no basta con «encoger» la versión de escritorio: hay que recomponer el diseño para cada formato.
 
 ## 3. Tarda en cargar
 
@@ -74,7 +74,9 @@ No siempre hace falta empezar de cero. Si tu web tiene una buena base técnica y
 
 ### ¿Voy a perder posicionamiento en Google si rediseño mi web?
 
-No si se planifica bien. La clave es mantener las URL que ya funcionan o redirigirlas de forma permanente (redirecciones 301) a sus nuevas versiones, conservar el contenido valioso y cuidar los títulos y descripciones. Bien hecho, un rediseño suele mejorar el posicionamiento.
+Es un riesgo real, pero se puede reducir mucho con un buen plan. Antes de lanzar, conviene hacer un inventario de las páginas que hoy reciben visitas desde Google. Esas URL se mantienen o se redirigen de forma permanente (redirecciones 301) a su nueva versión, y se conserva el contenido que ya funciona, con sus títulos y descripciones.
+
+Después del lanzamiento, revisa en Search Console las páginas, las consultas y los errores durante las semanas siguientes. Es normal que haya movimiento mientras Google procesa los cambios. Nadie puede garantizar posiciones, pero una web más clara, más rápida y mejor organizada le da a Google y a tus visitas mejores razones para quedarse.
 
 ### ¿Cuánto tarda un rediseño?
 
@@ -90,6 +92,6 @@ Tus objetivos, quién es tu cliente ideal, los servicios que quieres destacar, e
 
 ## En resumen
 
-Una web no es un folleto: es una herramienta de trabajo. Si reconoces tu web en tres o más de estas señales, probablemente esté costándote oportunidades que no ves.
+Una web no es un folleto: es una herramienta de trabajo. Si reconoces tu web en varias de estas señales, vale la pena revisarla con calma: puede estar costándote oportunidades que no ves. No hace falta un número exacto; lo que importa es si la web cumple el trabajo que tu negocio necesita.
 
 ¿Quieres una opinión honesta sobre tu web actual? [Hablemos de tu proyecto](/#contacto).
