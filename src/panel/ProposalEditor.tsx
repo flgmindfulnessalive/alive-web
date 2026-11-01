@@ -173,8 +173,12 @@ export function ProposalEditor({ deal, client, onClose, onSave }: Props) {
                 onChange={(v) => set({ alojamiento: { mensual: v ? Number(v.replace(/[^\d.]/g, '')) : null } })}
               />
             )}
+            <label className="prod-pays">
+              <input type="checkbox" checked={Boolean(d.factura)} onChange={(e) => set({ factura: e.target.checked })} />
+              Con factura (+18 % de IGV). Pagando con Whop no aplica.
+            </label>
             <p className="pe-total">
-              Total: <b>{total == null ? '—' : money(total)}</b>
+              {d.factura ? 'Total con IGV' : 'Total'}: <b>{total == null ? '—' : money(total)}</b>
               {total != null && ` · 70 % ${money(Math.round(total * 70) / 100)} · 30 % ${money(Math.round(total * 30) / 100)}`}
             </p>
           </Group>

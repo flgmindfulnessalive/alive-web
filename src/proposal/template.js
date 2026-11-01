@@ -43,7 +43,10 @@ export function buildProposal(d, { asset, wordmarkSvg }) {
   const adicionales = (eco ?? marca ?? med)?.adicionales ?? []
   const total =
     d.servicio.precio == null ? null : d.servicio.precio + bloques * precioBloque + adicionales.reduce((a, x) => a + (x.precio ?? 0), 0)
-  const parte = (pct) => (total == null ? null : Math.round(total * pct) / 100)
+  // Con factura se suma el 18 % de IGV; pagando con Whop no aplica (d.factura).
+  const igv = d.factura && total != null ? Math.round(total * 18) / 100 : 0
+  const totalFinal = total == null ? null : total + igv
+  const parte = (pct) => (totalFinal == null ? null : Math.round(totalFinal * pct) / 100)
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   const cliente = esc(d.cliente.nombre)
   const Plazo = d.plazo.charAt(0).toUpperCase() + d.plazo.slice(1)
@@ -260,6 +263,7 @@ p + p { margin-top: 8px; }
 .eco .fila { padding: 10px 0; }
 .fila { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line-dark); }
 .fila:last-child { border-bottom: 0; }
+.fila .igv { color: var(--text-muted); font-size: 10pt; }
 .fila small { display: block; color: var(--text-muted); font-size: 10pt; margin-top: 2px; }
 .fila .importe { font-size: 15pt; font-weight: 550; white-space: nowrap; }
 .fila .etiqueta { font-size: 8.5pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--turq); padding-top: 12px; border: 0; }
@@ -381,24 +385,26 @@ p + p { margin-top: 8px; }
 <section class="page">
   <p class="eyebrow">04 · Inversión</p>
   <h2>Lo que cuesta, sin letra pequeña</h2>
-  <div class="tabla${eco || med ? ' eco' : ''}">
+  <div class="tabla${eco || med || d.factura ? ' eco' : ''}">
     <div class="fila etiqueta">Una vez</div>
     <div class="fila"><div>${esc(d.servicio.nombre)}<small>${med ? `${funciones.length || '3 a 5'} funciones, prototipo, demos semanales y prueba con usuarios` : marca ? (completa ? 'Estrategia, 3 rutas, sistema, aplicaciones, manual y editables' : 'Concepto, 3 rutas, versiones del logotipo y guía de uso') : eco ? `Tienda, panel de pedidos y carga de ${eco.productos ?? 40} productos` : `Diseño, desarrollo${panel ? ', panel' : ''} y puesta en marcha`}</small></div><div class="importe">${dinero(d.servicio.precio)}</div></div>
     ${bloques ? `<div class="fila"><div>Productos adicionales<small>${bloques} ${bloques === 1 ? 'bloque' : 'bloques'} de 40 productos cargados por ALIVE</small></div><div class="importe">${dinero(bloques * precioBloque)}</div></div>` : ''}
     ${adicionales.map((x) => `<div class="fila"><div>${esc(x.nombre)}${x.detalle ? `<small>${esc(x.detalle)}</small>` : ''}</div><div class="importe">${dinero(x.precio)}</div></div>`).join('')}
-    ${bloques || adicionales.length ? `<div class="fila"><div><b>Total del proyecto</b></div><div class="importe">${dinero(total)}</div></div>` : ''}
+    ${d.factura
+      ? `<div class="fila"><div><b>Total con IGV</b> <span class="igv">(${dinero(total)} + 18 %)</span></div><div class="importe">${dinero(totalFinal)}</div></div>`
+      : bloques || adicionales.length
+        ? `<div class="fila"><div><b>Total del proyecto</b></div><div class="importe">${dinero(total)}</div></div>`
+        : ''}
     ${med ? `<div class="fila"><div>Garantía tras el lanzamiento<small>Corrección de cualquier error de lo construido</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
-    <div class="fila etiqueta">Mensual · opcional</div>
-    <div class="fila"><div>Plan Cuidado<small>Monitoreo, copias de seguridad, errores y hasta 2 h de ajustes</small></div><div class="importe">${dinero(120)} / mes</div></div>
-    <div class="fila"><div>Plan Evoluciona<small>Todo lo anterior y hasta 8 h de mejoras al mes</small></div><div class="importe">${dinero(390)} / mes</div></div>` : marca ? `<div class="fila"><div>Acompañamiento tras la entrega<small>Dudas sobre el uso de los archivos</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>` : eco ? `<div class="fila"><div>Alojamiento mensual<small>Servidor, base de datos de pedidos e imágenes</small></div><div class="importe">${alojamiento}</div></div>` : `<div class="fila"><div>Acompañamiento tras la publicación<small>Dudas y pequeños ajustes</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
+    <div class="fila"><div>Plan mensual (opcional)<small>Cuidado ${dinero(120)}: monitoreo, copias, errores y 2 h de ajustes · Evoluciona ${dinero(390)}: además 8 h de mejoras</small></div><div class="importe">desde ${dinero(120)} / mes</div></div>` : marca ? `<div class="fila"><div>Acompañamiento tras la entrega<small>Dudas sobre el uso de los archivos</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>` : eco ? `<div class="fila"><div>Alojamiento mensual<small>Servidor, base de datos de pedidos e imágenes</small></div><div class="importe">${alojamiento}</div></div>` : `<div class="fila"><div>Acompañamiento tras la publicación<small>Dudas y pequeños ajustes</small></div><div class="importe">${d.acompanamientoDias} días incluidos</div></div>
     <div class="fila etiqueta">Mensual · opcional</div>
     <div class="fila"><div>Alojamiento<small>Servidor y certificado de seguridad, o la publicamos en una cuenta tuya</small></div><div class="importe">${alojamiento}</div></div>`}
   </div>
   <div class="total">
-    <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>Adelanto para reservar el inicio${eco ? ', con Whop' : ' del proyecto'}.</small></div>
+    <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>Adelanto para reservar el inicio${eco && !d.factura ? ', con Whop' : ' del proyecto'}.</small></div>
     <div class="card"><span>Al aprobar la ${cosa} · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>${med ? 'Saldo, antes del lanzamiento.' : marca ? 'Saldo, antes de entregarte los archivos.' : 'Saldo, antes de publicarla en tu dominio.'}</small></div>
   </div>
-  ${eco || med ? '' : '<p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>'}
+  ${eco || med || d.factura ? '' : '<p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>'}
   <h3 style="margin-top:20px">Condiciones</h3>
   <div class="condiciones">
     <div><h3>Plazos</h3><p>${esc(Plazo)} de trabajo desde que tenemos ${med ? 'tus cuentas' : 'el material'}. No cuentan los días que esperamos tu respuesta.</p></div>
@@ -406,7 +412,7 @@ p + p { margin-top: 8px; }
     <div><h3>Si no hay respuesta</h3><p>A los ${pausa.diasSinRespuesta} días hábiles sin respuesta el proyecto se pausa, y a los ${pausa.diasCierre} días de pausa se cierra. Para retomarlo, se paga el saldo.</p></div>
     ${med ? '<div><h3>Servicios de terceros</h3><p>Base de datos, alojamiento, IA y otros servicios los pagas directo al proveedor, con las cuentas a tu nombre.</p></div>' : marca ? '<div><h3>Registro de la marca</h3><p>La búsqueda y el registro en INDECOPI los hace el cliente. ALIVE no garantiza la disponibilidad registral.</p></div>' : eco ? '<div><h3>Dominio y alojamiento</h3><p>El dominio queda a tu nombre. La tienda se aloja en nuestra cuenta y, si un día te vas, te la transferimos con todos tus datos.</p></div>' : '<div><h3>Dominio y alojamiento</h3><p>Se pagan aparte y quedan a tu nombre. El alojamiento con nosotros es opcional.</p></div>'}
     <div><h3>Propiedad</h3><p>${med ? 'Con el pago completo, el código, los datos y las cuentas son tuyos.' : marca ? 'Con el pago completo, los derechos sobre la marca y sus archivos pasan a ti.' : `Con el pago completo, la ${cosa} y sus contenidos son tuyos.`}</p></div>
-    <div><h3>Contratas con</h3><p>Francesco Lulli Guzmán (ALIVE), Lima, Perú.</p></div>
+    <div><h3>Contratas con</h3><p>Francesco Lulli Guzmán (ALIVE), Lima, Perú. ${d.factura ? 'Con factura e IGV.' : 'Con factura, se suma el 18 % de IGV.'}</p></div>
   </div>
   ${pie(5)}
 </section>

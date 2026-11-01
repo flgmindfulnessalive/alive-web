@@ -22,6 +22,8 @@ export type ProposalData = {
   alojamiento?: { mensual: number | null }
   pausa?: { diasSinRespuesta: number; diasCierre: number }
   portada: { titulo: [string, string]; bajada: string; enLinea?: boolean }
+  // Con factura: se suma el 18 % de IGV (pagando con Whop no aplica).
+  factura?: boolean
 }
 export const PROPOSAL_ASSETS: string[]
 export function buildProposal(d: ProposalData, opts: { asset: (path: string) => string; wordmarkSvg: string }): string

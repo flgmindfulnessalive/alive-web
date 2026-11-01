@@ -106,7 +106,9 @@ export function proposalTotal(d: ProposalData) {
   const s = d.servicio
   const extras = (s.ecommerce?.adicionales ?? s.marca?.adicionales ?? s.medida?.adicionales ?? []).reduce((a, x) => a + x.precio, 0)
   const blocks = s.ecommerce ? s.ecommerce.bloquesExtra * s.ecommerce.precioBloque : 0
-  return s.precio == null ? null : s.precio + blocks + extras
+  if (s.precio == null) return null
+  const base = s.precio + blocks + extras
+  return d.factura ? base + Math.round(base * 18) / 100 : base
 }
 
 // El texto con degradado (background-clip: text) no se exporta bien a PDF (según el visor sale con
