@@ -35,6 +35,8 @@ function parse(file) {
   return {
     slug,
     title: meta.title,
+    // Título para Google y redes (opcional). Si falta: «<title> | ALIVE».
+    seoTitle: meta.seo_title || '',
     description: meta.description,
     date: meta.date,
     author: meta.author || DEFAULT_AUTHOR,
@@ -45,7 +47,11 @@ function parse(file) {
     // Desempata artículos con la misma fecha (menor = antes).
     order: Number(meta.order ?? 99),
     minutes: Math.max(1, Math.round(words / 220)),
-    html: marked.parse(m[2]),
+    // Las tablas van en un contenedor desplazable (en móvil) y alcanzable con el teclado.
+    html: marked
+      .parse(m[2])
+      .replace(/<table>/g, '<div class="post__table" role="region" aria-label="Tabla" tabindex="0"><table>')
+      .replace(/<\/table>/g, '</table></div>'),
   }
 }
 
@@ -154,7 +160,7 @@ function postPage(p) {
     <meta property="og:type" content="article" />
     <meta property="article:published_time" content="${p.date}" />
     <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`
-  return `${head({ title: `${p.title} | ALIVE`, description: p.description, path: `/blog/${p.slug}/`, image, extra })}
+  return `${head({ title: p.seoTitle || `${p.title} | ALIVE`, description: p.description, path: `/blog/${p.slug}/`, image, extra })}
   <body class="blog">${header}
     <main id="contenido">
       <header class="post__hero">
