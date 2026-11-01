@@ -44,7 +44,7 @@ Elige pocas métricas y que estén conectadas con el objetivo: solicitudes de co
 Con esas cinco decisiones, el resto del proyecto se ordena casi solo:
 
 - **La arquitectura de contenido** responde al mensaje y al recorrido de la persona.
-- **El diseño** expresa la marca y hace evidente el siguiente paso.
+- **El diseño** expresa la marca y hace evidente el siguiente paso. Si la marca también necesita revisarse, te servirá [qué incluye un proyecto de branding](/blog/branding-para-empresas-que-incluye/).
 - **La tecnología** se elige por lo que el proyecto necesita hoy y mañana, no por moda.
 - **La inteligencia artificial**, si tiene sentido, entra donde resuelve un problema concreto. Lo explicamos en [inteligencia artificial para empresas: por dónde empezar](/blog/inteligencia-artificial-para-empresas/).
 
@@ -74,7 +74,7 @@ Si alguna respuesta está vacía, ahí está tu primer trabajo. Y está bien: es
 
 Nuestro proceso tiene cuatro fases: **entendemos** el contexto, los objetivos y las necesidades; **definimos** la dirección, el alcance y las prioridades; **creamos** con diseño, desarrollo e iteración; y **evolucionamos** con el lanzamiento, el aprendizaje y la mejora. Las dos primeras fases son, en la práctica, la estrategia, y son las que hacen que las dos siguientes salgan bien.
 
-Si estás pensando en una web, ten a mano también [las 9 señales de que tu página web necesita un rediseño](/blog/senales-pagina-web-necesita-rediseno/).
+Si estás pensando en una web, ten a mano también [las 9 señales de que tu página web necesita un rediseño](/blog/senales-pagina-web-necesita-rediseno/) y [cuánto cuesta una página web y qué debería incluir la propuesta](/blog/cuanto-cuesta-pagina-web-peru/).
 
 ## Preguntas frecuentes
 

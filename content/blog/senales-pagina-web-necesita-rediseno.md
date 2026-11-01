@@ -78,11 +78,11 @@ No si se planifica bien. La clave es mantener las URL que ya funcionan o redirig
 
 ### ¿Cuánto tarda un rediseño?
 
-Depende del alcance: no es lo mismo una web corporativa de pocas páginas que una plataforma con muchas secciones o integraciones. Lo importante es que el plan incluya tiempo para el contenido, que suele ser lo que más se retrasa.
+Depende del alcance: no es lo mismo una web corporativa de pocas páginas que una plataforma con muchas secciones o integraciones. Lo importante es que el plan incluya tiempo para el contenido, que suele ser lo que más se retrasa. Para comparar presupuestos, revisa [cuánto cuesta una página web en Perú y qué debería incluir una propuesta](/blog/cuanto-cuesta-pagina-web-peru/).
 
 ### ¿Es mejor una plantilla o un diseño a medida?
 
-Una plantilla puede servir para empezar rápido. Un diseño a medida tiene sentido cuando la web es una pieza clave de tu negocio, cuando la marca necesita diferenciarse o cuando necesitas integraciones y rendimiento que una plantilla genérica no ofrece.
+Una plantilla puede servir para empezar rápido. Un diseño a medida tiene sentido cuando la web es una pieza clave de tu negocio, cuando la marca necesita diferenciarse o cuando necesitas integraciones y rendimiento que una plantilla genérica no ofrece. Y si estás por lanzar una campaña, quizá no necesites rehacer todo el sitio: revisa [si te conviene una landing page o una página web](/blog/landing-page-o-pagina-web/).
 
 ### ¿Qué debería preparar antes de pedir un rediseño?
 

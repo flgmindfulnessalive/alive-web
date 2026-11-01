@@ -28,7 +28,7 @@ El diseño puede expresar una dirección, pero antes alguien debe definirla. Si 
 
 Esta etapa establece para quién existe la marca, qué problema atiende y por qué alguien debería elegirla. Puede incluir revisión del negocio, entrevistas, análisis de competidores, propuesta de valor, posicionamiento y personalidad.
 
-El resultado debe orientar decisiones. Por ejemplo, si una consultora quiere ser percibida como un socio especializado, sus mensajes, casos y experiencia comercial deberían sostener esa posición. Escribir “excelencia” en una diapositiva no explica cómo se demuestra.
+El resultado debe orientar decisiones. Por ejemplo, si una consultora quiere ser percibida como un socio especializado, sus mensajes, casos y experiencia comercial deberían sostener esa posición. Escribir «excelencia» en una diapositiva no explica cómo se demuestra.
 
 Pregunta qué información se investigará y qué decisiones quedarán documentadas. Un proyecto pequeño puede requerir un trabajo acotado; uno con varias unidades de negocio puede necesitar una revisión mayor.
 
@@ -38,7 +38,7 @@ La marca también se reconoce por lo que dice y cómo lo dice. Esta parte puede 
 
 Si se requiere un nombre nuevo, el naming debe figurar expresamente en el alcance. No todos los proyectos lo necesitan y no todo servicio de branding lo incluye.
 
-Una guía verbal útil muestra aplicaciones concretas: cómo explicar un servicio, presentar una propuesta o responder una consulta. Decir que la marca es “cercana y profesional” deja demasiado espacio a la interpretación si no se acompaña de ejemplos.
+Una guía verbal útil muestra aplicaciones concretas: cómo explicar un servicio, presentar una propuesta o responder una consulta. Decir que la marca es «cercana y profesional» deja demasiado espacio a la interpretación si no se acompaña de ejemplos.
 
 ### 3. Identidad visual
 
@@ -68,11 +68,11 @@ Esta tabla sirve para orientar el diagnóstico. No sustituye una revisión del c
 | El logo funciona mal en formatos pequeños | Ajuste técnico y pruebas de uso | Reabrir toda la estrategia por una limitación puntual |
 | Existen varias líneas o productos que se confunden | Revisar arquitectura de marca y jerarquías | Añadir logos sin una relación clara entre ellos |
 
-Un ejemplo hipotético: una empresa de reclutamiento que pasa de vender búsquedas aisladas a ofrecer una plataforma necesita explicar una nueva experiencia. Puede que el logo continúe siendo útil, mientras cambian el relato comercial, la demostración del producto y las interfaces. La decisión debería responder a esa evolución.
+Un ejemplo hipotético: una empresa de mantenimiento industrial que pasa de atender pedidos sueltos a vender contratos anuales con reportes en línea necesita explicar una nueva forma de trabajar. Puede que el logo continúe siendo útil, mientras cambian el relato comercial, la propuesta y los materiales de venta. La decisión debería responder a esa evolución.
 
 ## Cómo evaluar los entregables
 
-Una propuesta puede listar “logo, manual y aplicaciones” y dejar preguntas importantes sin responder. Para comparar proveedores, pide que cada entrega tenga un propósito y un formato definidos.
+Una propuesta puede listar «logo, manual y aplicaciones» y dejar preguntas importantes sin responder. Para comparar proveedores, pide que cada entrega tenga un propósito y un formato definidos.
 
 Puedes utilizar esta revisión:
 
@@ -90,7 +90,7 @@ El número de páginas de un manual no determina su utilidad. Una guía breve y 
 
 Define quién decide y quién aporta información. Un equipo comercial puede detectar dudas recurrentes de clientes; una persona de operaciones puede señalar limitaciones de uso. Esas observaciones ayudan, pero la elección final necesita criterios acordados.
 
-Revisa las propuestas con preguntas: ¿representa el posicionamiento?, ¿se distingue dentro de la categoría?, ¿funciona en los soportes prioritarios?, ¿puede utilizarla el equipo? Esto permite discutir decisiones con más claridad que una ronda de “me gusta” o “no me gusta”.
+Revisa las propuestas con preguntas: ¿representa el posicionamiento?, ¿se distingue dentro de la categoría?, ¿funciona en los soportes prioritarios?, ¿puede utilizarla el equipo? Esto permite discutir decisiones con más claridad que una ronda de «me gusta» o «no me gusta».
 
 También acuerda cuántas rondas de ajustes habrá y qué cambios se consideran una ampliación del encargo. Si el negocio redefine su oferta a mitad del proyecto, esa decisión puede afectar tanto mensajes como diseño.
 
@@ -100,8 +100,21 @@ Reúne los materiales actuales, una descripción de tu cliente, los servicios pr
 
 Elige tres aplicaciones reales para probar las propuestas. Puede ser una presentación de ventas, la portada de tu web y una publicación. Ver el sistema en uso facilita detectar problemas antes de producir el resto.
 
-En ALIVE trabajamos estrategia, branding, dirección de arte y experiencias digitales. Puedes explorar el [portafolio de marcas y plataformas](/#proyectos) para ver cómo se expresa esa combinación.
+## Branding con ALIVE
+
+Trabajamos dos alcances, con precio de partida publicado:
+
+| Proyecto | Qué incluye | Desde |
+|---|---|---|
+| Marca Esencial | Concepto de marca, 3 rutas creativas, logotipo con sus versiones, paleta, 2 tipografías y guía corta de uso | US$ 200, pago único |
+| Identidad Completa | Además, estrategia de marca y tono de voz, sistema visual, aplicaciones (tarjeta, hoja membretada, firma de correo y 3 plantillas de redes), manual y archivos editables | US$ 450, pago único |
+
+Ambos tienen 2 rondas de cambios y un plazo de hasta 10 días hábiles. El naming se cotiza aparte. Los precios están en dólares y sin IGV; si necesitas factura, se suma el 18 %.
+
+Un consejo antes de elegir: haz la búsqueda de tu marca en INDECOPI antes de la ronda final. Así no inviertes en un diseño que luego no puedas registrar. La búsqueda y el registro los hace la empresa, y nadie puede garantizar de antemano su resultado.
+
+Puedes explorar el [portafolio de marcas y plataformas](/#proyectos) para ver cómo combinamos estrategia, branding, dirección de arte y experiencias digitales.
 
 **[Cuéntanos qué está cambiando en tu empresa](/#contacto)** y conversemos sobre qué necesita tu marca para acompañar ese cambio.
 
-**Referencias editoriales:** páginas de servicios de [Slinky](https://slinky.pe/servicios/branding/) y [Novo Creativo](https://www.novocreativo.com/servicios/branding-y-diseno-de-logotipo), consultadas el 31/10/2026 para contrastar categorías de entregables. El método de evaluación y los ejemplos de este artículo son una propuesta editorial original; no se atribuyen resultados a clientes.
+**Referencias editoriales:** páginas de servicios de branding de dos agencias peruanas, consultadas el 31/10/2026 para contrastar categorías de entregables. El método de evaluación y los ejemplos de este artículo son una propuesta editorial original; no se atribuyen resultados a clientes.

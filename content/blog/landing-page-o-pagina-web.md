@@ -36,7 +36,7 @@ Ninguna opción genera clientes por existir. Necesita una propuesta comprensible
 
 ## Cuándo conviene una landing page
 
-Una landing tiene sentido cuando puedes completar esta frase con precisión: “Esta página presenta esta oferta a este público para que realice esta acción”.
+Una landing tiene sentido cuando puedes completar esta frase con precisión: «Esta página presenta esta oferta a este público para que realice esta acción».
 
 Por ejemplo, una empresa puede crear una página para invitar a responsables de recursos humanos a una demostración de su plataforma. El anuncio, el contenido y el formulario deben hablar de esa misma necesidad.
 
