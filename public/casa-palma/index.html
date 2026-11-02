@@ -16,6 +16,13 @@
       .wordmark__logo { display: block; height: 54px; width: auto; }
       .footer__brand .wordmark__logo { height: 96px; }
       @media (max-width: 959px) { .header .wordmark__logo, .mobile-menu__top .wordmark__logo { height: 44px; } }
+      @media (min-width: 960px) {
+        .hero { height: clamp(620px, 100svh, 900px); min-height: 0; grid-template-rows: minmax(0, 1fr); }
+        .hero__media { min-height: 0; height: auto; overflow: hidden; }
+        .hero__media .photo { height: 100%; aspect-ratio: auto !important; }
+        .hero__photo img { object-position: 50% 72%; }
+        .hero__copy { align-self: center; padding-bottom: 40px; }
+      }
     </style>
   </head>
   <body>
