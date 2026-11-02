@@ -1,0 +1,4 @@
+# Prototipo: fuera de indexación (si el servidor es Apache)
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>

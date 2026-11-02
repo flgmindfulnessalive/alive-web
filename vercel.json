@@ -72,6 +72,33 @@
           "value": "no-store"
         }
       ]
+    },
+    {
+      "source": "/casa-palma",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/casa-palma/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/casa-palma/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "redirects": [
@@ -84,6 +111,11 @@
       "source": "/panel",
       "destination": "/panel/",
       "permanent": true
+    },
+    {
+      "source": "/casa-palma",
+      "destination": "/casa-palma/",
+      "permanent": false
     }
   ]
 }
