@@ -6,7 +6,6 @@ date: 2026-11-05
 author: Francesco Lulli
 order: 3
 image: /blog/automatizar-seguimiento-prospectos.jpg
-draft: true
 ---
 
 Muchas empresas no pierden clientes por falta de consultas, sino por lo que pasa después: una respuesta que llega tarde, una cotización que nadie vuelve a mencionar, un contacto que se queda en el WhatsApp de alguien que ya no está en el equipo.

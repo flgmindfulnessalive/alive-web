@@ -6,7 +6,6 @@ date: 2026-11-05
 author: Francesco Lulli
 order: 1
 image: /blog/brief-de-branding.jpg
-draft: true
 ---
 
 Un proyecto de marca rara vez se complica por falta de talento. Se complica porque nadie escribió, antes de empezar, qué tiene que lograr. Entonces cada propuesta se evalúa con gustos distintos, las rondas de cambios se multiplican y la decisión final depende de quién opinó último.

@@ -6,7 +6,6 @@ date: 2026-11-05
 author: Francesco Lulli
 order: 2
 image: /blog/plantilla-o-diseno-web-a-medida.jpg
-draft: true
 ---
 
 Cuando cotizas una web, tarde o temprano aparece esta pregunta: ¿conviene una plantilla o un diseño a medida? La respuesta corta es que depende menos del diseño que de lo que pasa después del lanzamiento: quién mantiene la web, cuánto cuesta cada cambio y qué tan fácil es crecer.
