@@ -73,7 +73,7 @@ Las respuestas suelen decir más que el precio.
 
 ## Un punto intermedio
 
-Hay una tercera vía: una web con diseño propio que incluya un panel para que tu equipo edite el contenido, sin depender de una plataforma de plantillas ni de plugins. Es lo que en ALIVE llamamos Web Esencial con panel: diseño a la medida de tu marca, rápida desde el primer día y editable desde el celular.
+Hay una tercera vía: una web con diseño propio que incluya un panel para que tu equipo edite el contenido, sin depender de una plataforma de plantillas ni de plugins. Es lo que en ALIVE llamamos [web con panel propio](/servicios/diseno-web/): diseño a la medida de tu marca, rápida desde el primer día y editable desde el celular.
 
 Si estás evaluando rehacer tu web actual, revisa primero [las señales de que necesita un rediseño](/blog/senales-pagina-web-necesita-rediseno/); y si tu objetivo es una campaña puntual, quizá te sirva más [una landing page que una web completa](/blog/landing-page-o-pagina-web/).
 

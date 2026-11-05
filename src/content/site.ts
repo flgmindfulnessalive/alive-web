@@ -266,6 +266,7 @@ export const studio = {
       name: 'Tecnología + IA',
       text: 'Desarrollo y soluciones inteligentes conectadas con necesidades reales del negocio.',
       scope: 'Sitios web, aplicaciones, integraciones y automatización.',
+      link: { href: '/servicios/diseno-web/', label: 'Diseño web para empresas' },
     },
   ],
 }

@@ -102,14 +102,14 @@ Elige tres aplicaciones reales para probar las propuestas. Puede ser una present
 
 ## Branding con ALIVE
 
-Trabajamos dos alcances, con precio de partida publicado:
+Trabajamos dos alcances:
 
-| Proyecto | Qué incluye | Desde |
-|---|---|---|
-| Marca Esencial | Concepto de marca, 3 rutas creativas, logotipo con sus versiones, paleta, 2 tipografías y guía corta de uso | US$ 200, pago único |
-| Identidad Completa | Además, estrategia de marca y tono de voz, sistema visual, aplicaciones (tarjeta, hoja membretada, firma de correo y 3 plantillas de redes), manual y archivos editables | US$ 450, pago único |
+| Proyecto | Qué incluye |
+|---|---|
+| Marca Esencial | Concepto de marca, 3 rutas creativas, logotipo con sus versiones, paleta, 2 tipografías y guía corta de uso |
+| Identidad Completa | Además, estrategia de marca y tono de voz, sistema visual, aplicaciones (tarjeta, hoja membretada, firma de correo y 3 plantillas de redes), manual y archivos editables |
 
-Ambos tienen 2 rondas de cambios y un plazo de hasta 10 días hábiles. El naming se cotiza aparte. Los precios están en dólares y sin IGV; si necesitas factura, se suma el 18 %.
+Ambos incluyen rondas de cambios y se cotizan según el alcance; en la propuesta detallamos plazo e inversión. El naming se cotiza aparte.
 
 Un consejo antes de elegir: haz la búsqueda de tu marca en INDECOPI antes de la ronda final. Así no inviertes en un diseño que luego no puedas registrar. La búsqueda y el registro los hace la empresa, y nadie puede garantizar de antemano su resultado.
 
