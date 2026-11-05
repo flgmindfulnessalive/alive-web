@@ -92,6 +92,6 @@ La estrategia decide qué construir, para quién y con qué objetivo. El marketi
 
 ## En resumen
 
-Diseñar y programar son las partes más visibles de un proyecto digital, pero el éxito se decide antes: en el objetivo, la persona, el mensaje, el alcance y la forma de medir. Dedicar tiempo a esas decisiones no retrasa el proyecto. Lo acelera.
+Diseñar y programar son las partes más visibles de un proyecto digital, pero el éxito se decide antes: en el objetivo, la persona, el mensaje, el alcance y la forma de medir. Dedicar tiempo a esas decisiones no retrasa el proyecto. Lo acelera. Si quieres ver cómo lo trabajamos, junto con SEO y campañas, revisa [nuestro servicio de estrategia digital](/servicios/estrategia-digital/).
 
 ¿Quieres que pensemos juntos tu próximo proyecto? [Empecemos por una buena conversación](/#contacto).

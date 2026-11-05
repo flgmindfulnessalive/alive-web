@@ -254,6 +254,7 @@ export const studio = {
       name: 'Estrategia',
       text: 'Claridad para decidir qué construir, para quién y con qué propósito.',
       scope: 'Consultoría digital, posicionamiento y definición de experiencias.',
+      link: { href: '/servicios/estrategia-digital/', label: 'Estrategia, SEO y campañas' },
     },
     {
       number: '02',
