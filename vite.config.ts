@@ -141,6 +141,7 @@ export default defineConfig(({ mode, isSsrBuild }) => {
           main: 'index.html',
           privacidad: 'privacidad/index.html',
           prensa: 'prensa/index.html',
+          'servicio-diseno-web': 'servicios/diseno-web/index.html',
           brief: 'brief-form/index.html',
           panel: 'panel/index.html',
           ...blogPages(),
