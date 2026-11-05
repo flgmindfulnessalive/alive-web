@@ -143,6 +143,7 @@ export default defineConfig(({ mode, isSsrBuild }) => {
           prensa: 'prensa/index.html',
           'servicio-diseno-web': 'servicios/diseno-web/index.html',
           'servicio-branding': 'servicios/branding/index.html',
+          'servicio-estrategia': 'servicios/estrategia-digital/index.html',
           brief: 'brief-form/index.html',
           panel: 'panel/index.html',
           ...blogPages(),
