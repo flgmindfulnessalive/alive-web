@@ -20,6 +20,9 @@ const root = new URL('../', import.meta.url)
 const file = (p) => new URL(p, root).href
 const paths = readFileSync(new URL('src/assets/brand/paths.ts', root), 'utf8')
 const WORDMARK = paths.match(/WORDMARK_PATH =\s*'([^']+)'/)[1]
+const VIEWBOX = paths.match(/WORDMARK_VIEWBOX = '([^']+)'/)[1]
+const REG_CIRCLE = paths.match(/circle: \{ cx: ([\d.]+), cy: ([\d.]+), r: ([\d.]+), strokeWidth: ([\d.]+) \}/).slice(1)
+const REG_LETTER = paths.match(/letter: \{ d: '([^']+)', strokeWidth: ([\d.]+) \}/).slice(1)
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
 
 const posts = readdirSync(new URL('content/blog/', root))
@@ -40,7 +43,7 @@ svg { display: block; width: 100%; height: auto; }
 </style>
 <div class="abs" style="inset:0;background:radial-gradient(55% 70% at 85% 30%, rgba(59,130,246,.28), transparent 70%),radial-gradient(35% 45% at 95% 95%, rgba(20,217,208,.14), transparent 70%)"></div>
 <img class="abs" src="${file('src/assets/visual/sculpture-hero.webp')}" style="right:-120px;top:-40px;width:720px;mix-blend-mode:screen;opacity:.9;-webkit-mask-image:linear-gradient(to right,transparent,#000 38%),linear-gradient(to bottom,#000 70%,transparent 96%);-webkit-mask-composite:source-in">
-<div class="abs" style="left:72px;top:64px;width:150px">${`<svg viewBox="0 0 547 107"><path fill="#F5F7FA" fill-rule="evenodd" d="${WORDMARK}"/></svg>`}</div>
+<div class="abs" style="left:72px;top:64px;width:150px">${`<svg viewBox="${VIEWBOX}"><path fill="#F5F7FA" d="${WORDMARK}"/><g fill="none" stroke="#F5F7FA"><circle cx="${REG_CIRCLE[0]}" cy="${REG_CIRCLE[1]}" r="${REG_CIRCLE[2]}" stroke-width="${REG_CIRCLE[3]}"/><path d="${REG_LETTER[0]}" stroke-width="${REG_LETTER[1]}"/></g></svg>`}</div>
 <div class="abs" style="left:72px;top:150px;display:flex;align-items:center;gap:16px;font-size:16px;font-weight:500;letter-spacing:.22em;color:#C9CED6">
   BLOG <span style="width:40px;height:2px;background:linear-gradient(90deg,#3B82F6,#8B5CF6)"></span>
 </div>

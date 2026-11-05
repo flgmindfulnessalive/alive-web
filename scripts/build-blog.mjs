@@ -142,8 +142,12 @@ const footer = `
       </div>
     </footer>`
 
+// Subir cuando se vuelvan a generar las portadas con render-blog-covers.mjs.
+const COVER_VERSION = '20261105'
+
 function postPage(p) {
-  const image = p.image || '/og-image.jpg?v=20261030'
+  // ?v= fuerza a Facebook, LinkedIn y WhatsApp a pedir de nuevo la portada cuando se regenera.
+  const image = p.image ? `${p.image}?v=${COVER_VERSION}` : '/og-image.jpg?v=20261030'
   const ld = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
