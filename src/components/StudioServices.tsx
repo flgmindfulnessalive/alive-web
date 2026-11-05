@@ -22,6 +22,11 @@ function ServiceItem({ service, index }: { service: Service; index: number }) {
         <span className="studio__scope-label">Alcance</span>
         {service.scope}
       </p>
+      {'link' in service && service.link && (
+        <a className="text-link studio__link" href={service.link.href}>
+          {service.link.label} →
+        </a>
+      )}
     </li>
   )
 }

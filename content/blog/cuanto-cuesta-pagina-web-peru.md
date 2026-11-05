@@ -10,7 +10,7 @@ image: /blog/cuanto-cuesta-pagina-web-peru.jpg
 
 Si estás cotizando una página web para tu empresa, probablemente ya encontraste propuestas con diferencias de precio difíciles de explicar. Todas dicen incluir diseño, versión móvil y formulario. Sin embargo, no necesariamente están presupuestando el mismo trabajo.
 
-Para orientarte con referencias concretas: en octubre de 2026, una agencia peruana publica páginas web desde S/ 1,250 más IGV y otra anuncia páginas para empresas desde S/ 6,900 más IGV. Son ofertas con alcances distintos y **no representan un promedio del mercado**. Más abajo encontrarás también los precios de partida de ALIVE. El precio final requiere revisar qué se entregará, qué necesita tu negocio y qué tendrás que pagar después.
+Para orientarte con referencias concretas: en octubre de 2026, una agencia peruana publica páginas web desde S/ 1,250 más IGV y otra anuncia páginas para empresas desde S/ 6,900 más IGV. Son ofertas con alcances distintos y **no representan un promedio del mercado**. El precio final requiere revisar qué se entregará, qué necesita tu negocio y qué tendrás que pagar después.
 
 Una buena comparación empieza por el proyecto. Si solo comparas el total de la última página de la propuesta, puedes terminar eligiendo una solución incompleta o pagando funciones que no vas a utilizar.
 
@@ -103,21 +103,20 @@ Prepara una descripción breve del negocio, los servicios prioritarios, el públ
 
 Si tienes un presupuesto disponible, compartirlo permite priorizar. No necesitas resolver todas las decisiones técnicas antes de hablar con una agencia; sí conviene tener claro qué debería cambiar en tu negocio gracias al proyecto.
 
-## Cuánto cuesta una web con ALIVE
+## Cómo cotizamos en ALIVE
 
-Publicamos nuestros precios de partida para que puedas compararlos con los mismos criterios de este artículo:
+Cada web se cotiza según su alcance, con los mismos criterios de este artículo. Trabajamos cuatro puntos de partida:
 
-| Proyecto | Para qué sirve | Desde |
-|---|---|---|
-| Web Esencial | Presentar tu negocio con diseño propio y recibir consultas | US$ 350, pago único |
-| Web Esencial con panel | Lo mismo, y además editar textos, imágenes y precios desde el celular | US$ 450, pago único |
-| Proyecto a medida | Plataformas, zonas privadas, integraciones o aplicaciones | US$ 1,500 por la primera versión |
+| Proyecto | Para qué sirve |
+|---|---|
+| Web Esencial | Presentar tu negocio con diseño propio y recibir consultas |
+| Web con panel propio | Lo mismo, y además editar textos, imágenes y precios desde el celular |
+| Tienda en línea | Vender por internet con tu marca, con pedidos también por WhatsApp |
+| Proyecto a medida | Plataformas, zonas privadas, integraciones o aplicaciones |
 
-La **Web Esencial** incluye dirección visual propia, hasta 5 secciones, diseño adaptado a celular, tableta y escritorio, formulario y WhatsApp conectados, SEO técnico de base (títulos, descripciones, datos estructurados y sitemap), HTTPS, aviso de privacidad, 2 rondas de cambios y 10 días de acompañamiento después de publicar. El plazo es de hasta 10 días hábiles desde que el material está completo.
+La **Web Esencial** incluye dirección visual propia, hasta 5 secciones, diseño adaptado a celular, tableta y escritorio, formulario y WhatsApp conectados, SEO técnico de base (títulos, descripciones, datos estructurados y sitemap), HTTPS, aviso de privacidad, rondas de cambios y acompañamiento después de publicar.
 
-No incluye el dominio, que queda a tu nombre, ni el alojamiento, que puedes tener con nosotros por US$ 10 al mes o en una cuenta tuya. Los precios están en dólares y sin IGV; si necesitas factura, se suma el 18 %.
-
-Con la fórmula de arriba, el primer año de una Web Esencial alojada con nosotros sería: **US$ 350 + 12 × US$ 10 = US$ 470**, más el dominio y el IGV si corresponde.
+En la propuesta detallamos alcance, plazo e inversión, y también lo que pagarás después: dominio a tu nombre y alojamiento, con nosotros o en una cuenta tuya. Así puedes calcular el costo del primer año con la fórmula de arriba. Conoce más sobre [nuestro servicio de diseño web](/servicios/diseno-web/).
 
 **[Cuéntanos qué necesitas que haga tu web](/#contacto)** y te decimos qué alcance tiene sentido para tu empresa.
 

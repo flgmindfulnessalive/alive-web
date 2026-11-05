@@ -199,3 +199,9 @@
     margin-top: calc(var(--space-10) * 2);
   }
 }
+
+.studio__link {
+  justify-self: start;
+  margin-top: var(--space-2);
+  font-size: var(--fs-small);
+}
