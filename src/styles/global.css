@@ -231,6 +231,29 @@ button {
   background: var(--color-action-hover);
 }
 
+/* Botón principal con halo suave (home y páginas de servicio). */
+.btn-glow {
+  position: relative;
+  isolation: isolate;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(100deg, var(--color-violet), var(--color-blue), var(--color-turquoise));
+  filter: blur(12px);
+  opacity: 0.22;
+  transition: opacity var(--dur-hover) var(--ease-out);
+}
+
+.btn-glow:hover::before,
+.btn-glow:focus-visible::before {
+  opacity: 0.45;
+}
+
 .btn-ghost {
   border-color: var(--line-strong);
   color: var(--color-text);

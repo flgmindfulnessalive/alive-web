@@ -62,7 +62,7 @@ export function Hero() {
             {hero.description}
           </p>
           <div className="hero__actions hero-enter" style={{ '--d': 4 } as CSSProperties}>
-            <a className="btn btn-primary" href={hero.primaryCta.href}>
+            <a className="btn btn-primary btn-glow" href={hero.primaryCta.href}>
               {hero.primaryCta.label}
               <span className="arrow" aria-hidden="true">→</span>
             </a>
