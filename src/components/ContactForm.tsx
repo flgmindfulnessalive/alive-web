@@ -166,7 +166,7 @@ export function ContactForm() {
           {!activeAdapter.isDemo && <Turnstile ref={turnstileRef} />}
 
           <div className="contact__actions">
-            <button type="submit" className="btn btn-primary" disabled={status === 'submitting'}>
+            <button type="submit" className="btn btn-primary btn-glow" disabled={status === 'submitting'}>
               {contact.submitLabel}
               <span className="arrow" aria-hidden="true">→</span>
             </button>

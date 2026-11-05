@@ -260,6 +260,7 @@ export const studio = {
       name: 'Diseño',
       text: 'Identidades y experiencias que dan forma a lo que hace distinta a tu marca.',
       scope: 'Branding, dirección de arte y diseño UX/UI.',
+      link: { href: '/servicios/branding/', label: 'Branding para empresas' },
     },
     {
       number: '03',

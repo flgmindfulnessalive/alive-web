@@ -257,6 +257,7 @@ const urls = [
   ['/', today],
   ['/prensa/', today],
   ['/servicios/diseno-web/', today],
+  ['/servicios/branding/', today],
   ['/privacidad/', today],
   ...(posts.length ? [['/blog/', posts[0].date]] : []),
   ...posts.map((p) => [`/blog/${p.slug}/`, p.date]),

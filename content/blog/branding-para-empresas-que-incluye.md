@@ -102,7 +102,7 @@ Elige tres aplicaciones reales para probar las propuestas. Puede ser una present
 
 ## Branding con ALIVE
 
-Trabajamos dos alcances:
+Trabajamos dos alcances, que detallamos en [nuestro servicio de branding](/servicios/branding/):
 
 | Proyecto | Qué incluye |
 |---|---|

@@ -27,34 +27,12 @@
   margin-top: var(--space-2);
 }
 
-/* Botón con halo */
-.btn-glow {
-  position: relative;
-  isolation: isolate;
-}
-
-.btn-glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  z-index: -1;
-  border-radius: inherit;
-  background: linear-gradient(100deg, var(--color-violet), var(--color-blue), var(--color-turquoise));
-  filter: blur(14px);
-  opacity: 0.45;
-  transition: opacity var(--dur-hover) var(--ease-out);
-}
-
-.btn-glow:hover::before,
-.btn-glow:focus-visible::before {
-  opacity: 0.85;
-}
-
 /* Portada */
 .svc-hero {
   position: relative;
   display: grid;
   align-content: center;
+  align-content: safe center;
   gap: var(--space-6);
   min-height: min(100svh, 920px);
   padding-block: var(--space-6) var(--space-8);
@@ -732,4 +710,17 @@
 
 .svc-close .lead {
   max-width: 52ch;
+}
+
+/* Variante de tres modalidades */
+@media (min-width: 1200px) {
+  .svc-plans--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 720px) and (max-width: 1199px) {
+  .svc-plans--3 > :last-child {
+    grid-column: 1 / -1;
+  }
 }
