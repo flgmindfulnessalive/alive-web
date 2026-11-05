@@ -213,6 +213,11 @@
     padding-top: 0;
   }
 
+  /* El ancla #contacto deja «Hablemos» justo bajo la cabecera, sin el aire superior de la sección. */
+  .contact {
+    scroll-margin-top: calc(var(--space-6) - var(--section-y));
+  }
+
   .contact__form {
     grid-column: 7 / -1;
     padding-top: clamp(12rem, 22vw, 20rem);
