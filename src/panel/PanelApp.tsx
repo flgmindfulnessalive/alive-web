@@ -11,6 +11,7 @@ import type { Recurring } from './recurring'
 import { dealLabel, isWon, projectName, statusLabel, waNumber, winPatch, type Deal, type Project } from './production'
 import { Board, DealDialog } from './Pipeline'
 import { ProposalEditor } from './ProposalEditor'
+import { Finance } from './Finance'
 
 const money = (n: number | null) =>
   n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
@@ -192,9 +193,9 @@ function Workspace({ session }: { session: Session }) {
   const [projectsMissing, setProjectsMissing] = useState(false)
   const [recurring, setRecurring] = useState<Recurring[]>([])
   const [recurringMissing, setRecurringMissing] = useState(false)
-  type Section = 'resumen' | 'clientes' | 'produccion'
+  type Section = 'resumen' | 'clientes' | 'produccion' | 'finanzas'
   const [section, setSection] = useState<Section>(() =>
-    location.hash === '#produccion' ? 'produccion' : location.hash === '#clientes' ? 'clientes' : 'resumen',
+    location.hash === '#produccion' ? 'produccion' : location.hash === '#clientes' ? 'clientes' : location.hash === '#finanzas' ? 'finanzas' : 'resumen',
   )
   const [newProjectFor, setNewProjectFor] = useState<string | null>(null)
   const [focusProject, setFocusProject] = useState<string | null>(null)
@@ -353,9 +354,9 @@ function Workspace({ session }: { session: Session }) {
     >
       <main className="panel-main">
         <nav className="panel-tabs prod-nav" aria-label="Secciones">
-          {(['resumen', 'clientes', 'produccion'] as const).map((v) => (
+          {(['resumen', 'clientes', 'produccion', 'finanzas'] as const).map((v) => (
             <button key={v} aria-current={section === v ? 'page' : undefined} aria-selected={section === v} onClick={() => go(v)}>
-              {v === 'resumen' ? 'Resumen' : v === 'clientes' ? 'Clientes' : 'Producción'}
+              {v === 'resumen' ? 'Resumen' : v === 'clientes' ? 'Clientes' : v === 'produccion' ? 'Producción' : 'Finanzas'}
             </button>
           ))}
         </nav>
@@ -382,6 +383,8 @@ function Workspace({ session }: { session: Session }) {
             onOpenProject={(id) => go('produccion', id)}
             onOpenDeal={(id) => setDealOpen({ id })}
           />
+        ) : section === 'finanzas' ? (
+          <Finance clients={clients} projects={won} recurring={recurring} email={session.user.email ?? ''} />
         ) : section === 'produccion' ? (
           <>
             {projectsMissing && (
