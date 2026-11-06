@@ -326,13 +326,13 @@ function Timeline({
     <>
       <div className="prod-tl-nav" role="group" aria-label="Mover la línea de tiempo">
         <button className="btn btn-ghost btn-sm" onClick={() => setWeeks((w) => w - 1)}>
-          ← Semana anterior
+          ← <span className="prod-tl-long">Semana </span>anterior
         </button>
         <button className="btn btn-ghost btn-sm" disabled={weeks === 0} onClick={() => setWeeks(0)}>
           Hoy
         </button>
         <button className="btn btn-ghost btn-sm" onClick={() => setWeeks((w) => w + 1)}>
-          Semana siguiente →
+          <span className="prod-tl-long">Semana </span>siguiente →
         </button>
         <span>
           {shortDate(days[0])} – {shortDate(days[N - 1])}

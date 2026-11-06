@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ClipboardEvent, type FormEvent, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ClipboardEvent, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import wordmarkUrl from '../assets/brand/alive-wordmark.svg'
 import { PROJECT_TYPES, steps } from '../brief/questions'
@@ -11,6 +11,7 @@ import type { Recurring } from './recurring'
 import { dealLabel, isWon, projectName, statusLabel, waNumber, winPatch, type Deal, type Project } from './production'
 import { Board, DealDialog } from './Pipeline'
 import { ProposalEditor } from './ProposalEditor'
+import { Finance } from './Finance'
 
 const money = (n: number | null) =>
   n == null ? '' : `US$ ${n.toLocaleString('es-PE', { maximumFractionDigits: 2 })}`
@@ -192,9 +193,9 @@ function Workspace({ session }: { session: Session }) {
   const [projectsMissing, setProjectsMissing] = useState(false)
   const [recurring, setRecurring] = useState<Recurring[]>([])
   const [recurringMissing, setRecurringMissing] = useState(false)
-  type Section = 'resumen' | 'clientes' | 'produccion'
+  type Section = 'resumen' | 'clientes' | 'produccion' | 'finanzas'
   const [section, setSection] = useState<Section>(() =>
-    location.hash === '#produccion' ? 'produccion' : location.hash === '#clientes' ? 'clientes' : 'resumen',
+    location.hash === '#produccion' ? 'produccion' : location.hash === '#clientes' ? 'clientes' : location.hash === '#finanzas' ? 'finanzas' : 'resumen',
   )
   const [newProjectFor, setNewProjectFor] = useState<string | null>(null)
   const [focusProject, setFocusProject] = useState<string | null>(null)
@@ -340,22 +341,31 @@ function Workspace({ session }: { session: Session }) {
     )
   }
 
+  const SECTIONS: { id: Section; label: string; hint: string; badge?: number }[] = [
+    { id: 'resumen', label: 'Resumen', hint: 'Cobros, prioridades y ventas' },
+    { id: 'clientes', label: 'Clientes', hint: 'Consultas y oportunidades', badge: nuevos || undefined },
+    { id: 'produccion', label: 'Producción', hint: 'Proyectos en curso y plazos' },
+    { id: 'finanzas', label: 'Finanzas', hint: 'Ventas, gastos y cierre del mes' },
+  ]
+  const current = SECTIONS.find((x) => x.id === section)!
+
   return (
     <Shell
       right={
         <>
           <span className="panel-user">{session.user.email}</span>
-          <button className="panel-link" onClick={signOut}>
+          <button className="panel-link panel-signout" onClick={signOut}>
             Salir
           </button>
+          <MobileMenu sections={SECTIONS} current={current} email={session.user.email ?? ''} onGo={(id) => go(id)} onSignOut={signOut} />
         </>
       }
     >
       <main className="panel-main">
-        <nav className="panel-tabs prod-nav" aria-label="Secciones">
-          {(['resumen', 'clientes', 'produccion'] as const).map((v) => (
+        <nav className="panel-tabs prod-nav panel-sections" aria-label="Secciones">
+          {(['resumen', 'clientes', 'produccion', 'finanzas'] as const).map((v) => (
             <button key={v} aria-current={section === v ? 'page' : undefined} aria-selected={section === v} onClick={() => go(v)}>
-              {v === 'resumen' ? 'Resumen' : v === 'clientes' ? 'Clientes' : 'Producción'}
+              {v === 'resumen' ? 'Resumen' : v === 'clientes' ? 'Clientes' : v === 'produccion' ? 'Producción' : 'Finanzas'}
             </button>
           ))}
         </nav>
@@ -382,6 +392,8 @@ function Workspace({ session }: { session: Session }) {
             onOpenProject={(id) => go('produccion', id)}
             onOpenDeal={(id) => setDealOpen({ id })}
           />
+        ) : section === 'finanzas' ? (
+          <Finance clients={clients} projects={won} recurring={recurring} email={session.user.email ?? ''} />
         ) : section === 'produccion' ? (
           <>
             {projectsMissing && (
@@ -576,6 +588,88 @@ function Workspace({ session }: { session: Session }) {
 }
 
 // Directorio de clientes: estado comercial (lo más reciente) y lo ganado con cada uno.
+// Menú del celular: botón tipo hamburguesa en la barra superior y hoja con las secciones.
+function MobileMenu<T extends string>({
+  sections,
+  current,
+  email,
+  onGo,
+  onSignOut,
+}: {
+  sections: { id: T; label: string; hint: string; badge?: number }[]
+  current: { id: T; label: string }
+  email: string
+  onGo: (id: T) => void
+  onSignOut: () => void
+}) {
+  const [open, setOpen] = useState(false)
+  const sheet = useRef<HTMLDivElement>(null)
+  const button = useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!open) return
+    document.documentElement.classList.add('panel-menu-open')
+    sheet.current?.querySelector<HTMLButtonElement>('[aria-current="page"]')?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        button.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.documentElement.classList.remove('panel-menu-open')
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+  const badge = sections.reduce((a, x) => a + (x.badge ?? 0), 0)
+
+  return (
+    <>
+      <button ref={button} className="panel-burger" aria-expanded={open} aria-controls="panel-menu" onClick={() => setOpen((v) => !v)}>
+        <span className="panel-burger__label">{current.label}</span>
+        <span className="panel-burger__icon" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span className="visually-hidden">{open ? 'Cerrar menú' : 'Abrir menú'}</span>
+        {badge > 0 && !open && <span className="panel-burger__dot" aria-hidden="true" />}
+      </button>
+      <div id="panel-menu" ref={sheet} className="panel-menu" data-open={open} hidden={!open} onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
+        <nav className="panel-menu__sheet" aria-label="Secciones">
+          <ul>
+            {sections.map((x, i) => (
+              <li key={x.id} style={{ '--i': i } as CSSProperties}>
+                <button
+                  aria-current={x.id === current.id ? 'page' : undefined}
+                  onClick={() => {
+                    onGo(x.id)
+                    setOpen(false)
+                    window.scrollTo({ top: 0 })
+                  }}
+                >
+                  <span className="panel-menu__n">0{i + 1}</span>
+                  <span className="panel-menu__txt">
+                    <b>{x.label}</b>
+                    <small>{x.hint}</small>
+                  </span>
+                  {x.badge ? <span className="panel-menu__badge">{x.badge}</span> : <span className="panel-menu__arrow" aria-hidden="true">→</span>}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="panel-menu__foot">
+            <span>{email}</span>
+            <button className="btn btn-ghost btn-sm" onClick={onSignOut}>
+              Salir
+            </button>
+          </div>
+        </nav>
+      </div>
+    </>
+  )
+}
+
 function List({ clients, projects, onOpen }: { clients: Client[]; projects: Project[]; onOpen: (id: string) => void }) {
   if (!clients.length) return <p className="panel-muted panel-empty">Todavía no hay clientes. Los briefs y consultas aparecerán aquí solos.</p>
   const stateOf = (c: Client) => {
@@ -591,7 +685,7 @@ function List({ clients, projects, onOpen }: { clients: Client[]; projects: Proj
   const wonTotal = (c: Client) => projects.filter((p) => p.client_id === c.id && isWon(p)).reduce((t, p) => t + (p.amount ?? 0), 0)
   return (
     <div className="table-wrap">
-      <table className="table">
+      <table className="table table--stack panel-list">
         <thead>
           <tr>
             <th scope="col">Cliente</th>
@@ -616,9 +710,9 @@ function List({ clients, projects, onOpen }: { clients: Client[]; projects: Proj
                 <td>
                   <span className={`stage stage--${st.id}`}>{st.label}</span>
                 </td>
-                <td>{SOURCE_LABEL[c.source]}</td>
-                <td>{total ? money(total) : ''}</td>
-                <td>{date(c.created_at)}</td>
+                <td data-label="Origen">{SOURCE_LABEL[c.source]}</td>
+                <td data-label="Ganado">{total ? money(total) : ''}</td>
+                <td data-label="Recibido">{date(c.created_at)}</td>
               </tr>
             )
           })}
