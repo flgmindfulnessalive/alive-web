@@ -80,6 +80,29 @@ function download(name: string, data: BlobPart, type: string) {
   setTimeout(() => URL.revokeObjectURL(url), 2000)
 }
 
+// Fotos del celular: se reducen a 2000 px y JPEG para que suban rápido y no pasen el límite de 10 MB.
+// Si el navegador no puede leer el formato (por ejemplo HEIC en algunos equipos), se sube tal cual.
+async function prepareImage(file: File): Promise<File> {
+  if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') return file
+  try {
+    const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' })
+    const max = 2000
+    const scale = Math.min(1, max / Math.max(bmp.width, bmp.height))
+    if (scale === 1 && file.size < 1.5 * 1024 * 1024) return file
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bmp.width * scale)
+    canvas.height = Math.round(bmp.height * scale)
+    canvas.getContext('2d')!.drawImage(bmp, 0, 0, canvas.width, canvas.height)
+    bmp.close()
+    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, 'image/jpeg', 0.82))
+    if (!blob || blob.size >= file.size) return file
+    const name = file.name.replace(/\.[^.]+$/, '') || 'foto'
+    return new File([blob], `${name}.jpg`, { type: 'image/jpeg' })
+  } catch {
+    return file
+  }
+}
+
 async function openFile(path: string) {
   const { data } = await supabase!.storage.from(BUCKET).createSignedUrl(path, 120)
   if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener')
@@ -298,6 +321,11 @@ function DocsTab({
         )}
       </div>
       {locked && <p className="panel-note">Este mes está declarado. Para corregirlo, reábrelo en Cierre del mes.</p>}
+      {!locked && (
+        <button className="btn btn-primary fin-fab" onClick={() => onNew()} aria-label={sale ? 'Registrar venta' : 'Registrar gasto'}>
+          + {sale ? 'Venta' : 'Gasto'}
+        </button>
+      )}
 
       {sale && pending.length > 0 && (
         <div className="fin-pending">
@@ -347,7 +375,7 @@ function DocsTab({
         </div>
       ) : (
         <div className="table-wrap">
-          <table className="table fin-table">
+          <table className="table table--stack fin-table">
             <thead>
               <tr>
                 <th>Fecha</th>
@@ -365,16 +393,16 @@ function DocsTab({
                 const warn = alerts.filter((a) => a.tone === 'warn').length
                 return (
                   <tr key={d.id} className={d.annulled ? 'is-annulled' : undefined}>
-                    <td>{shortDate(d.issued_on)}</td>
+                    <td data-label="Fecha">{shortDate(d.issued_on)}</td>
                     <td>
                       <button className="table__open" onClick={() => onOpen(d)}>
                         {DOC_TYPES[d.doc_type].short} {docNumber(d)}
                       </button>
                     </td>
-                    <td>{d.party_name}</td>
+                    <td onClick={() => onOpen(d)}>{d.party_name}</td>
                     <td>{sale ? OPERATIONS[d.operation] : d.category || '—'}</td>
                     <td className="fin-num">{amountIn(d.currency, sign(d) * d.total)}</td>
-                    <td className="fin-num">{pen(sign(d) * toPen(d, d.total))}</td>
+                    <td className="fin-num">{d.currency === 'USD' ? pen(sign(d) * toPen(d, d.total)) : <span className="fin-same">{pen(sign(d) * toPen(d, d.total))}</span>}</td>
                     <td>
                       {d.annulled ? (
                         <span className="prod-pill">Anulado</span>
@@ -470,6 +498,20 @@ function DocDialog({
   const [files, setFiles] = useState<DocFile[]>(doc?.files ?? [])
   const [removed, setRemoved] = useState<DocFile[]>([])
   const [adding, setAdding] = useState<File[]>([])
+  const [preparing, setPreparing] = useState(false)
+  // Miniaturas de las fotos por subir (se liberan al cambiar la lista).
+  const previews = useMemo(() => adding.map((f) => (f.type.startsWith('image/') ? URL.createObjectURL(f) : '')), [adding])
+  useEffect(() => () => previews.forEach((u) => u && URL.revokeObjectURL(u)), [previews])
+
+  async function addFiles(input: HTMLInputElement) {
+    const list = Array.from(input.files ?? [])
+    input.value = ''
+    if (!list.length) return
+    setPreparing(true)
+    const ready = await Promise.all(list.map(prepareImage))
+    setPreparing(false)
+    setAdding((l) => [...l, ...ready])
+  }
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -918,13 +960,35 @@ function DocDialog({
                 ))}
               </ul>
             )}
-            {adding.length > 0 && <p className="fin-hint">Se subirán al guardar: {adding.map((f) => f.name).join(', ')}</p>}
-            <input
-              type="file"
-              multiple
-              accept="application/pdf,.pdf,.xml,text/xml,application/xml,image/*"
-              onChange={(e) => setAdding([...adding, ...Array.from(e.target.files ?? [])])}
-            />
+            {adding.length > 0 && (
+              <ul className="fin-pending-files">
+                {adding.map((f, i) => (
+                  <li key={`${f.name}-${i}`}>
+                    {f.type.startsWith('image/') ? <img src={previews[i]} alt="" /> : <span className="fin-file-ico" aria-hidden="true">{f.name.split('.').pop()?.toUpperCase()}</span>}
+                    <span>
+                      {f.name}
+                      <small>{(f.size / 1024 / 1024).toFixed(1)} MB · se sube al guardar</small>
+                    </span>
+                    <button type="button" className="panel-link panel-link--danger" onClick={() => setAdding((l) => l.filter((_, j) => j !== i))}>
+                      Quitar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!locked && (
+              <div className="fin-upload">
+                <label className="btn btn-primary btn-sm fin-upload__camera">
+                  Tomar foto
+                  <input className="visually-hidden" type="file" accept="image/*" capture="environment" onChange={(e) => void addFiles(e.target)} />
+                </label>
+                <label className="btn btn-ghost btn-sm">
+                  Subir archivo
+                  <input className="visually-hidden" type="file" multiple accept="application/pdf,.pdf,.xml,text/xml,application/xml,image/*" onChange={(e) => void addFiles(e.target)} />
+                </label>
+                {preparing && <span className="fin-hint">Preparando la foto…</span>}
+              </div>
+            )}
           </div>
 
           <label className="panel-field">
