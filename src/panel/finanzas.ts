@@ -47,6 +47,8 @@ export type FinDoc = {
   annulled: boolean
   notes: string | null
   files: DocFile[]
+  // Gasto fijo: el panel lo recuerda cada mes (requiere supabase/finanzas-fase2.sql).
+  fijo?: boolean
 }
 
 export type MonthSummary = {
@@ -117,6 +119,13 @@ export const withDefaults = (data: Partial<Settings> | null | undefined): Settin
   }
   return out
 }
+
+// Datos que no son tasas: RUC de ALIVE y gastos fijos que ya no se quieren recordar.
+export type FinConfig = { ruc: string; fijosOff: string[] }
+export const configOf = (data: Record<string, unknown> | null | undefined): FinConfig => ({
+  ruc: typeof data?.ruc === 'string' ? data.ruc.trim() : '',
+  fijosOff: Array.isArray(data?.fijosOff) ? (data.fijosOff as unknown[]).filter((x): x is string => typeof x === 'string') : [],
+})
 
 // ——— Catálogos ———
 export const DOC_TYPES: Record<DocType, { label: string; short: string; credit: boolean; sale: boolean }> = {
@@ -506,4 +515,27 @@ export function zip(entries: { name: string; data: Uint8Array }[]): Uint8Array {
     p += x.length
   }
   return out
+}
+
+// ——— Gastos fijos ———
+// Un proveedor es «fijo» si su último gasto se marcó así. Se recuerda en cada mes siguiente
+// (hasta el mes actual) mientras no tenga un gasto registrado en ese mes.
+export const partyKey = (d: Pick<FinDoc, 'party_doc' | 'party_name'>) => `${(d.party_doc ?? '').trim()}|${d.party_name.trim().toLowerCase()}`
+
+export function fijosPendientes(docs: FinDoc[], period: string, off: string[]) {
+  if (period > currentPeriod()) return []
+  const groups = new Map<string, FinDoc[]>()
+  for (const d of active(docs)) {
+    if (d.direction !== 'compra') continue
+    const k = partyKey(d)
+    groups.set(k, [...(groups.get(k) ?? []), d])
+  }
+  const out: { key: string; last: FinDoc }[] = []
+  for (const [key, list] of groups) {
+    const before = list.filter((d) => d.period < period)
+    if (!before.length || list.some((d) => d.period === period) || off.includes(key)) continue
+    const last = before.reduce((a, b) => (b.period > a.period || (b.period === a.period && b.issued_on > a.issued_on) ? b : a))
+    if (last.fijo) out.push({ key, last })
+  }
+  return out.sort((a, b) => a.last.party_name.localeCompare(b.last.party_name, 'es'))
 }

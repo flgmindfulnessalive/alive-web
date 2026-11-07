@@ -3114,3 +3114,58 @@ label.prod-pays {
     justify-content: space-between;
   }
 }
+
+/* Finanzas · fase 2 */
+.fin-xml {
+  padding: 10px 14px;
+  border-left: 3px solid var(--prod-warn);
+  border-radius: 10px;
+  background: rgb(242 181 74 / 0.07);
+  font-size: var(--fs-small);
+}
+
+.fin-xml.is-ok {
+  border-left-color: var(--prod-ok);
+  background: rgb(95 211 141 / 0.07);
+}
+
+.fin-pending__act {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fin-link {
+  color: var(--color-blue);
+  text-decoration: underline;
+}
+
+.fin-sire {
+  display: grid;
+  gap: 10px;
+  font-size: var(--fs-small);
+}
+
+.fin-sire h3 {
+  margin-top: 6px;
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.fin-sire__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text) !important;
+}
+
+@media (max-width: 599px) {
+  .fin-pending__act {
+    grid-column: 1 / -1;
+  }
+
+  .fin-sire__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
