@@ -152,6 +152,21 @@
       "source": "/demo-vuelv/marcas",
       "destination": "/demo-vuelv/marcas/",
       "permanent": false
+    },
+    {
+      "source": "/demo-vuelv/privacidad",
+      "destination": "/demo-vuelv/privacidad/",
+      "permanent": false
+    },
+    {
+      "source": "/demo-vuelv/terminos",
+      "destination": "/demo-vuelv/terminos/",
+      "permanent": false
+    },
+    {
+      "source": "/demo-vuelv/baja",
+      "destination": "/demo-vuelv/baja/",
+      "permanent": false
     }
   ]
 }
