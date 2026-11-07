@@ -167,6 +167,11 @@
       "source": "/demo-vuelv/baja",
       "destination": "/demo-vuelv/baja/",
       "permanent": false
+    },
+    {
+      "source": "/demo-vuelv/crear-cuenta",
+      "destination": "/demo-vuelv/crear-cuenta/",
+      "permanent": false
     }
   ]
 }
