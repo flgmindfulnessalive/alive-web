@@ -147,6 +147,11 @@
       "source": "/demo-vuelv",
       "destination": "/demo-vuelv/",
       "permanent": false
+    },
+    {
+      "source": "/demo-vuelv/marcas",
+      "destination": "/demo-vuelv/marcas/",
+      "permanent": false
     }
   ]
 }
