@@ -125,6 +125,15 @@
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: https://images.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
         }
       ]
+    },
+    {
+      "source": "/demo-vuelv/panel/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "redirects": [
@@ -171,6 +180,11 @@
     {
       "source": "/demo-vuelv/crear-cuenta",
       "destination": "/demo-vuelv/crear-cuenta/",
+      "permanent": false
+    },
+    {
+      "source": "/demo-vuelv/panel",
+      "destination": "/demo-vuelv/panel/",
       "permanent": false
     }
   ]
