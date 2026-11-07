@@ -15,10 +15,12 @@ import {
   alertsOf,
   amountIn,
   cobrosOf,
+  configOf,
   currentPeriod,
   docNumber,
   docsCsv,
   exportName,
+  fijosPendientes,
   monthSummary,
   pen,
   periodLabel,
@@ -36,6 +38,7 @@ import {
   type Closing,
   type Cobro,
   type Direction,
+  type FinConfig,
   type DocFile,
   type DocType,
   type FinDoc,
@@ -45,6 +48,8 @@ import {
   type PartyDocType,
   type Settings,
 } from './finanzas'
+import { parseInvoiceXml, XmlError } from './finanzasXml'
+import { SireCompare } from './FinanceSire'
 
 type Tab = 'ventas' | 'compras' | 'cierre' | 'ajustes'
 const TABS: { id: Tab; label: string }[] = [
@@ -103,6 +108,9 @@ async function prepareImage(file: File): Promise<File> {
   }
 }
 
+const MIME: Record<string, string> = { pdf: 'application/pdf', xml: 'application/xml', jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', heic: 'image/heic' }
+const mimeOf = (name: string) => MIME[name.split('.').pop()?.toLowerCase() ?? ''] ?? 'application/octet-stream'
+
 async function openFile(path: string) {
   const { data } = await supabase!.storage.from(BUCKET).createSignedUrl(path, 120)
   if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener')
@@ -114,6 +122,9 @@ export function Finance({ clients, projects, recurring, email }: Props) {
   const [docs, setDocs] = useState<FinDoc[]>([])
   const [closings, setClosings] = useState<Closing[]>([])
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
+  // Contenido completo de fin_settings.data (tasas, RUC de ALIVE y gastos fijos pausados).
+  const [raw, setRaw] = useState<Record<string, unknown>>({})
+  const config: FinConfig = configOf(raw)
   const [missing, setMissing] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -136,13 +147,26 @@ export function Finance({ clients, projects, recurring, email }: Props) {
     setMissing(Boolean(d.error || c.error || s.error))
     setDocs(((d.data ?? []) as FinDoc[]).map(normalize))
     setClosings((c.data ?? []) as Closing[])
-    setSettings(withDefaults((s.data?.data ?? null) as Partial<Settings> | null))
+    const data = (s.data?.data ?? {}) as Record<string, unknown>
+    setRaw(data)
+    setSettings(withDefaults(data as Partial<Settings>))
     setLoaded(true)
   }, [])
 
   useEffect(() => {
     void load()
   }, [load])
+
+  async function saveRaw(next: Record<string, unknown>) {
+    const { error: e } = await supabase!.from('fin_settings').upsert({ id: 1, data: next, updated_at: new Date().toISOString() })
+    if (e) {
+      setError('No se pudieron guardar los ajustes.')
+      return false
+    }
+    setRaw(next)
+    setSettings(withDefaults(next as Partial<Settings>))
+    return true
+  }
 
   const choose = (t: Tab) => {
     setTab(t)
@@ -157,6 +181,7 @@ export function Finance({ clients, projects, recurring, email }: Props) {
   const inPeriod = docs.filter((d) => d.period === period)
   const cobros = useMemo(() => cobrosOf(projects, recurring, clients), [projects, recurring, clients])
   const pending = unbilled(cobros, docs, period)
+  const fijos = fijosPendientes(docs, period, config.fijosOff)
 
   // Proveedores y clientes ya usados: para autocompletar RUC, nombre y categoría.
   const parties = useMemo(() => {
@@ -230,6 +255,8 @@ export function Finance({ clients, projects, recurring, email }: Props) {
           settings={settings}
           locked={Boolean(closing)}
           pending={pending}
+          fijos={[]}
+          onStopFijo={() => undefined}
           onNew={(preset) => setEditing({ direction: 'venta', preset })}
           onOpen={(doc) => setEditing({ direction: 'venta', doc })}
         />
@@ -241,6 +268,8 @@ export function Finance({ clients, projects, recurring, email }: Props) {
           settings={settings}
           locked={Boolean(closing)}
           pending={[]}
+          fijos={fijos}
+          onStopFijo={(key) => saveRaw({ ...raw, fijosOff: [...config.fijosOff, key] })}
           onNew={(preset) => setEditing({ direction: 'compra', preset })}
           onOpen={(doc) => setEditing({ direction: 'compra', doc })}
         />
@@ -251,14 +280,16 @@ export function Finance({ clients, projects, recurring, email }: Props) {
           closings={closings}
           settings={settings}
           pending={pending}
+          fijos={fijos.length}
           email={email}
+          onRegister={(direction, preset) => setEditing({ direction, preset })}
           onOpen={(doc) => setEditing({ direction: doc.direction, doc })}
           onGoVentas={() => choose('ventas')}
           onChanged={load}
           onError={setError}
         />
       ) : (
-        <SettingsTab settings={settings} onSaved={setSettings} onError={setError} />
+        <SettingsTab settings={settings} config={config} raw={raw} onSave={saveRaw} onError={setError} />
       )}
 
       {editing && (
@@ -269,6 +300,7 @@ export function Finance({ clients, projects, recurring, email }: Props) {
           preset={editing.preset}
           period={period}
           settings={settings}
+          ruc={config.ruc}
           lockedPeriods={new Set(closings.map((c) => c.period))}
           parties={parties.filter((p) => p.direction === editing.direction)}
           clients={clients}
@@ -289,6 +321,8 @@ function DocsTab({
   settings,
   locked,
   pending,
+  fijos,
+  onStopFijo,
   onNew,
   onOpen,
 }: {
@@ -298,6 +332,8 @@ function DocsTab({
   settings: Settings
   locked: boolean
   pending: Cobro[]
+  fijos: { key: string; last: FinDoc }[]
+  onStopFijo: (key: string) => void
   onNew: (preset?: Partial<FinDoc>) => void
   onOpen: (doc: FinDoc) => void
 }) {
@@ -325,6 +361,40 @@ function DocsTab({
         <button className="btn btn-primary fin-fab" onClick={() => onNew()} aria-label={sale ? 'Registrar venta' : 'Registrar gasto'}>
           + {sale ? 'Venta' : 'Gasto'}
         </button>
+      )}
+
+      {!sale && !locked && fijos.length > 0 && (
+        <div className="fin-pending">
+          <p>
+            <b>Gastos fijos de {periodLabel(period)} por registrar</b>
+            <span className="panel-muted"> · el mes pasado los marcaste como fijos</span>
+          </p>
+          <ul>
+            {fijos.map(({ key, last }) => (
+              <li key={key}>
+                <span>
+                  {last.party_name}
+                  <span className="panel-muted"> · {last.category || DOC_TYPES[last.doc_type].short} · último {periodLabel(last.period)}</span>
+                </span>
+                <b>{amountIn(last.currency, last.total)}</b>
+                <span className="fin-pending__act">
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => {
+                      const { id: _i, created_at: _c, updated_at: _u, files: _f, series: _s, number: _n, links: _l, ...rest } = last
+                      onNew({ ...rest, issued_on: period === todayIso().slice(0, 7) ? todayIso() : `${period}-01`, period, paid_on: null, annulled: false, fijo: true })
+                    }}
+                  >
+                    Registrar
+                  </button>
+                  <button className="panel-link" onClick={() => onStopFijo(key)}>
+                    Ya no es fijo
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {sale && pending.length > 0 && (
@@ -442,6 +512,7 @@ function DocDialog({
   preset,
   period,
   settings,
+  ruc,
   lockedPeriods,
   parties,
   clients,
@@ -454,6 +525,7 @@ function DocDialog({
   preset?: Partial<FinDoc>
   period: string
   settings: Settings
+  ruc: string
   lockedPeriods: Set<string>
   parties: FinDoc[]
   clients: Client[]
@@ -495,6 +567,9 @@ function DocDialog({
   const [detRef, setDetRef] = useState(start.detraccion_ref ?? '')
   const [notes, setNotes] = useState(start.notes ?? '')
   const [annulled, setAnnulled] = useState(start.annulled ?? false)
+  const [fijo, setFijo] = useState(start.fijo ?? false)
+  // Resultado de leer el XML: qué se completó o por qué no se pudo.
+  const [xmlNote, setXmlNote] = useState<{ ok: boolean; text: string } | null>(null)
   const [files, setFiles] = useState<DocFile[]>(doc?.files ?? [])
   const [removed, setRemoved] = useState<DocFile[]>([])
   const [adding, setAdding] = useState<File[]>([])
@@ -511,6 +586,48 @@ function DocDialog({
     const ready = await Promise.all(list.map(prepareImage))
     setPreparing(false)
     setAdding((l) => [...l, ...ready])
+    const xml = ready.find((f) => /\.xml$/i.test(f.name) || /xml/.test(f.type))
+    if (xml) await fillFromXml(xml)
+  }
+
+  // Completa el formulario con los datos exactos del XML del comprobante electrónico.
+  async function fillFromXml(file: File) {
+    try {
+      const x = parseInvoiceXml(await file.text())
+      const party = sale ? x.customer : x.supplier
+      const mine = sale ? x.supplier : x.customer
+      if (x.currency !== 'PEN' && x.currency !== 'USD') throw new XmlError(`El comprobante está en ${x.currency}: regístralo a mano con su equivalente.`)
+      setDocType(x.docType)
+      setSeries(x.series)
+      setNumber(x.number)
+      if (x.issuedOn) {
+        setIssuedOn(x.issuedOn)
+        if (!periodTouched) setDocPeriod(x.issuedOn.slice(0, 7))
+      }
+      setCurrency(x.currency as 'PEN' | 'USD')
+      setPartyType(party.docType)
+      setPartyDoc(party.doc)
+      if (party.name) setPartyName(party.name)
+      setOperation(x.operation)
+      setTotal(String(x.total))
+      setTotalTouched(true)
+      setBase(String(x.base))
+      setIgv(String(x.igv))
+      setManual(true)
+      if (!sale) {
+        const known = parties.find((p) => p.party_doc && p.party_doc === party.doc)
+        if (known?.category && !category) setCategory(known.category)
+        setCredit(DOC_TYPES[x.docType].credit && x.operation === 'gravada' && party.docType === '6' && (!ruc || mine.doc === ruc))
+      }
+      if (sale && x.detraccion) {
+        setDetraccion(true)
+        setDetAmount(String(x.detraccion.amount))
+      }
+      const warn = ruc && mine.doc && mine.doc !== ruc ? ` Ojo: está a nombre de ${mine.name || mine.doc}, no de ALIVE (RUC ${ruc}).` : ''
+      setXmlNote({ ok: !warn, text: `Datos leídos del XML: ${DOC_TYPES[x.docType].short} ${x.series}-${x.number} de ${(party.name || party.doc).replace(/\.$/, '')}.${warn}` })
+    } catch (e) {
+      setXmlNote({ ok: false, text: e instanceof XmlError ? e.message : 'No se pudo leer el XML. Completa los datos a mano.' })
+    }
   }
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -561,6 +678,7 @@ function DocDialog({
     detraccion_amount: sale && detraccion ? Number(detAmount) || 0 : null,
     detraccion_ref: sale && detraccion ? detRef.trim() || null : null,
     links: doc?.links ?? preset?.links ?? [],
+    fijo: sale ? false : fijo,
     client_id: clientId || null,
     project_id: doc?.project_id ?? preset?.project_id ?? null,
     annulled,
@@ -594,7 +712,7 @@ function DocDialog({
     for (const f of adding) {
       const safe = f.name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w.-]+/g, '-').slice(-80)
       const path = `${id}/${Date.now()}-${safe}`
-      const { error: upErr } = await supabase!.storage.from(BUCKET).upload(path, f, { contentType: f.type || undefined })
+      const { error: upErr } = await supabase!.storage.from(BUCKET).upload(path, f, { contentType: f.type || mimeOf(f.name) })
       if (upErr) {
         if (uploaded.length) await supabase!.storage.from(BUCKET).remove(uploaded.map((u) => u.path))
         setBusy(false)
@@ -603,14 +721,19 @@ function DocDialog({
       uploaded.push({ path, name: f.name, size: f.size })
     }
     const { id: _i, created_at: _c, updated_at: _u, ...row } = draft
-    const payload = { ...row, files: [...files, ...uploaded] }
+    // «fijo» solo se envía si se usa: así el formulario funciona aunque falte supabase/finanzas-fase2.sql.
+    const { fijo: fijoValue, ...rest } = row
+    const payload = { ...rest, ...(fijoValue || doc?.fijo ? { fijo: fijoValue } : {}), files: [...files, ...uploaded] }
     const res = doc
       ? await supabase!.from('fin_docs').update(payload).eq('id', id).select().single()
       : await supabase!.from('fin_docs').insert({ ...payload, id }).select().single()
     if (res.error || !res.data) {
       if (uploaded.length) await supabase!.storage.from(BUCKET).remove(uploaded.map((u) => u.path))
       setBusy(false)
-      return setError(res.error?.message.includes('cerrado') ? res.error.message : 'No se pudo guardar el comprobante.')
+      const msg = res.error?.message ?? ''
+      return setError(
+        msg.includes('cerrado') ? msg : /fijo/.test(msg) ? 'Para marcar gastos fijos falta ejecutar supabase/finanzas-fase2.sql en Supabase.' : 'No se pudo guardar el comprobante.',
+      )
     }
     if (removed.length) await supabase!.storage.from(BUCKET).remove(removed.map((r) => r.path))
     onSaved(res.data as FinDoc)
@@ -858,6 +981,10 @@ function DocDialog({
                 <input type="checkbox" checked={credit} onChange={(e) => setCredit(e.target.checked)} />
                 Usar el IGV como crédito fiscal
               </label>
+              <label className="prod-pays fin-check fin-span-2">
+                <input type="checkbox" checked={fijo} onChange={(e) => setFijo(e.target.checked)} />
+                Gasto fijo: recordármelo cada mes
+              </label>
             </div>
           )}
 
@@ -936,7 +1063,7 @@ function DocDialog({
           )}
 
           <div className="panel-field">
-            <span>Comprobante (PDF, XML o foto)</span>
+            <span>Comprobante (PDF, XML o foto) · con el XML se completa solo</span>
             {files.length > 0 && (
               <ul className="fin-files">
                 {files.map((f) => (
@@ -976,6 +1103,7 @@ function DocDialog({
                 ))}
               </ul>
             )}
+            {xmlNote && <p className={`fin-xml${xmlNote.ok ? ' is-ok' : ''}`}>{xmlNote.text}</p>}
             {!locked && (
               <div className="fin-upload">
                 <label className="btn btn-primary btn-sm fin-upload__camera">
@@ -1053,8 +1181,10 @@ function ClosingTab({
   closings,
   settings,
   pending,
+  fijos,
   email,
   onOpen,
+  onRegister,
   onGoVentas,
   onChanged,
   onError,
@@ -1064,8 +1194,10 @@ function ClosingTab({
   closings: Closing[]
   settings: Settings
   pending: Cobro[]
+  fijos: number
   email: string
   onOpen: (d: FinDoc) => void
+  onRegister: (direction: Direction, preset: Partial<FinDoc>) => void
   onGoVentas: () => void
   onChanged: () => Promise<void>
   onError: (msg: string) => void
@@ -1159,8 +1291,8 @@ function ClosingTab({
         </article>
         <article className="dash-kpi">
           <span className="dash-kpi__label">Pendientes</span>
-          <b className="dash-kpi__value">{warns.length + pending.length}</b>
-          <span className="dash-kpi__sub">{warns.length + pending.length ? 'Revisa la lista de abajo' : 'Todo en orden'}</span>
+          <b className="dash-kpi__value">{warns.length + pending.length + fijos}</b>
+          <span className="dash-kpi__sub">{warns.length + pending.length + fijos ? 'Revisa la lista de abajo' : 'Todo en orden'}</span>
         </article>
       </div>
 
@@ -1205,10 +1337,17 @@ function ClosingTab({
           <div className="dash-card__head">
             <h2>Antes de declarar</h2>
           </div>
-          {pending.length === 0 && issues.length === 0 ? (
+          {pending.length === 0 && issues.length === 0 && fijos === 0 ? (
             <p className="panel-muted">Todo en orden: cada comprobante tiene su archivo y sus datos.</p>
           ) : (
             <ul className="fin-issues">
+              {fijos > 0 && (
+                <li className="is-warn">
+                  <span>
+                    {fijos === 1 ? '1 gasto fijo' : `${fijos} gastos fijos`} sin registrar (revisa Compras y gastos)
+                  </span>
+                </li>
+              )}
               {pending.length > 0 && (
                 <li className="is-warn">
                   <button className="panel-link" onClick={onGoVentas}>
@@ -1282,7 +1421,7 @@ function ClosingTab({
             </div>
             {confirm === 'cerrar' ? (
               <p className="rec-row__end">
-                {warns.length + pending.length ? `Quedan ${warns.length + pending.length} pendientes. ` : ''}¿Cerrar {periodLabel(period)}?
+                {warns.length + pending.length + fijos ? `Quedan ${warns.length + pending.length + fijos} pendientes. ` : ''}¿Cerrar {periodLabel(period)}?
                 <button className="panel-link" disabled={busy} onClick={close}>
                   Sí, cerrar
                 </button>
@@ -1298,6 +1437,8 @@ function ClosingTab({
           </>
         )}
       </div>
+
+      <SireCompare period={period} docs={docs} onOpen={onOpen} onRegister={onRegister} locked={Boolean(closing)} />
 
       <div className="dash-card">
         <div className="dash-card__head">
@@ -1348,10 +1489,23 @@ const FIELDS: { key: keyof Settings; label: string; pct?: boolean; hint?: string
   { key: 'rxhTasa', label: 'Retención de honorarios', pct: true },
 ]
 
-function SettingsTab({ settings, onSaved, onError }: { settings: Settings; onSaved: (s: Settings) => void; onError: (m: string) => void }) {
+function SettingsTab({
+  settings,
+  config,
+  raw,
+  onSave,
+  onError,
+}: {
+  settings: Settings
+  config: FinConfig
+  raw: Record<string, unknown>
+  onSave: (next: Record<string, unknown>) => Promise<boolean>
+  onError: (m: string) => void
+}) {
   const toText = (s: Settings) =>
     Object.fromEntries(FIELDS.map((f) => [f.key, f.pct ? String(round2(s[f.key] * 100)) : String(s[f.key])])) as Record<keyof Settings, string>
   const [values, setValues] = useState(() => toText(settings))
+  const [ruc, setRuc] = useState(config.ruc)
   const [busy, setBusy] = useState(false)
   const [ok, setOk] = useState(false)
 
@@ -1359,32 +1513,63 @@ function SettingsTab({ settings, onSaved, onError }: { settings: Settings; onSav
     e.preventDefault()
     const data = Object.fromEntries(FIELDS.map((f) => [f.key, f.pct ? Number(values[f.key]) / 100 : Number(values[f.key])])) as Settings
     if (Object.values(data).some((v) => !Number.isFinite(v) || v < 0)) return onError('Revisa los valores: deben ser números.')
+    if (ruc && !/^(10|15|17|20)\d{9}$/.test(ruc)) return onError('El RUC debe tener 11 dígitos.')
     setBusy(true)
-    const { error } = await supabase!.from('fin_settings').upsert({ id: 1, data, updated_at: new Date().toISOString() })
+    const saved = await onSave({ ...raw, ...data, ruc })
     setBusy(false)
-    if (error) return onError('No se pudieron guardar los ajustes.')
-    onSaved(data)
+    if (!saved) return
     setOk(true)
     setTimeout(() => setOk(false), 2500)
   }
 
   return (
-    <form className="fin-section dash-card" onSubmit={save}>
-      <div className="dash-card__head">
-        <h2>Valores tributarios</h2>
-      </div>
-      <p className="panel-muted">Actualízalos cuando SUNAT los cambie (la UIT cambia cada enero). Confírmalos con tu contador.</p>
-      <div className="fin-grid fin-grid--3">
-        {FIELDS.map((f) => (
-          <label key={f.key} className="panel-field">
-            <span>
-              {f.label}
-              {f.pct ? ' (%)' : ''}
-              {f.hint ? ` · ${f.hint}` : ''}
-            </span>
-            <input value={values[f.key]} inputMode="decimal" onChange={(e) => setValues({ ...values, [f.key]: e.target.value.replace(/[^\d.]/g, '') })} />
+    <form className="fin-section" onSubmit={save}>
+      <div className="dash-card">
+        <div className="dash-card__head">
+          <h2>Tu empresa</h2>
+        </div>
+        <div className="fin-grid fin-grid--3">
+          <label className="panel-field">
+            <span>RUC de ALIVE</span>
+            <input value={ruc} inputMode="numeric" maxLength={11} placeholder="20…" onChange={(e) => setRuc(e.target.value.replace(/\D/g, ''))} />
           </label>
-        ))}
+        </div>
+        <p className="fin-hint">Con el RUC, al leer el XML de una factura el panel revisa que esté a nombre de ALIVE: si no, no da crédito fiscal.</p>
+      </div>
+      {config.fijosOff.length > 0 && (
+        <div className="dash-card">
+          <div className="dash-card__head">
+            <h2>Gastos que dejaste de recordar</h2>
+          </div>
+          <ul className="fin-files">
+            {config.fijosOff.map((k) => (
+              <li key={k}>
+                <span>{k.split('|')[1] || k}</span>
+                <button type="button" className="panel-link" onClick={() => onSave({ ...raw, fijosOff: config.fijosOff.filter((x) => x !== k) })}>
+                  Volver a recordar
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div className="dash-card">
+        <div className="dash-card__head">
+          <h2>Valores tributarios</h2>
+        </div>
+        <p className="panel-muted">Actualízalos cuando SUNAT los cambie (la UIT cambia cada enero). Confírmalos con tu contador.</p>
+        <div className="fin-grid fin-grid--3">
+          {FIELDS.map((f) => (
+            <label key={f.key} className="panel-field">
+              <span>
+                {f.label}
+                {f.pct ? ' (%)' : ''}
+                {f.hint ? ` · ${f.hint}` : ''}
+              </span>
+              <input value={values[f.key]} inputMode="decimal" onChange={(e) => setValues({ ...values, [f.key]: e.target.value.replace(/[^\d.]/g, '') })} />
+            </label>
+          ))}
+        </div>
       </div>
       <div className="prod-actions">
         <button className="btn btn-primary btn-sm" disabled={busy}>
