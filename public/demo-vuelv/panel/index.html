@@ -199,7 +199,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const F=n=>Math.round(n).toLocaleString('es-PE'),S$=n=>'S/'+F(n);
 const PL={starter:['Starter',490],growth:['Growth',990],pro:['Pro',1990]};
-let ACC={name:'Zapatillas Runner',sub:'zapatillas-runner',plan:'growth',email:'hola@zapatillas-runner.pe',end:Date.now()+23*864e5};
+let ACC={name:'Zapatillas Runner',sub:'zapatillas-runner.pe',plan:'growth',email:'hola@zapatillas-runner.pe',end:Date.now()+23*864e5};
 try{const a=JSON.parse(localStorage.getItem('vuelv_alta')||'null');if(a&&a.f&&a.f.name){ACC={name:a.w&&a.w.disp||a.f.name,sub:a.f.sub,plan:a.plan in PL?a.plan:'growth',email:a.f.email,end:a.end||ACC.end}}}catch(e){}
 let ST={in:false,email:'',tab:'res',days:30,filt:'all',set:{when:'20',disc:'10',pause:false}};
 try{const x=JSON.parse(localStorage.getItem('vuelv_panel')||'null');if(x)ST={...ST,...x}}catch(e){}
@@ -228,7 +228,7 @@ function login(){return `<div class=pnlog><div class=pnc><span class=pnk>Ingreso
 function header(){const p=PL[ACC.plan];$('#pnu').innerHTML=ST.in?`<span class=nm>${esc(ACC.name)}</span><span class=chp>${p[0]} · mes gratis ${dleft()} días</span><button class=pnbtn data-a=out>Salir</button>`:`<a class=pnbtn href="/demo-vuelv/crear-cuenta/">Crear cuenta</a>`}
 
 const TABS=[['res','Resumen'],['ven','Ventas'],['con','Consentimiento'],['wa','WhatsApp'],['aj','Ajustes']];
-function dash(){const m=metrics(ST.days);return `<div class="w pnw"><div class=pntop><div><span class=pnk>Panel de tu tienda</span><h1 style="margin-top:6px">${esc(ACC.name)}</h1><p class=pnl style="margin-top:4px">${esc(ACC.sub)}.myshopify.com</p></div>
+function dash(){const m=metrics(ST.days);return `<div class="w pnw"><div class=pntop><div><span class=pnk>Panel de tu tienda</span><h1 style="margin-top:6px">${esc(ACC.name)}</h1><p class=pnl style="margin-top:4px">${esc(ACC.sub)}</p></div>
 <div class=seg role=group aria-label="Período">${[7,30].map(d=>`<button data-d=${d} aria-pressed=${ST.days===d}>${d} días</button>`).join('')}</div></div>
 <div class=tabs2 role=tablist>${TABS.map(([k,t])=>`<button role=tab data-t=${k} aria-selected=${ST.tab===k}>${t}</button>`).join('')}</div>
 <div id=tp>${({res,ven,con,wa,aj})[ST.tab](m)}</div>
