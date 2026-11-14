@@ -25,7 +25,8 @@
   * { box-sizing: border-box; margin: 0; }
   html, body { height: 100%; }
   body { background: var(--ink); color: var(--ivory); font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  .hero { position: relative; min-height: 100svh; display: grid; place-items: center; overflow: hidden; isolation: isolate; padding: 48px 16px; }
+  .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; align-items: center; overflow: hidden; isolation: isolate; padding: 40px 16px 0; }
+  .wrap { margin: auto 0; }
   .hero picture, .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
   .hero img.bg { object-fit: cover; object-position: 50% 62%; animation: drift 24s ease-in-out infinite alternate; }
   .hero::after { content: ''; position: absolute; inset: 0; z-index: -1;
@@ -43,14 +44,15 @@
   h1 { margin-top: 18px; font-family: 'Archivo', Arial, sans-serif; font-weight: 800; letter-spacing: -.035em; line-height: .95; font-size: clamp(2.6rem, 7vw, 5rem); text-wrap: balance; }
   .lead { margin-top: 22px; max-width: 56ch; font-size: clamp(1rem, 2.2vw, 1.15rem); line-height: 1.65; color: var(--soft); text-wrap: pretty; }
   .ctas { margin-top: 34px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-  .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 24px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; transition: background-color .2s, color .2s, transform .2s; }
+  @media (max-width: 560px) { .ctas { flex-direction: column; align-items: stretch; width: 100%; max-width: 380px; } .btn { justify-content: center; } }
+  .btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; line-height: 1.25; gap: 8px; min-height: 48px; padding: 12px 24px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; transition: background-color .2s, color .2s, transform .2s; }
   .btn-light { background: var(--ivory); color: var(--ink); }
   .btn-light:hover { background: #fff; transform: translateY(-1px); }
   .btn-ghost { color: var(--ivory); border: 1.5px solid rgba(245,243,236,.55); background: rgba(15,27,29,.25); backdrop-filter: blur(6px); }
   .btn-ghost:hover { background: rgba(245,243,236,.15); }
   .btn:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
   .btn svg { width: 16px; height: 16px; }
-  .foot { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); display: flex; justify-content: center; gap: 8px 20px; flex-wrap: wrap; font-size: 12px; color: rgba(245,243,236,.7); }
+  .foot { position: relative; width: 100%; margin-top: 40px; padding: 18px 0 calc(18px + env(safe-area-inset-bottom)); display: flex; justify-content: center; gap: 8px 20px; flex-wrap: wrap; font-size: 12px; color: rgba(245,243,236,.7); }
   @media (prefers-reduced-motion: reduce) { .hero img.bg, .tag span { animation: none; } .btn { transition: none; } }
 </style>
 </head>
