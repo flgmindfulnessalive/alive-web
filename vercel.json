@@ -297,17 +297,5 @@
       "destination": "https://massiveco.shop/$1",
       "permanent": true
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "massiveco.shop"
-        }
-      ],
-      "destination": "/massiveco-proximamente/$1"
-    }
   ]
 }
