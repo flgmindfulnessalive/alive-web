@@ -204,6 +204,25 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "massiveco.shop"
+        }
+      ],
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        }
+      ]
     }
   ],
   "redirects": [
@@ -266,6 +285,29 @@
       "source": "/demo-massiveco",
       "destination": "/demo-massiveco/",
       "permanent": false
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.massiveco.shop"
+        }
+      ],
+      "destination": "https://massiveco.shop/$1",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "massiveco.shop"
+        }
+      ],
+      "destination": "/massiveco-proximamente/$1"
     }
   ]
 }
