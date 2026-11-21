@@ -406,16 +406,16 @@ p + p { margin-top: 8px; }
     <div class="fila etiqueta">Mensual · opcional</div>
     <div class="fila"><div>Alojamiento<small>Servidor y certificado de seguridad, o la publicamos en una cuenta tuya</small></div><div class="importe">${alojamiento}</div></div>`}
   </div>
-  <div class="total">
-    <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>${T?.adelantoNota ? esc(T.adelantoNota) : `Adelanto para reservar el inicio${eco && !d.factura ? ', con Whop' : ' del proyecto'}.`}</small></div>
-    <div class="card"><span>Al aprobar la ${cosa} · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>${T ? esc(T.saldo) : med ? 'Saldo, antes del lanzamiento.' : marca ? 'Saldo, antes de entregarte los archivos.' : 'Saldo, antes de publicarla en tu dominio.'}</small></div>
+  <div class="total"${d.pago.saldo ? '' : ' style="grid-template-columns:1fr"'}>
+    <div class="card destacada"><span>Al confirmar · ${d.pago.saldo ? `${d.pago.adelanto} %` : 'pago único'}</span><b>${dinero(parte(d.pago.adelanto))}</b><small>${T?.adelantoNota ? esc(T.adelantoNota) : `Adelanto para reservar el inicio${eco && !d.factura ? ', con Whop' : ' del proyecto'}.`}</small></div>
+    ${d.pago.saldo ? `<div class="card"><span>Al aprobar la ${cosa} · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>${T ? esc(T.saldo) : med ? 'Saldo, antes del lanzamiento.' : marca ? 'Saldo, antes de entregarte los archivos.' : 'Saldo, antes de publicarla en tu dominio.'}</small></div>` : ''}
   </div>
   ${eco || med || d.factura ? '' : '<p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>'}
   <h3 style="margin-top:20px">Condiciones</h3>
   <div class="condiciones">
     <div><h3>Plazos</h3><p>${esc(Plazo)} de trabajo desde que tenemos ${T ? esc(T.plazoDesde) : med ? 'tus cuentas' : 'el material'}. No cuentan los días que esperamos tu respuesta.</p></div>
-    <div><h3>Cambios</h3><p>${d.rondasDeAjustes} rondas, cada una con una sola lista. Lo que no está en esta propuesta se cotiza aparte, antes de hacerlo.</p></div>
-    <div><h3>Si no hay respuesta</h3><p>A los ${pausa.diasSinRespuesta} días hábiles sin respuesta el proyecto se pausa, y a los ${pausa.diasCierre} días de pausa se cierra. Para retomarlo, se paga el saldo.</p></div>
+    <div><h3>Cambios</h3><p>${d.rondasDeAjustes === 1 ? '1 ronda, con una sola lista' : `${d.rondasDeAjustes} rondas, cada una con una sola lista`}. Lo que no está en esta propuesta se cotiza aparte, antes de hacerlo.</p></div>
+    <div><h3>Si no hay respuesta</h3><p>A los ${pausa.diasSinRespuesta} días hábiles sin respuesta el proyecto se pausa, y a los ${pausa.diasCierre} días de pausa se cierra. ${d.pago.saldo ? 'Para retomarlo, se paga el saldo.' : 'Para retomarlo, se acuerda una nueva fecha.'}</p></div>
     ${T ? `<div><h3>${esc(T.condicion[0])}</h3><p>${esc(T.condicion[1])}</p></div>` : med ? '<div><h3>Servicios de terceros</h3><p>Base de datos, alojamiento, IA y otros servicios los pagas directo al proveedor, con las cuentas a tu nombre.</p></div>' : marca ? '<div><h3>Registro de la marca</h3><p>La búsqueda y el registro en INDECOPI los hace el cliente. ALIVE no garantiza la disponibilidad registral.</p></div>' : eco ? '<div><h3>Dominio y alojamiento</h3><p>El dominio queda a tu nombre. La tienda se aloja en nuestra cuenta y, si un día te vas, te la transferimos con todos tus datos.</p></div>' : '<div><h3>Dominio y alojamiento</h3><p>Se pagan aparte y quedan a tu nombre. El alojamiento con nosotros es opcional.</p></div>'}
     <div><h3>Propiedad</h3><p>${T ? esc(T.propiedad) : med ? 'Con el pago completo, el código, los datos y las cuentas son tuyos.' : marca ? 'Con el pago completo, los derechos sobre la marca y sus archivos pasan a ti.' : `Con el pago completo, la ${cosa} y sus contenidos son tuyos.`}</p></div>
     <div><h3>Contratas con</h3><p>Francesco Lulli Guzmán (ALIVE), Lima, Perú. ${d.factura ? 'Con factura e IGV.' : 'Con factura, se suma el 18 % de IGV.'}</p></div>

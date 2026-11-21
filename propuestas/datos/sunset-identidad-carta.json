@@ -20,8 +20,8 @@
     ]
   },
   "pago": {
-    "adelanto": 70,
-    "saldo": 30
+    "adelanto": 100,
+    "saldo": 0
   },
   "plazo": "hasta 3 días hábiles",
   "rondasDeAjustes": 1,
@@ -94,7 +94,7 @@
       [
         "Al confirmar",
         "Contenido final",
-        "Con el adelanto del 70 % confirmas platos, precios y textos, y nos envías tus comentarios en una sola lista."
+        "Con el pago confirmas platos, precios y textos, y nos envías tus comentarios en una sola lista."
       ],
       [
         "Ajustes",
@@ -104,7 +104,7 @@
       [
         "Entrega",
         "Archivos finales",
-        "Con el 30 % restante te entregamos el paquete organizado: presentación, carta, imprenta, redes, mockups y editables."
+        "Aplicados los cambios, te entregamos el paquete organizado: presentación, carta, imprenta, redes, mockups y editables."
       ]
     ],
     "detalleInversion": "Identidad, carta, piezas de mesa, 4 posts, mockups y guía",
@@ -126,9 +126,9 @@
       ]
     ],
     "adelanto": [
-      "Adelanto",
-      "70 % con Whop o transferencia."
+      "Pago",
+      "100 % al confirmar, con Whop o transferencia."
     ],
-    "adelantoNota": "Adelanto, al confirmar la propuesta."
+    "adelantoNota": "Pago único al confirmar la propuesta."
   }
 }
