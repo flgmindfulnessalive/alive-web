@@ -31,6 +31,7 @@ export type ProposalData = {
     tituloProceso: string; plazoDesde: string; fases: [string, string, string][]
     detalleInversion: string; acompanamiento: string; saldo: string
     condicion: [string, string]; propiedad: string; pasos: [string, string][]
+    adelanto?: [string, string]; adelantoNota?: string
   }
   // Con factura: se suma el 18 % de IGV (pagando con Whop no aplica).
   factura?: boolean

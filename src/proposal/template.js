@@ -244,6 +244,7 @@ p + p { margin-top: 8px; }
 
 /* Resumen */
 .pilar h3 { font-size: 15pt; font-weight: 500; margin-bottom: 6px; }
+.pilar h3.grad { display: block; line-height: 1.15; }
 .pilar p { color: var(--muted); font-size: 11pt; }
 
 /* Qué incluye */
@@ -308,7 +309,7 @@ p + p { margin-top: 8px; }
     <h1${d.portada.enLinea ? ' class="en-linea"' : ''}><span>${esc(d.portada.titulo[0])}${d.portada.enLinea ? ' ' : ''}</span><span class="grad">${esc(d.portada.titulo[1])}</span></h1>
     <p class="bajada">${esc(d.portada.bajada)}</p>
     <dl class="meta">
-      <div><dt>Preparada para</dt><dd>${cliente}<small>${esc(d.cliente.detalle)}</small></dd></div>
+      <div><dt>Preparada para</dt><dd>${cliente}<small>${esc(d.cliente.detalle).replace(/\n/g, '<br />')}</small></dd></div>
       <div><dt>Preparada por</dt><dd>Francesco Lulli<small>ALIVE</small></dd></div>
       <div><dt>Fecha</dt><dd>${corta(fecha)}</dd></div>
       <div><dt>Válida hasta</dt><dd>${corta(vence)}</dd></div>
@@ -406,7 +407,7 @@ p + p { margin-top: 8px; }
     <div class="fila"><div>Alojamiento<small>Servidor y certificado de seguridad, o la publicamos en una cuenta tuya</small></div><div class="importe">${alojamiento}</div></div>`}
   </div>
   <div class="total">
-    <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>Adelanto para reservar el inicio${eco && !d.factura ? ', con Whop' : ' del proyecto'}.</small></div>
+    <div class="card destacada"><span>Al confirmar · ${d.pago.adelanto} %</span><b>${dinero(parte(d.pago.adelanto))}</b><small>${T?.adelantoNota ? esc(T.adelantoNota) : `Adelanto para reservar el inicio${eco && !d.factura ? ', con Whop' : ' del proyecto'}.`}</small></div>
     <div class="card"><span>Al aprobar la ${cosa} · ${d.pago.saldo} %</span><b>${dinero(parte(d.pago.saldo))}</b><small>${T ? esc(T.saldo) : med ? 'Saldo, antes del lanzamiento.' : marca ? 'Saldo, antes de entregarte los archivos.' : 'Saldo, antes de publicarla en tu dominio.'}</small></div>
   </div>
   ${eco || med || d.factura ? '' : '<p class="nota">Pagos seguros con Whop. No vemos ni guardamos los datos de tu tarjeta.</p>'}
@@ -448,7 +449,7 @@ p + p { margin-top: 8px; }
     <div style="margin-top:18px; max-width:125mm">
       ${[
         ['Confirmas la propuesta', `Antes del ${larga(vence)}.`],
-        ['Adelanto y reunión de arranque', `${d.pago.adelanto} % con Whop y te pedimos el material.`],
+        T?.adelanto ? T.adelanto : ['Adelanto y reunión de arranque', `${d.pago.adelanto} % con Whop y te pedimos el material.`],
         ...(T
           ? T.pasos
           : med

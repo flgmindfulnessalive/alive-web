@@ -2,7 +2,7 @@
   "slug": "sunset-identidad-carta-aplicaciones",
   "cliente": {
     "nombre": "Restaurante SUNSET",
-    "detalle": "Club Náutico de Poseidón · Atención: Raúl Modonese"
+    "detalle": "Club Náutico de Poseidón\nAtención: Raúl Modonese"
   },
   "fecha": "2026-11-21",
   "validezDias": 30,
@@ -10,11 +10,11 @@
   "servicio": {
     "nombre": "Dirección de arte SUNSET",
     "tipo": "Evolución de identidad, carta y piezas de mesa · pago único",
-    "precio": 1300,
+    "precio": 650,
     "adicionales": [
       {
         "nombre": "Tarifa friends & family",
-        "detalle": "42 % de descuento",
+        "detalle": "Precio especial para SUNSET",
         "precio": -550
       }
     ]
@@ -23,8 +23,8 @@
     "adelanto": 70,
     "saldo": 30
   },
-  "plazo": "hasta 12 días hábiles",
-  "rondasDeAjustes": 2,
+  "plazo": "hasta 3 días hábiles",
+  "rondasDeAjustes": 1,
   "acompanamientoDias": 15,
   "pausa": {
     "diasSinRespuesta": 10,
@@ -35,7 +35,7 @@
       "La hora en que el sol",
       "toca el horizonte."
     ],
-    "bajada": "Evolución de la identidad de SUNSET, su carta y las piezas de mesa y redes, listas para imprenta y para publicar."
+    "bajada": "La identidad de SUNSET afinada y aplicada a su carta, sus piezas de mesa y sus redes, con los archivos listos para imprenta y para publicar."
   },
   "textos": {
     "cosa": "entrega",
@@ -56,8 +56,8 @@
           "Artes de imprenta a escala real, con sangrado, troqueles y especificaciones, y piezas listas para redes."
         ]
       ],
-      "comoEmpezamos": "Una revisión de los originales aprobados y una dirección creativa que apruebas antes de producir. Después, la carta, las piezas de mesa y los posts, con 2 rondas de cambios y todos los archivos finales, en hasta 12 días hábiles de trabajo.",
-      "frase": "la identidad de SUNSET afinada y aplicada a la carta, la mesa y las redes, con archivos listos para la imprenta y para publicar."
+      "comoEmpezamos": "El trabajo ya está hecho y lo conoces: la presentación de dirección de arte, la carta, las piezas de mesa, los posts y los archivos de imprenta. Solo falta que confirmes el contenido final y hagamos una ronda de cambios. Después te entregamos el paquete completo.",
+      "frase": "la identidad de SUNSET afinada y aplicada a la carta, la mesa y las redes, lista para imprimir y publicar en hasta 3 días hábiles desde tu confirmación."
     },
     "incluye": [
       "Afinado del logo: espaciado del lettering, franjas del sol y versiones vertical, pequeña y horizontal",
@@ -67,7 +67,7 @@
       "Posavasos, cartel plegable y portacuenta a escala 1:1, con troquel y guías",
       "4 posts para redes con maestros editables y plantilla de música en vivo",
       "Presentación de dirección de arte, mockups en alta y guía breve de marca",
-      "2 rondas de cambios y 15 días de acompañamiento con la imprenta"
+      "1 ronda de cambios y 15 días de acompañamiento con la imprenta"
     ],
     "noIncluye": [
       "Impresión y producción física, que se pagan a la imprenta",
@@ -77,34 +77,34 @@
       "Registro de la marca en INDECOPI"
     ],
     "necesitamos": [
-      "La carta vigente con platos y precios",
-      "El arte original del logo",
-      "Las fotografías originales en alta",
-      "El perfil de color y los troqueles de la imprenta"
+      "Confirmar platos, precios y textos de la carta",
+      "Tus comentarios en una sola lista",
+      "El perfil de color y los troqueles de la imprenta",
+      "Las fotos originales en alta, si las tienes"
     ],
     "notaIncluye": "Con el perfil de color de la imprenta entregamos los archivos en CMYK como PDF/X-4. Recomendamos una prueba física del gofrado y del azul antes del tiraje.",
-    "tituloProceso": "De los originales<br />a los archivos finales",
-    "plazoDesde": "la carta vigente",
+    "tituloProceso": "Del trabajo presentado<br />a los archivos finales",
+    "plazoDesde": "tu confirmación",
     "fases": [
       [
+        "Hecho",
+        "Dirección y diseño",
+        "Revisamos los originales, afinamos la identidad y diseñamos la carta, las piezas de mesa, los posts y los mockups. Ya lo tienes en la presentación."
+      ],
+      [
         "Al confirmar",
-        "Revisión y dirección",
-        "Con el adelanto del 70 % revisamos los originales y te presentamos los cambios de alto impacto y la dirección creativa. La apruebas antes de producir."
+        "Contenido final",
+        "Con el adelanto del 70 % confirmas platos, precios y textos, y nos envías tus comentarios en una sola lista."
       ],
       [
-        "Primeros días",
-        "Identidad y carta",
-        "Afinamos la firma, la paleta, la tipografía y los motivos, y diseñamos la carta completa sobre una retícula a dos columnas."
-      ],
-      [
-        "Aplicaciones",
-        "Mesa y redes",
-        "Posavasos, cartel plegable, portacuenta y 4 posts, con mockups para verlos en contexto. Tienes 2 rondas de cambios, cada una en una sola lista."
+        "Ajustes",
+        "1 ronda de cambios",
+        "Aplicamos tus comentarios en la carta y las piezas, y volvemos a verificar textos y precios."
       ],
       [
         "Entrega",
         "Archivos finales",
-        "Con todo aprobado y el 30 % restante, entregamos el paquete organizado: presentación, carta, imprenta, redes, mockups y editables."
+        "Con el 30 % restante te entregamos el paquete organizado: presentación, carta, imprenta, redes, mockups y editables."
       ]
     ],
     "detalleInversion": "Identidad, carta, piezas de mesa, 4 posts, mockups y guía",
@@ -117,13 +117,18 @@
     "propiedad": "Con el pago completo, los archivos y sus derechos pasan a SUNSET.",
     "pasos": [
       [
-        "Dirección creativa",
-        "La apruebas antes de producir."
+        "Contenido final",
+        "Confirmas platos, precios y textos."
       ],
       [
         "Archivos finales",
-        "En hasta 12 días hábiles de trabajo."
+        "En hasta 3 días hábiles, con una ronda de cambios."
       ]
-    ]
+    ],
+    "adelanto": [
+      "Adelanto",
+      "70 % con Whop o transferencia."
+    ],
+    "adelantoNota": "Adelanto, al confirmar la propuesta."
   }
 }
