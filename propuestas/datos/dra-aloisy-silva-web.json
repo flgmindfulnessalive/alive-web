@@ -1,0 +1,56 @@
+{
+  "slug": "dra-aloisy-silva-web-panel",
+  "cliente": { "nombre": "Dra. Aloisy Silva", "detalle": "Ginecología funcional y antiedad\nCEGEMA · Trujillo" },
+  "fecha": "2026-11-25",
+  "validezDias": 30,
+  "moneda": "USD",
+  "servicio": { "nombre": "Web Esencial con panel propio", "tipo": "Diseño y desarrollo · pago único", "precio": 450, "panel": true },
+  "pago": { "adelanto": 70, "saldo": 30 },
+  "plazo": "hasta 10 días hábiles",
+  "rondasDeAjustes": 2,
+  "acompanamientoDias": 10,
+  "alojamiento": { "mensual": 10 },
+  "pausa": { "diasSinRespuesta": 10, "diasCierre": 30 },
+  "portada": {
+    "titulo": ["Una web a la altura", "de tu consulta."],
+    "bajada": "Tu enfoque en ginecología funcional, hormonas y longevidad, explicado con claridad, con testimonios, blog y un panel para actualizarla desde tu celular."
+  },
+  "textos": {
+    "resumen": {
+      "titulo": "Tu consulta empieza<br />antes de la primera cita.",
+      "lead": "Antes de agendar, una paciente busca tu nombre, revisa qué tratas y lee lo que cuentan otras pacientes. Esta propuesta es para que esa búsqueda termine en una consulta: una web con tu enfoque, que actualizas tú y que lleva a cada interesada a tu WhatsApp o a tu formulario.",
+      "pilares": [
+        ["Tu enfoque, claro", "Ginecología funcional, hormonas, menopausia y metabolismo explicados en lenguaje de paciente."],
+        ["Más consultas", "Formulario de evaluación inicial y WhatsApp en cada sección, con aviso inmediato a tu correo."],
+        ["La manejas tú", "Textos, fotos, testimonios y blog desde tu celular, sin depender de nadie."]
+      ],
+      "comoEmpezamos": "Una reunión para entender tu consulta y a tus pacientes y, en pocos días, una dirección visual que apruebas antes de construir. Después, la web completa con su panel, publicada en tu dominio en hasta 10 días hábiles desde que tenemos el material.",
+      "frase": "una web propia, que se paga una vez, trae consultas y que actualizas tú."
+    },
+    "incluye": [
+      "Dirección visual propia, cálida y profesional, coherente con tu marca personal",
+      "Hasta 5 secciones: Inicio, Sobre ti, Servicios, Testimonios y Contacto",
+      "Panel propio para editar textos, fotos y servicios desde el celular",
+      "Testimonios administrables: agregas, editas u ocultas cada uno desde el panel",
+      "Blog listo y apagado: lo activas desde el panel cuando quieras publicar",
+      "Formulario de evaluación inicial y WhatsApp conectados, con aviso a tu correo",
+      "Diseño adaptado a móvil y SEO de base para Trujillo y tus especialidades",
+      "HTTPS, aviso de privacidad y consentimiento para datos personales",
+      "2 rondas de cambios y 10 días de acompañamiento después de publicar"
+    ],
+    "noIncluye": [
+      "Redacción de artículos del blog y de textos largos",
+      "Sesión de fotos profesional",
+      "Agenda de citas con pago en línea",
+      "Gestión de redes sociales y publicidad",
+      "Dominio y alojamiento, que se pagan aparte y quedan a tu nombre"
+    ],
+    "necesitamos": [
+      "Tu logo, o tu nombre como marca, y fotos tuyas y del consultorio",
+      "Tu presentación y los textos base de cada servicio",
+      "Testimonios con la autorización escrita de cada paciente",
+      "Dirección de CEGEMA, horarios, WhatsApp y correo de contacto"
+    ],
+    "notaIncluye": "En salud, los testimonios se publican solo con autorización de cada paciente y los textos no prometen resultados. El formulario pide lo mínimo, sin datos clínicos, y queda protegido según la ley de datos personales."
+  }
+}

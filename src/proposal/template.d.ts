@@ -24,13 +24,14 @@ export type ProposalData = {
   pausa?: { diasSinRespuesta: number; diasCierre: number }
   portada: { titulo: [string, string]; bajada: string; enLinea?: boolean }
   // Servicio con textos propios (encargos fuera de las fichas). Se puede sumar servicio.adicionales.
+  // Cada campo es opcional: lo que no se indica usa el texto de la ficha del servicio.
   textos?: {
-    cosa: string
-    resumen: { titulo: string; lead: string; pilares: [string, string][]; comoEmpezamos: string; frase: string }
-    incluye: string[]; noIncluye: string[]; necesitamos: string[]; notaIncluye: string
-    tituloProceso: string; plazoDesde: string; fases: [string, string, string][]
-    detalleInversion: string; acompanamiento: string; saldo: string
-    condicion: [string, string]; propiedad: string; pasos: [string, string][]
+    cosa?: string
+    resumen?: { titulo: string; lead: string; pilares: [string, string][]; comoEmpezamos: string; frase: string }
+    incluye?: string[]; noIncluye?: string[]; necesitamos?: string[]; notaIncluye?: string
+    tituloProceso?: string; plazoDesde?: string; fases?: [string, string, string][]
+    detalleInversion?: string; acompanamiento?: string; saldo?: string
+    condicion?: [string, string]; propiedad?: string; pasos?: [string, string][]
     adelanto?: [string, string]; adelantoNota?: string
   }
   // Con factura: se suma el 18 % de IGV (pagando con Whop no aplica).
