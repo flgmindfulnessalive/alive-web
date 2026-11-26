@@ -279,6 +279,24 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
 @media (max-width:480px){.hero .pill{font-size:clamp(9px,2.75vw,12px);letter-spacing:.05em;padding:8px 12px}}
 html,body{overflow-x:clip}
 .hero .g>*,.in>*{min-width:0}
+
+/* carrusel del hero */
+.carrusel{display:block;min-height:0}
+.pista-c{display:flex;width:100%;height:100%;min-height:600px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;border-radius:inherit;overscroll-behavior-x:contain}
+.pista-c::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 100%;margin:0;scroll-snap-align:start;scroll-snap-stop:always}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slide figcaption{position:absolute;left:18px;bottom:18px;right:120px;background:rgba(255,255,255,.94);color:var(--tinta);border-radius:16px;padding:12px 16px;font-size:14.5px;line-height:1.3;box-shadow:0 14px 30px -18px rgba(0,0,0,.5)}
+.slide figcaption b{display:block;font:700 17px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:2px}
+.puntos{position:absolute;right:20px;bottom:30px;display:flex;gap:8px;background:rgba(26,20,32,.5);padding:7px 10px;border-radius:99px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.puntos button{width:9px;height:9px;padding:0;border:0;border-radius:99px;background:rgba(255,255,255,.6);cursor:pointer;transition:width .25s,background .25s}
+.puntos button[aria-current="true"]{width:26px;background:#fff}
+.flecha-c{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:var(--tinta);display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 24px -12px rgba(0,0,0,.5)}
+.flecha-c svg{width:20px;height:20px}.flecha-c.prev{left:16px}.flecha-c.next{right:16px}
+@media (hover:none),(max-width:700px){.flecha-c{display:none}}
+@media (max-width:920px){.pista-c{min-height:440px}}
+@media (max-width:480px){.pista-c{min-height:420px}.slide figcaption{left:12px;bottom:12px;right:84px;font-size:13px;padding:10px 12px}.slide figcaption b{font-size:15px}.puntos{right:12px;bottom:22px;padding:6px 8px;gap:6px}}
+@media (prefers-reduced-motion:reduce){.pista-c{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -323,12 +341,15 @@ html,body{overflow-x:clip}
       </div>
       <div class="datos"><span>Presencial en CEGEMA, Trujillo</span><span>Virtual en todo el Perú</span></div>
     </div>
-    <div class="visual">
-      <img class="foto-hero" src="img/f-energia.webp" width="1600" height="1067" alt="Mujer sonriente con los brazos en alto en un campo de girasoles">
-      <div class="tarjeta t-virtual"><b>Consulta virtual</b><small>Desde cualquier lugar del Perú</small></div>
-      <div class="foto">
-        <div class="tarjeta t-cita"><span class="ic"><svg aria-hidden="true"><use href="#wa"/></svg></span><div><b>Evaluación inicial</b><small>Presencial o virtual · por WhatsApp</small></div></div>
+    <div class="visual carrusel" aria-roledescription="carrusel" aria-label="Fotos destacadas">
+      <div class="pista-c" tabindex="0">
+        <figure class="slide" aria-roledescription="diapositiva" aria-label="1 de 3"><img src="img/f-energia.webp" width="1600" height="1067" alt="Mujer sonriente con los brazos en alto en un campo de girasoles" style="object-position:58% 40%"><figcaption>Bienestar hormonal en cada etapa</figcaption></figure>
+        <figure class="slide" aria-roledescription="diapositiva" aria-label="2 de 3"><img src="img/f-dra.webp" width="1400" height="1556" alt="Dra. Aloisy Silva, sonriendo" loading="lazy" style="object-position:50% 20%"><figcaption><b>Dra. Aloisy Silva</b> Ginecología funcional · Trujillo</figcaption></figure>
+        <figure class="slide" aria-roledescription="diapositiva" aria-label="3 de 3"><img src="img/f-consulta.webp" width="1000" height="667" alt="Médica conversando con una paciente durante la consulta" loading="lazy" style="object-position:40% 50%"><figcaption>Presencial en Trujillo y virtual en todo el Perú</figcaption></figure>
       </div>
+      <button class="flecha-c prev" type="button" aria-label="Foto anterior"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="flecha-c next" type="button" aria-label="Foto siguiente"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="puntos" role="group" aria-label="Elegir foto"><button type="button" aria-label="Foto 1" aria-current="true"></button><button type="button" aria-label="Foto 2"></button><button type="button" aria-label="Foto 3"></button></div>
     </div>
   </div></div>
 </section>

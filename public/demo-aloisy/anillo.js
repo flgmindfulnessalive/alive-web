@@ -1,4 +1,22 @@
 // Origen: demo Dra. Aloisy Silva (ALIVE). Dibuja el anillo de 28 días.
+// Carrusel del hero: se desliza con el dedo; puntos, flechas y avance automático cada 6 s que se detiene al tocar.
+(function () {
+  var c = document.querySelector('.carrusel'); if (!c) return;
+  var pista = c.querySelector('.pista-c'), slides = c.querySelectorAll('.slide'), puntos = c.querySelectorAll('.puntos button');
+  var actual = 0, timer = null, quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ir(i) { actual = (i + slides.length) % slides.length; pista.scrollTo({ left: actual * pista.clientWidth }); }
+  function marcar() { var i = Math.round(pista.scrollLeft / pista.clientWidth); actual = i; puntos.forEach(function (p, k) { p.setAttribute('aria-current', k === i ? 'true' : 'false'); }); }
+  function parar() { clearInterval(timer); timer = null; }
+  function seguir() { if (quieto || timer) return; timer = setInterval(function () { ir(actual + 1); }, 6000); }
+  pista.addEventListener('scroll', function () { window.requestAnimationFrame(marcar); }, { passive: true });
+  puntos.forEach(function (p, k) { p.addEventListener('click', function () { parar(); ir(k); }); });
+  c.querySelector('.prev').addEventListener('click', function () { parar(); ir(actual - 1); });
+  c.querySelector('.next').addEventListener('click', function () { parar(); ir(actual + 1); });
+  ['pointerdown', 'touchstart', 'focusin'].forEach(function (e) { pista.addEventListener(e, parar, { passive: true }); });
+  c.addEventListener('mouseenter', parar); c.addEventListener('mouseleave', seguir);
+  pista.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { parar(); ir(actual + 1); } if (e.key === 'ArrowLeft') { parar(); ir(actual - 1); } });
+  seguir();
+})();
 // Menú del celular: abre y cierra el panel; se cierra al elegir una opción o con Escape.
 (function () {
   var b = document.querySelector('.menu-btn'), m = document.getElementById('menu-movil');
