@@ -125,7 +125,10 @@ p { margin: 0; }
 /* ---------- Hero ---------- */
 .hero { position: relative; background: var(--graphite); color: var(--ivory); overflow: hidden; isolation: isolate; }
 .hero-bg { position: absolute; inset: 0; z-index: -1; }
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; opacity: .9; }
+.hero-bg video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; display: block; }
+.video-toggle { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 12px; min-height: 36px; background: rgba(21,23,26,.5); color: var(--ivory); border: 1px solid rgba(242,239,232,.3); border-radius: 3px; font: 500 .8125rem/1 var(--mono); cursor: pointer; }
+.video-toggle:hover { border-color: var(--ivory); }
+.video-toggle svg { width: 10px; height: 10px; }
 .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
   radial-gradient(42% 60% at 70% 52%, rgba(46,52,60,.55) 0%, rgba(46,52,60,0) 72%),
   linear-gradient(90deg, rgba(21,23,26,.97) 0%, rgba(21,23,26,.9) 34%, rgba(21,23,26,.5) 62%, rgba(21,23,26,.62) 100%),
@@ -424,7 +427,7 @@ p { margin: 0; }
 
 <!-- 2 · HERO -->
 <section class="hero on-dark" aria-labelledby="h1">
-  <div class="hero-bg" aria-hidden="true"><img src="img/plant-blur-1200.webp" srcset="img/plant-blur-640.webp 640w, img/plant-blur-1200.webp 1200w" sizes="100vw" width="1200" height="750" alt="" decoding="async" fetchpriority="low"></div>
+  <div class="hero-bg"><video id="hero-video" muted loop playsinline preload="none" poster="img/hero-poster.webp" width="1280" height="720" aria-hidden="true" tabindex="-1"></video></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="hero-kicker mono">Importación y distribución · Argentina</p>
@@ -435,6 +438,7 @@ p { margin: 0; }
         <a class="btn btn-ghost-dark" href="#explorador">Explorar productos <span class="arrow" aria-hidden="true">↓</span></a>
       </div>
       <p class="hero-sign mono"><span>Everything Flows Well</span><span class="dot" aria-hidden="true">·</span><span>Buenos Aires · Campana · Miami · Lima</span></p>
+      <button type="button" class="video-toggle" id="video-toggle" aria-pressed="false" hidden><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z" fill="currentColor"/></svg><span>Pausar video</span></button>
     </div>
     <figure class="hero-figure">
       <picture>
@@ -1010,6 +1014,35 @@ document.documentElement.lang = 'es-AR';
     Object.keys(rules).forEach(function (id) { document.getElementById(id).removeAttribute('aria-invalid'); document.getElementById('e-' + id.replace('f-', '')).textContent = ''; });
     $('#done').hidden = true; $('#form-body').hidden = false; $('#f-nombre').focus();
   });
+
+  /* Video del héroe: solo en escritorio, sin movimiento reducido ni ahorro de datos, después de la carga */
+  var hv = $('#hero-video'), tg = $('#video-toggle'), userPaused = false;
+  var PLAY = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg><span>Reproducir video</span>';
+  var PAUSE = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z" fill="currentColor"/></svg><span>Pausar video</span>';
+  function canVideo() {
+    return window.matchMedia('(min-width: 861px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData);
+  }
+  function startVideo() {
+    if (!canVideo() || hv.dataset.on) return;
+    hv.dataset.on = '1';
+    var src = document.createElement('source'); src.src = 'img/hero-video-720.mp4'; src.type = 'video/mp4';
+    hv.appendChild(src); hv.load();
+    var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {});
+    tg.hidden = false;
+  }
+  tg.addEventListener('click', function () {
+    if (hv.paused) { userPaused = false; hv.play(); tg.innerHTML = PAUSE; tg.setAttribute('aria-pressed', 'false'); }
+    else { userPaused = true; hv.pause(); tg.innerHTML = PLAY; tg.setAttribute('aria-pressed', 'true'); }
+  });
+  if (document.readyState === 'complete') setTimeout(startVideo, 400);
+  else window.addEventListener('load', function () { setTimeout(startVideo, 400); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      if (!hv.dataset.on) return;
+      if (es[0].isIntersecting) { if (!userPaused) { var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {}); } }
+      else hv.pause();
+    }).observe(hv);
+  }
 
   /* Industrias: cada sector cambia la fotografía de fondo (decorativa) */
   var indCaps = {"oil": "Planta de proceso con racks de cañerías, tanques y columnas.", "mining": "Cañerías de conducción sobre soportes en un yacimiento.", "energy": "Central con torres de enfriamiento y racks de cañerías.", "food": "Sala de proceso con tanques de acero inoxidable y cañerías sanitarias.", "fire": "Colector de red contra incendio con válvulas de bloqueo."};
