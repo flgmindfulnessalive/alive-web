@@ -1,0 +1,1008 @@
+<!doctype html>
+<!-- Origen: prototipo del Home de ATP Solutions · ALIVE Digital Boutique Agency · noviembre 2026. Vista previa privada, no indexar. -->
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<title>ATP Solutions · Home</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Proveedor de válvulas, instrumentación y componentes para conducción de fluidos en Argentina. Consultá a ATP Solutions y solicitá una cotización para tu proyecto.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="ATP Solutions">
+<meta property="og:title" content="Válvulas industriales y control de fluidos | ATP Solutions">
+<meta property="og:description" content="Válvulas, instrumentación y componentes para conducción de fluidos. Solicitá una cotización para tu proyecto.">
+<meta property="og:image" content="https://alivedigital.agency/demo-atp/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="img/hero-1200.webp" imagesrcset="img/hero-700.webp 700w, img/hero-1200.webp 1200w" imagesizes="45vw" media="(min-width: 861px)"><link rel="preload" as="image" href="img/hero-m-800.webp" media="(max-width: 860px)" fetchpriority="high">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ATP Solutions S.R.L.","url":"https://atpsolutions.com.ar/"}</script>
+<style>
+@font-face { font-family: "Archivo"; src: url(fonts/archivo-latin-wdth-normal.woff2) format("woff2-variations"), url(fonts/archivo-latin-wdth-normal.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-style: normal; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url(fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url(fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+[hidden] { display: none !important; }
+/* Retícula: apertura asimétrica 1/3 texto + 2/3 pieza sobre grafito; corte a superficie clara con índice de catálogo. */
+:root {
+  color-scheme: light;
+  --graphite: #15171a;
+  --graphite-2: #1d2024;
+  --graphite-line: #33373d;
+  --ivory: #f2efe8;
+  --ivory-dim: #b9b6ae;
+  --paper: #f3f4f2;
+  --paper-2: #e9ebe8;
+  --ink: #15181b;
+  --ink-2: #4a5056;
+  --rule: #cfd3d4;
+  --brand: #1f9cdf;           /* azul de la palabra «atp» en el logo */
+  --accent: #006fc6;          /* azul del logo oscurecido para texto blanco AA (5.1:1) */
+  --accent-ink: #ffffff;
+  --accent-on-dark: #3fa9e6;
+  --danger: #b3261e;
+  --ok: #1d6b3a;
+  --focus: #006fc6;
+  --font: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: .8125rem; --step-0: 1rem; --step-1: 1.1875rem; --step-2: 1.5rem; --step-3: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+  --step-4: clamp(2.25rem, 1.3rem + 3.4vw, 4.25rem);
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --max: 1320px;
+  --header-h: 72px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 16px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); font-size: var(--step-0); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--paper); }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 700; letter-spacing: -.015em; line-height: 1.08; }
+p { margin: 0; }
+.wrap { max-width: var(--max); margin-inline: auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+.mono { font-family: var(--mono); font-size: var(--step--1); letter-spacing: .02em; }
+.eyebrow { font-family: var(--mono); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+.on-dark :focus-visible { outline-color: var(--accent-on-dark); }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--ivory); color: var(--ink); padding: 10px 14px; font-weight: 600; }
+.skip:focus { top: calc(env(safe-area-inset-top, 0px) + 8px); }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5em; min-height: 48px; padding: 0 1.25rem; font: 600 1rem/1 var(--font); text-decoration: none; border: 1.5px solid transparent; border-radius: 3px; cursor: pointer; transition: background-color .15s, color .15s, border-color .15s; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: #005aa3; }
+.btn-ghost-dark { color: var(--ivory); border-color: #6b6f75; background: transparent; }
+.btn-ghost-dark:hover { border-color: var(--ivory); }
+.btn-ghost { color: var(--ink); border-color: var(--ink); background: transparent; }
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+.btn-sm { min-height: 40px; padding: 0 1rem; font-size: .9375rem; }
+.arrow { font-family: var(--mono); font-weight: 500; }
+
+/* ---------- Encabezado ---------- */
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(243,244,242,.97); color: var(--ink); border-bottom: 1px solid var(--rule); }
+@supports (backdrop-filter: blur(8px)) { .site-header { background: rgba(243,244,242,.9); backdrop-filter: blur(10px); } }
+.header-row { display: flex; align-items: center; gap: 24px; height: var(--header-h); }
+.brand { display: inline-flex; align-items: center; text-decoration: none; line-height: 1; }
+.logo { height: 48px; width: auto; }
+.nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.nav > ul { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.nav-link { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; color: var(--ink); text-decoration: none; font: 500 .9375rem/1 var(--font); background: none; border: 0; cursor: pointer; border-radius: 3px; }
+.nav-link:hover, .nav-link[aria-expanded="true"] { background: var(--paper-2); }
+.chev { width: 10px; height: 10px; transition: transform .2s; }
+.nav-link[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.header-cta { margin-left: 12px; }
+.icon-btn.menu-btn { display: none; }
+
+.mega { position: absolute; left: 0; right: 0; top: 100%; background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--rule); box-shadow: 0 24px 48px -24px rgba(0,0,0,.35); }
+.mega-grid { display: grid; grid-template-columns: 1fr 2.2fr; gap: 40px; padding-block: 32px 36px; }
+.mega-intro p { color: var(--ink-2); margin-top: 10px; max-width: 32ch; }
+.mega-intro .btn { margin-top: 20px; }
+.mega-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
+.mega-list a { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 14px 0; border-top: 1px solid var(--rule); text-decoration: none; }
+.mega-list a:hover .mega-name { color: var(--accent); }
+.mega-name { font-weight: 600; }
+.mega-desc { grid-column: 1 / -1; color: var(--ink-2); font-size: .875rem; line-height: 1.4; }
+
+/* Menú móvil */
+.drawer { position: fixed; inset: 0; z-index: 70; background: var(--paper); color: var(--ink); display: flex; flex-direction: column; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); overflow-y: auto; }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.drawer nav ul { list-style: none; margin: 0; padding: 0; }
+.drawer nav > ul > li { border-bottom: 1px solid var(--rule); }
+.drawer nav a { display: block; padding: 16px 0; color: var(--ink); text-decoration: none; font-size: 1.375rem; font-weight: 600; }
+.drawer .sub a { font-size: 1rem; font-weight: 400; padding: 10px 0 10px 16px; color: var(--ink-2); }
+.drawer .sub { padding-bottom: 12px; }
+.drawer-foot { margin-top: auto; padding-block: 24px; }
+.drawer-foot .btn { width: 100%; }
+.icon-btn { width: 44px; height: 44px; display: inline-grid; place-items: center; background: transparent; border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); cursor: pointer; }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; background: var(--graphite); color: var(--ivory); overflow: hidden; isolation: isolate; }
+.hero-bg { position: absolute; inset: 0; z-index: -1; }
+.hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; opacity: .9; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
+  radial-gradient(42% 60% at 70% 52%, rgba(46,52,60,.55) 0%, rgba(46,52,60,0) 72%),
+  linear-gradient(90deg, rgba(21,23,26,.97) 0%, rgba(21,23,26,.9) 34%, rgba(21,23,26,.5) 62%, rgba(21,23,26,.62) 100%),
+  linear-gradient(180deg, rgba(21,23,26,.35) 0%, rgba(21,23,26,0) 30%, rgba(21,23,26,0) 70%, rgba(21,23,26,.85) 100%); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; min-height: clamp(560px, 78vh, 820px); }
+.hero-copy { padding-block: 72px 80px; position: relative; z-index: 2; }
+.hero-kicker { color: var(--ivory-dim); margin-bottom: 28px; display: flex; gap: 12px; align-items: center; }
+.hero-kicker::before { content: ""; width: 28px; height: 1px; background: var(--accent-on-dark); }
+.hero h1 { font-size: var(--step-4); font-weight: 760; font-stretch: 104%; letter-spacing: -.025em; line-height: 1.02; max-width: 13ch; }
+.hero-lede { margin-top: 24px; font-size: var(--step-1); line-height: 1.5; color: #d8d4cb; max-width: 40ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.hero-sign { margin-top: 48px; color: var(--ivory-dim); display: flex; gap: 20px; flex-wrap: wrap; }
+.hero-figure { position: relative; margin: 0; align-self: stretch; }
+.hero-figure picture { position: absolute; top: 3%; bottom: -4%; left: 0; right: calc(-1 * max(0px, (100vw - var(--max)) / 2)); }
+.hero-figure img { width: 100%; height: 100%; object-fit: contain; object-position: 38% 100%; animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(18px) scale(1.015); } to { opacity: 1; transform: none; } }
+.hero-cap { position: absolute; right: 0; top: 20px; text-align: right; color: var(--ivory-dim); max-width: 36ch; line-height: 1.45; z-index: 2; }
+.hero-cap b { color: var(--ivory); font-weight: 500; }
+
+/* ---------- Secciones genéricas ---------- */
+.section { padding-block: clamp(64px, 9vw, 120px); }
+.section-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 48px; align-items: end; margin-bottom: 48px; }
+.section-head h2 { font-size: var(--step-3); }
+.section-head p { color: var(--ink-2); max-width: 58ch; }
+.section-head .eyebrow { margin-bottom: 14px; display: block; }
+
+/* ---------- Explorador ---------- */
+.explorer { background: var(--paper); }
+.idx { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); column-gap: 56px; border-top: 1.5px solid var(--ink); }
+.idx-item { display: contents; }
+.idx-btn { grid-column: 1; display: grid; grid-template-columns: 3.2rem 1fr auto; align-items: baseline; gap: 12px; width: 100%; padding: 20px 4px; background: none; border: 0; border-bottom: 1px solid var(--rule); text-align: left; cursor: pointer; color: var(--ink); font: inherit; }
+.idx-btn .n { font-family: var(--mono); font-size: .8125rem; color: var(--ink-2); }
+.idx-btn .t { font-size: clamp(1.125rem, 1rem + .6vw, 1.5rem); font-weight: 650; letter-spacing: -.01em; line-height: 1.2; }
+.idx-btn .ind { font-family: var(--mono); font-size: .875rem; color: var(--ink-2); transition: transform .2s, color .2s; }
+.idx-btn:hover .t { color: var(--accent); }
+.idx-btn[aria-expanded="true"] { background: linear-gradient(90deg, var(--paper-2), rgba(233,235,232,0)); }
+.idx-btn[aria-expanded="true"] .t { color: var(--accent); }
+.idx-btn[aria-expanded="true"] .ind { color: var(--accent); transform: translateX(4px); }
+.idx-panel { grid-column: 2; grid-row: 1 / span 7; align-self: start; position: sticky; top: calc(var(--header-h) + 24px); }
+.idx-panel[hidden] { display: none !important; }
+.idx-fig { margin: 0; background: var(--graphite); overflow: hidden; }
+.idx-fig img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.idx-fig figcaption { padding: 0 16px 14px; color: var(--ivory-dim); font-family: var(--mono); font-size: .75rem; letter-spacing: .02em; }
+.idx-body { padding: 24px 0 0; display: grid; gap: 14px; }
+.idx-body h3 { font-size: var(--step-2); }
+.idx-body p { color: var(--ink-2); max-width: 56ch; }
+.idx-route { color: var(--ink-2); font-family: var(--mono); font-size: .75rem; overflow-wrap: anywhere; }
+.idx-body .btn { justify-self: start; margin-top: 6px; }
+.idx-foot { grid-column: 1; padding: 24px 4px 0; color: var(--ink-2); }
+.idx-foot a { color: var(--accent); font-weight: 600; }
+
+/* ---------- Líneas ---------- */
+.lines { background: var(--paper-2); border-top: 1px solid var(--rule); }
+.lines-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 1.5px solid var(--ink); }
+.line { display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; padding: 24px 20px 28px; border-right: 1px solid var(--rule); position: relative; }
+.line:last-child { border-right: 0; }
+.line-fig { margin: -24px -20px 8px; aspect-ratio: 4 / 5; overflow: hidden; background: var(--graphite); position: relative; }
+.line-fig img { width: 100%; height: 100%; object-fit: cover; }
+.line-fig .mat { position: absolute; left: 14px; bottom: 12px; font-family: var(--mono); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ivory); padding: 4px 8px; border: 1px solid rgba(242,239,232,.3); background: rgba(21,23,26,.5); backdrop-filter: blur(6px); }
+.line-name { font-weight: 800; font-stretch: 112%; font-size: 1.375rem; letter-spacing: .04em; }
+.line-name span { display: block; width: 32px; height: 4px; margin-bottom: 14px; }
+.line-when { font-weight: 600; font-size: 1.0625rem; line-height: 1.35; }
+.line-desc { color: var(--ink-2); font-size: .9375rem; }
+.line[data-selected="true"] { background: var(--paper); box-shadow: inset 0 3px 0 var(--accent); }
+.line .btn { justify-self: start; }
+.sw-critical { background: #3b3f45; } .sw-exact { background: #c9cdd1; outline: 1px solid #8a9096; } .sw-ignis { background: #a3241b; } .sw-purity { background: linear-gradient(90deg, #e9ecef, #aab1b8); }
+
+/* ---------- Industrias ---------- */
+.industries { background: var(--graphite); color: var(--ivory); position: relative; isolation: isolate; overflow: hidden; }
+.ind-bg { position: absolute; inset: 0; z-index: -2; margin: 0; }
+.ind-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+.industries::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
+  linear-gradient(180deg, rgba(21,23,26,.94) 0%, rgba(21,23,26,.6) 32%, rgba(21,23,26,.3) 62%, rgba(21,23,26,.88) 100%),
+  linear-gradient(90deg, rgba(21,23,26,.2) 0%, rgba(21,23,26,0) 50%, rgba(21,23,26,.45) 100%); }
+.ind-panel { background: rgba(21,23,26,.86); border: 1px solid rgba(242,239,232,.16); border-radius: 4px; padding: 6px 24px; }
+@supports (backdrop-filter: blur(12px)) { .ind-panel { background: rgba(24,27,31,.58); backdrop-filter: blur(16px) saturate(1.15); } }
+.ind-cap { align-self: end; color: var(--ivory-dim); max-width: 34ch; }
+.industries .eyebrow, .industries .section-head p { color: var(--ivory-dim); }
+.ind-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: stretch; min-height: 420px; }
+.ind-list { list-style: none; margin: 0; padding: 0; }
+.ind-list li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 18px 0; }
+.ind-list li + li { border-top: 1px solid rgba(242,239,232,.14); }
+.ind-list h3 { font-size: 1.125rem; font-weight: 650; }
+.ind-list p { color: #dcd8cf; font-size: .9375rem; }
+.ind-list a { color: var(--accent-on-dark); text-underline-offset: 3px; font-weight: 500; }
+
+/* ---------- Servicios ---------- */
+.services-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1.5px solid var(--ink); }
+.svc { padding: 28px 28px 32px 0; display: grid; gap: 12px; align-content: start; }
+.svc + .svc { padding-left: 28px; border-left: 1px solid var(--rule); }
+.svc h3 { font-size: var(--step-2); }
+.svc .get { margin-top: 6px; }
+.svc .get dt { font-family: var(--mono); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+.svc .get dd { margin: 6px 0 0; }
+.svc p { color: var(--ink-2); }
+
+.backing { margin-top: 72px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; padding-top: 40px; border-top: 1px solid var(--rule); }
+.iso { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; }
+.iso-mark { width: 84px; height: 84px; border: 1.5px solid var(--ink); border-radius: 50%; display: grid; place-items: center; text-align: center; font-family: var(--mono); font-size: .6875rem; line-height: 1.2; letter-spacing: .04em; }
+.iso h3 { font-size: 1.25rem; margin-bottom: 8px; }
+.iso p { color: var(--ink-2); }
+.offices { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+.offices li { padding: 16px 16px 0 0; display: grid; gap: 4px; }
+.offices li + li { padding-left: 16px; border-left: 1px solid var(--rule); }
+.offices .city { font-weight: 650; font-size: 1.125rem; }
+.offices .country { color: var(--ink-2); }
+
+/* ---------- Cotización ---------- */
+.quote { background: var(--graphite); color: var(--ivory); }
+.quote-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
+.quote h2 { font-size: var(--step-3); }
+.quote-intro p { color: #d8d4cb; margin-top: 18px; max-width: 42ch; font-size: var(--step-1); }
+.quote-help { margin-top: 32px; display: grid; gap: 14px; color: var(--ivory-dim); border-top: 1px solid var(--graphite-line); padding-top: 24px; }
+.quote-help strong { color: var(--ivory); font-weight: 600; }
+.form { background: var(--paper); color: var(--ink); padding: clamp(20px, 3vw, 36px); border-radius: 4px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 18px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field label, .field legend { font-weight: 600; font-size: .9375rem; }
+.opt { font-weight: 400; color: var(--ink-2); }
+.field input[type="text"], .field input[type="email"], .field input[type="tel"], .field select, .field textarea { width: 100%; min-height: 48px; padding: 10px 12px; font: 400 1rem/1.4 var(--font); color: var(--ink); background: #fff; border: 1.5px solid #8b9296; border-radius: 3px; }
+.field textarea { min-height: 140px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: 3px solid var(--focus); outline-offset: 1px; border-color: var(--ink); }
+.field [aria-invalid="true"] { border-color: var(--danger); }
+.hint { color: var(--ink-2); font-size: .875rem; }
+.err { color: var(--danger); font-size: .875rem; font-weight: 600; display: flex; gap: 6px; }
+.err::before { content: "!"; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--danger); color: #fff; font-size: .75rem; flex: none; margin-top: 1px; }
+.err:empty { display: none; }
+.mode { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.mode-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mode-opts label { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1.5px solid var(--rule); border-radius: 3px; cursor: pointer; font-weight: 500; background: #fff; }
+.mode-opts input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.mode-opts label:has(input:checked) { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.context { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 14px; background: #e3ecf9; border-left: 3px solid var(--accent); font-size: .9375rem; }
+.context strong { font-weight: 650; }
+.linkbtn { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; min-height: 32px; }
+.file-drop { display: grid; gap: 10px; padding: 16px; border: 1.5px dashed #8b9296; border-radius: 3px; background: #fff; }
+.file-drop.drag { border-color: var(--accent); background: #eef4fd; }
+.file-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.file-chip { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--paper-2); border-radius: 3px; min-width: 0; }
+.file-chip .fname { font-family: var(--mono); font-size: .8125rem; overflow-wrap: anywhere; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: .9375rem; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 8px; }
+.demo-note { color: var(--ink-2); font-size: .8125rem; font-family: var(--mono); }
+.done { display: grid; gap: 16px; padding: 8px 0; }
+.done h3 { font-size: var(--step-2); display: flex; gap: 12px; align-items: center; }
+.done h3::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--ok); flex: none; }
+.done dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: .9375rem; }
+.done dt { color: var(--ink-2); }
+.done dd { margin: 0; overflow-wrap: anywhere; }
+
+/* ---------- Pie ---------- */
+.site-footer { background: #0f1113; color: var(--ivory-dim); padding-block: 48px 32px; font-size: .9375rem; }
+.foot-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
+.site-footer a { color: var(--ivory); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+.site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.foot-sign { font-family: var(--mono); letter-spacing: .08em; margin-top: 12px; color: var(--ivory); }
+.foot-legal { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--graphite-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: .8125rem; }
+
+/* Barra fija de cotización en celular */
+.mobile-cta { display: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .nav > ul, .header-cta { display: none; }
+  .icon-btn.menu-btn { display: inline-grid; }
+  .header-quote { display: inline-flex; margin-left: auto; }
+  .lines-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .line:nth-child(2) { border-right: 0; }
+  .line:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .offices { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
+  .offices li:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+@media (min-width: 1081px) { .header-quote { display: none; } }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .hero-copy { padding-block: 40px 8px; }
+  .hero h1 { max-width: 16ch; }
+  .hero-figure { margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); }
+  .hero-figure picture { position: relative; display: block; inset: auto; height: min(112vw, 500px); }
+  .hero-figure img { object-position: 50% 40%; }
+  .hero::after { background: linear-gradient(180deg, rgba(21,23,26,.9) 0%, rgba(21,23,26,.78) 45%, rgba(21,23,26,.45) 75%, rgba(21,23,26,.9) 100%); }
+  .ind-grid { min-height: 0; gap: 20px; }
+  .ind-cap { order: 2; }
+  .ind-panel { padding: 4px 18px; }
+  .industries::after { background: linear-gradient(180deg, rgba(21,23,26,.92) 0%, rgba(21,23,26,.55) 40%, rgba(21,23,26,.75) 100%); }
+  .hero-cap { position: static; max-width: none; text-align: left; padding: 4px var(--gutter-r) 24px var(--gutter); }
+  .hero-sign { margin-top: 28px; }
+  .section-head, .ind-grid, .backing, .quote-grid { grid-template-columns: minmax(0, 1fr); }
+  .section-head { margin-bottom: 32px; }
+  .services-list { grid-template-columns: minmax(0, 1fr); }
+  .svc, .svc + .svc { padding: 24px 0; border-left: 0; }
+  .svc + .svc { border-top: 1px solid var(--rule); }
+  /* Explorador en acordeón */
+  .idx { grid-template-columns: minmax(0, 1fr); }
+  .idx-btn, .idx-panel, .idx-foot { grid-column: 1; }
+  .idx-panel { grid-row: auto; position: static; padding: 4px 0 28px; border-bottom: 1px solid var(--rule); }
+  .idx-fig img { aspect-ratio: 16 / 10; }
+  .idx-btn .ind { transform: rotate(90deg); }
+  .idx-btn[aria-expanded="true"] .ind { transform: rotate(-90deg); }
+  .idx-btn[aria-expanded="true"] { border-bottom-color: transparent; }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+  .foot-grid > :first-child { grid-column: 1 / -1; }
+  .mobile-cta { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; gap: 10px; padding: 10px var(--gutter-r) calc(10px + env(safe-area-inset-bottom, 0px)) var(--gutter); background: rgba(21,23,26,.97); border-top: 1px solid var(--graphite-line); transform: translateY(110%); transition: transform .25s; }
+  .mobile-cta.show { transform: none; }
+  .mobile-cta .btn { flex: 1; }
+  .site-footer { padding-bottom: 96px; }
+}
+@media (max-width: 560px) {
+  .header-row { gap: 10px; }
+  .header-quote { padding: 0 .85rem; }
+  .hero-sign .dot { display: none; }
+  .logo { height: 38px; }
+  .hero-sign { gap: 6px 20px; }
+  .lines-grid { grid-template-columns: minmax(0, 1fr); }
+  .line { border-right: 0; border-bottom: 1px solid var(--rule); grid-template-columns: minmax(0, 1fr); }
+  .line-fig { aspect-ratio: 16 / 10; }
+  .form-grid, .mode-opts { grid-template-columns: minmax(0, 1fr); }
+  .offices { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .hero-actions .btn { flex: 1 1 100%; }
+  .iso { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="brand" href="#top" aria-label="ATP Solutions, inicio">
+      <img class="logo" src="img/atp-logo.png" width="342" height="120" alt="ATP Solutions">
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <ul>
+        <li><button class="nav-link" id="mega-btn" aria-expanded="false" aria-controls="mega">Productos <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></li>
+        <li><a class="nav-link" href="#lineas">Líneas</a></li>
+        <li><a class="nav-link" href="#industrias">Industrias</a></li>
+        <li><a class="nav-link" href="#servicios">Servicios</a></li>
+        <li><a class="nav-link" href="#nosotros">Nosotros</a></li>
+      </ul>
+      <a class="btn btn-primary btn-sm header-cta" href="#cotizar" data-quote>Solicitar cotización</a>
+    </nav>
+    <a class="btn btn-primary btn-sm header-quote" href="#cotizar" data-quote>Cotizar</a>
+    <button class="icon-btn menu-btn" id="menu-btn" aria-expanded="false" aria-controls="drawer" aria-label="Abrir menú">
+      <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+  </div>
+  <div class="mega" id="mega" hidden>
+    <div class="wrap mega-grid">
+      <div class="mega-intro">
+        <span class="eyebrow">Productos</span>
+        <p>Familias del catálogo de ATP para conducción y control de fluidos industriales.</p>
+        <a class="btn btn-ghost btn-sm" href="#explorador" data-close-mega>Ir al explorador <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <ul class="mega-list" id="mega-list"></ul>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Menú" hidden>
+  <div class="wrap" style="display:flex;flex-direction:column;min-height:100%;width:100%">
+    <div class="drawer-head">
+      <span class="brand"><img class="logo" src="img/atp-logo.png" width="342" height="120" alt=""></span>
+      <button class="icon-btn" id="drawer-close" aria-label="Cerrar menú">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+    <nav aria-label="Principal (celular)">
+      <ul>
+        <li><a href="#explorador">Productos</a><ul class="sub" id="drawer-fams"></ul></li>
+        <li><a href="#lineas">Líneas</a></li>
+        <li><a href="#industrias">Industrias</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+      </ul>
+    </nav>
+    <div class="drawer-foot"><a class="btn btn-primary" href="#cotizar" data-quote>Solicitar cotización</a></div>
+  </div>
+</div>
+
+<main id="contenido">
+
+<!-- 2 · HERO -->
+<section class="hero on-dark" aria-labelledby="h1">
+  <div class="hero-bg" aria-hidden="true"><img src="img/plant-blur-1200.webp" srcset="img/plant-blur-640.webp 640w, img/plant-blur-1200.webp 1200w" sizes="100vw" width="1200" height="750" alt="" decoding="async" fetchpriority="low"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="hero-kicker mono">Importación y distribución · Argentina</p>
+      <h1 id="h1">Válvulas, instrumentación y control de fluidos industriales</h1>
+      <p class="hero-lede">Importamos y distribuimos componentes para paradas de planta, ampliaciones y mantenimiento. Nuestro equipo te acompaña en la selección técnica y el abastecimiento de tu proyecto.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#cotizar" data-quote>Solicitar cotización</a>
+        <a class="btn btn-ghost-dark" href="#explorador">Explorar productos <span class="arrow" aria-hidden="true">↓</span></a>
+      </div>
+      <p class="hero-sign mono"><span>Everything Flows Well</span><span class="dot" aria-hidden="true">·</span><span>Buenos Aires · Campana · Miami · Lima</span></p>
+    </div>
+    <figure class="hero-figure">
+      <picture>
+        <source media="(max-width: 860px)" srcset="img/hero-m-800.webp" width="800" height="900">
+        <img src="img/hero-1200.webp" srcset="img/hero-700.webp 700w, img/hero-1200.webp 1200w" sizes="(max-width: 860px) 100vw, 45vw" width="1200" height="1600" alt="Válvula de control tipo globo con actuador neumático de diafragma, vista en tres cuartos: cuerpo de acero fundido, bridas empernadas, bonete, yugo y vástago con indicador de carrera." fetchpriority="high" decoding="async">
+      </picture>
+      <figcaption class="hero-cap mono"><b>Fig. 1</b> Válvula de control con actuador de diafragma. Render ilustrativo.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3 · EXPLORADOR -->
+<section class="section explorer" id="explorador" aria-labelledby="h-explorador">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Índice de productos</span>
+        <h2 id="h-explorador">¿Qué componente necesitás?</h2>
+      </div>
+      <p>Elegí una familia para ver para qué se usa y consultarla directamente. Si todavía no definiste la pieza, describí el fluido o la aplicación y el equipo técnico te orienta.</p>
+    </div>
+
+    <div class="idx" id="idx">
+      <div class="idx-item">
+        <button class="idx-btn" id="fb-control" aria-expanded="false" aria-controls="fp-control" data-family="Válvulas de control"><span class="n">01</span><span class="t">Válvulas de control</span><span class="ind" aria-hidden="true">→</span></button>
+        <div class="idx-panel" id="fp-control" role="region" aria-labelledby="fb-control" hidden>
+          <figure class="idx-fig"><img src="img/fam_control-900.webp" srcset="img/fam_control-500.webp 500w, img/fam_control-900.webp 900w" sizes="(max-width: 860px) 100vw, 45vw" width="900" height="675" loading="lazy" decoding="async" alt="Cuerpo de válvula de control tipo globo con bridas y bonete empernado, sin actuador."><figcaption>Cuerpo de válvula globo · render ilustrativo</figcaption></figure>
+          <div class="idx-body">
+            <h3>Válvulas de control</h3>
+            <p>Regulan caudal, presión, temperatura o nivel dentro de un proceso. Su selección depende del fluido, de las condiciones de operación y del rango de regulación que necesita la planta.</p>
+            <p class="idx-route">/productos/valvulas-de-control</p>
+            <button class="btn btn-primary btn-sm" data-consult="Válvulas de control">Consultar por esta familia</button>
+          </div>
+        </div>
+      </div>
+      <div class="idx-item">
+        <button class="idx-btn" id="fb-auto" aria-expanded="false" aria-controls="fp-auto" data-family="Válvulas de control automatizadas"><span class="n">02</span><span class="t">Válvulas de control automatizadas</span><span class="ind" aria-hidden="true">→</span></button>
+        <div class="idx-panel" id="fp-auto" role="region" aria-labelledby="fb-auto" hidden>
+          <figure class="idx-fig"><img src="img/fam_auto-900.webp" srcset="img/fam_auto-500.webp 500w, img/fam_auto-900.webp 900w" sizes="(max-width: 860px) 100vw, 45vw" width="900" height="675" loading="lazy" decoding="async" alt="Válvula de control con actuador neumático de diafragma montado sobre yugo, vista en tres cuartos."><figcaption>Válvula con actuador de diafragma · render ilustrativo</figcaption></figure>
+          <div class="idx-body">
+            <h3>Válvulas de control automatizadas</h3>
+            <p>Válvulas con actuador para operar el proceso a distancia o dentro de un lazo de control. Te acompañamos a definir el conjunto de válvula y actuador según las condiciones de operación.</p>
+            <p class="idx-route">/productos/valvulas-de-control-automatizadas</p>
+            <button class="btn btn-primary btn-sm" data-consult="Válvulas de control automatizadas">Consultar por esta familia</button>
+          </div>
+        </div>
+      </div>
+      <div class="idx-item">
+        <button class="idx-btn" id="fb-pipe" aria-expanded="false" aria-controls="fp-pipe" data-family="Caños y tubos"><span class="n">03</span><span class="t">Caños y tubos</span><span class="ind" aria-hidden="true">→</span></button>
+        <div class="idx-panel" id="fp-pipe" role="region" aria-labelledby="fb-pipe" hidden>
+          <figure class="idx-fig"><img src="img/fam_pipe-900.webp" srcset="img/fam_pipe-500.webp 500w, img/fam_pipe-900.webp 900w" sizes="(max-width: 860px) 100vw, 45vw" width="900" height="675" loading="lazy" decoding="async" alt="Haz de caños metálicos de distintos diámetros, vistos desde el extremo."><figcaption>Caños de distintos diámetros · render ilustrativo</figcaption></figure>
+          <div class="idx-body">
+            <h3>Caños y tubos</h3>
+            <p>Para conducir fluidos en redes de proceso, servicios e instrumentación. Se especifican por material, diámetro y espesor de pared según la aplicación y la presión de trabajo.</p>
+            <p class="idx-route">/productos/canos-y-tubos</p>
+            <button class="btn btn-primary btn-sm" data-consult="Caños y tubos">Consultar por esta familia</button>
+          </div>
+        </div>
+      </div>
+      <div class="idx-item">
+        <button class="idx-btn" id="fb-fit" aria-expanded="false" aria-controls="fp-fit" data-family="Accesorios de cañerías"><span class="n">04</span><span class="t">Accesorios de cañerías</span><span class="ind" aria-hidden="true">→</span></button>
+        <div class="idx-panel" id="fp-fit" role="region" aria-labelledby="fb-fit" hidden>
+          <figure class="idx-fig"><img src="img/fam_fit-900.webp" srcset="img/fam_fit-500.webp 500w, img/fam_fit-900.webp 900w" sizes="(max-width: 860px) 100vw, 45vw" width="900" height="675" loading="lazy" decoding="async" alt="Accesorios de cañería: codo a 90 grados, te y reducción concéntrica."><figcaption>Codo, te y reducción · render ilustrativo</figcaption></figure>
+          <div class="idx-body">
+            <h3>Accesorios de cañerías</h3>
+            <p>Codos, tes, reducciones y demás piezas para unir, desviar y derivar líneas. Se eligen en función del caño, la presión y el tipo de unión de la instalación.</p>
+            <p class="idx-route">/productos/accesorios-de-canerias</p>
+            <button class="btn btn-primary btn-sm" data-consult="Accesorios de cañerías">Consultar por esta familia</button>
+          </div>
+        </div>
+      </div>
+      <div class="idx-item">
+        <button class="idx-btn" id="fb-inst" aria-expanded="false" aria-controls="fp-inst" data-family="Válvulas y accesorios para instrumentación"><span class="n">05</span><span class="t">Válvulas y accesorios para instrumentación</span><span class="ind" aria-hidden="true">→</span></button>
+        <div class="idx-panel" id="fp-inst" role="region" aria-labelledby="fb-inst" hidden>
+          <figure class="idx-fig"><img src="img/fam_inst-900.webp" srcset="img/fam_inst-500.webp 500w, img/fam_inst-900.webp 900w" sizes="(max-width: 860px) 100vw, 45vw" width="900" height="675" loading="lazy" decoding="async" alt="Válvula de aguja para instrumentación junto a un manómetro de esfera."><figcaption>Válvula de aguja y manómetro · render ilustrativo</figcaption></figure>
+          <div class="idx-body">
+            <h3>Válvulas y accesorios para instrumentación</h3>
+            <p>Componentes de pequeño diámetro para conectar, aislar y purgar instrumentos de medición en las líneas de proceso.</p>
+            <p class="idx-route">/productos/valvulas-y-accesorios-para-instrumentacion</p>
+            <button class="btn btn-primary btn-sm" data-consult="Válvulas y accesorios para instrumentación">Consultar por esta familia</button>
+          </div>
+        </div>
+      </div>
+      <div class="idx-item">
+        <button class="idx-btn" id="fb-sani" aria-expanded="false" aria-controls="fp-sani" data-family="Tuberías, válvulas y accesorios sanitarios"><span class="n">06</span><span class="t">Tuberías, válvulas y accesorios sanitarios</span><span class="ind" aria-hidden="true">→</span></button>
+        <div class="idx-panel" id="fp-sani" role="region" aria-labelledby="fb-sani" hidden>
+          <figure class="idx-fig"><img src="img/fam_sani-900.webp" srcset="img/fam_sani-500.webp 500w, img/fam_sani-900.webp 900w" sizes="(max-width: 860px) 100vw, 45vw" width="900" height="675" loading="lazy" decoding="async" alt="Tubería sanitaria de acero inoxidable con abrazadera de unión rápida y válvula mariposa con manija."><figcaption>Tubería sanitaria con abrazadera y válvula mariposa · render ilustrativo</figcaption></figure>
+          <div class="idx-body">
+            <h3>Tuberías, válvulas y accesorios sanitarios</h3>
+            <p>Componentes para procesos alimenticios y farmacéuticos, donde la limpieza del circuito forma parte del diseño de la instalación.</p>
+            <p class="idx-route">/productos/tuberias-valvulas-y-accesorios-sanitarios</p>
+            <button class="btn btn-primary btn-sm" data-consult="Tuberías, válvulas y accesorios sanitarios">Consultar por esta familia</button>
+          </div>
+        </div>
+      </div>
+      <p class="idx-foot">¿No sabés cómo se llama la pieza? <a href="#cotizar" data-mode="aplicacion">Contanos la aplicación</a> y lo resolvemos con vos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · LÍNEAS -->
+<section class="section lines" id="lineas" aria-labelledby="h-lineas">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Cuatro líneas ATP</span>
+        <h2 id="h-lineas">Elegí la línea por la aplicación</h2>
+      </div>
+      <p>Cada línea reúne componentes para un tipo de servicio. Si sabés qué tenés que resolver, empezá por acá.</p>
+    </div>
+    <div class="lines-grid">
+      <article class="line" id="linea-critical" data-line="ATP CRITICAL">
+        <figure class="line-fig"><img src="img/line_critical-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Cuerpo de válvula oscuro con bridas y cara de asiento revestida en material claro."><span class="mat">Revestimiento</span></figure>
+        <h3 class="line-name"><span class="sw-critical" aria-hidden="true"></span>ATP CRITICAL</h3>
+        <p class="line-when">Servicios críticos y manejo de fluidos corrosivos.</p>
+        <p class="line-desc">Conviene explorarla cuando el fluido ataca los materiales habituales o cuando una falla compromete la continuidad del proceso.</p>
+        <button class="btn btn-ghost btn-sm" data-consult="ATP CRITICAL">Consultar ATP CRITICAL</button>
+      </article>
+      <article class="line" id="linea-exact" data-line="ATP EXACT">
+        <figure class="line-fig"><img src="img/line_exact-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Manómetro de esfera montado sobre una válvula de aguja de instrumentación."><span class="mat">Medición</span></figure>
+        <h3 class="line-name"><span class="sw-exact" aria-hidden="true"></span>ATP EXACT</h3>
+        <p class="line-when">Medición e instrumentación para monitoreo y control de procesos.</p>
+        <p class="line-desc">Conviene explorarla cuando necesitás conocer y registrar lo que pasa en la línea: presión, caudal u otras variables del proceso.</p>
+        <button class="btn btn-ghost btn-sm" data-consult="ATP EXACT">Consultar ATP EXACT</button>
+      </article>
+      <article class="line" id="linea-ignis" data-line="ATP IGNIS">
+        <figure class="line-fig"><img src="img/line_ignis-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Válvula bridada con pintura roja, propia de redes contra incendio."><span class="mat">Incendio</span></figure>
+        <h3 class="line-name"><span class="sw-ignis" aria-hidden="true"></span>ATP IGNIS</h3>
+        <p class="line-when">Materiales y componentes para redes contra incendio.</p>
+        <p class="line-desc">Conviene explorarla cuando estás proyectando, ampliando o manteniendo la red de protección contra incendio de una planta.</p>
+        <button class="btn btn-ghost btn-sm" data-consult="ATP IGNIS">Consultar ATP IGNIS</button>
+      </article>
+      <article class="line" id="linea-purity" data-line="ATP PURITY">
+        <figure class="line-fig"><img src="img/line_purity-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Tubería sanitaria de acero inoxidable con abrazaderas de unión rápida y válvula mariposa."><span class="mat">Sanitario</span></figure>
+        <h3 class="line-name"><span class="sw-purity" aria-hidden="true"></span>ATP PURITY</h3>
+        <p class="line-when">Componentes sanitarios para procesos alimenticios y farmacéuticos.</p>
+        <p class="line-desc">Conviene explorarla cuando el producto que circula exige condiciones de higiene y una instalación que se pueda limpiar.</p>
+        <button class="btn btn-ghost btn-sm" data-consult="ATP PURITY">Consultar ATP PURITY</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · INDUSTRIAS -->
+<section class="section industries on-dark" id="industrias" aria-labelledby="h-industrias">
+  <figure class="ind-bg"><img src="img/plant-1600.webp" srcset="img/plant-900.webp 900w, img/plant-1600.webp 1600w" sizes="100vw" width="1600" height="900" loading="lazy" decoding="async" alt="Planta de proceso al atardecer: racks de cañerías, tanques de almacenamiento y columnas con plataformas, iluminados por luminarias de sodio."></figure>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Industrias y aplicaciones</span>
+        <h2 id="h-industrias">Dónde trabajan nuestros componentes</h2>
+      </div>
+      <p>Paradas de planta, ampliaciones y mantenimiento en industrias de proceso. Estas son algunas necesidades frecuentes y por dónde empezar.</p>
+    </div>
+    <div class="ind-grid">
+      <p class="ind-cap mono">Fig. 2 Planta de proceso con racks de cañerías, tanques y columnas. Render ilustrativo.</p>
+      <div class="ind-panel"><ul class="ind-list">
+        <li><h3>Oil &amp; gas y petroquímica</h3><p>Servicios críticos y fluidos corrosivos. <a href="#linea-critical">Ver ATP CRITICAL</a></p></li>
+        <li><h3>Minería</h3><p>Manejo de fluidos corrosivos en procesos y servicios de planta. <a href="#linea-critical">Ver ATP CRITICAL</a></p></li>
+        <li><h3>Generación de energía</h3><p>Medición e instrumentación para monitorear y controlar el proceso. <a href="#linea-exact">Ver ATP EXACT</a></p></li>
+        <li><h3>Alimentos, bebidas y farma</h3><p>Selección de componentes sanitarios para procesos alimenticios y farmacéuticos. <a href="#linea-purity">Ver ATP PURITY</a></p></li>
+        <li><h3>Protección contra incendio en planta</h3><p>Materiales y componentes para la red contra incendio de cualquier instalación. <a href="#linea-ignis">Ver ATP IGNIS</a></p></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · SERVICIOS Y RESPALDO -->
+<section class="section" id="servicios" aria-labelledby="h-servicios">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Servicios</span>
+        <h2 id="h-servicios">Acompañamiento técnico, del requerimiento al abastecimiento</h2>
+      </div>
+      <p>Además de importar y distribuir, ATP acompaña la definición técnica de cada pedido para que lo que llega a planta sea lo que el proceso necesita.</p>
+    </div>
+    <div class="services-list">
+      <article class="svc">
+        <h3>Ingeniería de detalle</h3>
+        <p>Trabajamos sobre la especificación del proyecto para definir los componentes de conducción y control.</p>
+        <dl class="get"><dt>Qué recibís</dt><dd>Una revisión técnica de tu requerimiento y la definición de los componentes que lo resuelven.</dd></dl>
+      </article>
+      <article class="svc">
+        <h3>Consultoría en válvulas y automatización</h3>
+        <p>Te ayudamos a seleccionar y dimensionar válvulas y actuadores según las condiciones de operación.</p>
+        <dl class="get"><dt>Qué recibís</dt><dd>Apoyo para elegir la válvula adecuada para el fluido, la presión, la temperatura y el tipo de maniobra.</dd></dl>
+      </article>
+      <article class="svc">
+        <h3>Abastecimiento de proyectos</h3>
+        <p>Coordinamos la provisión de los componentes de una parada de planta, una ampliación o un plan de mantenimiento.</p>
+        <dl class="get"><dt>Qué recibís</dt><dd>Un interlocutor para cotizar y abastecer el listado de materiales de tu proyecto.</dd></dl>
+      </article>
+    </div>
+
+    <div class="backing" id="nosotros">
+      <div class="iso">
+        <div class="iso-mark" aria-hidden="true">ISO<br>9001<br>:2015</div>
+        <div>
+          <h3>Procesos certificados ISO 9001:2015</h3>
+          <p>El sistema de gestión de calidad de ATP está certificado bajo la norma ISO 9001:2015. La certificación alcanza los procesos de la empresa, no la de cada producto.</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="eyebrow" style="font-weight:400;margin-bottom:14px">Oficinas</h3>
+        <ul class="offices">
+          <li><span class="city">Buenos Aires</span><span class="country">Argentina</span></li>
+          <li><span class="city">Campana</span><span class="country">Argentina</span></li>
+          <li><span class="city">Miami</span><span class="country">Estados Unidos</span></li>
+          <li><span class="city">Lima</span><span class="country">Perú</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · COTIZACIÓN -->
+<section class="section quote on-dark" id="cotizar" aria-labelledby="h-cotizar">
+  <div class="wrap quote-grid">
+    <div class="quote-intro">
+      <span class="eyebrow" style="color:var(--ivory-dim)">Solicitar cotización</span>
+      <h2 id="h-cotizar" style="margin-top:14px">¿Tenés una especificación o un listado de materiales?</h2>
+      <p>Compartinos el requerimiento para que nuestro equipo pueda evaluarlo.</p>
+      <div class="quote-help">
+        <p><strong>Si tenés un listado:</strong> adjuntalo tal como está, en PDF, Excel o Word.</p>
+        <p><strong>Si todavía no sabés qué pieza es:</strong> contanos el fluido, la aplicación y las condiciones de operación que conozcas.</p>
+      </div>
+    </div>
+
+    <form class="form" id="quote-form" novalidate aria-labelledby="h-cotizar">
+      <div id="form-body">
+        <div class="form-grid">
+          <fieldset class="mode field full">
+            <legend>¿Cómo querés empezar?</legend>
+            <div class="mode-opts">
+              <label><input type="radio" name="modo" id="modo-listado" value="listado" checked> Tengo un listado o especificación</label>
+              <label><input type="radio" name="modo" id="modo-aplicacion" value="aplicacion"> Tengo una aplicación por resolver</label>
+            </div>
+          </fieldset>
+
+          <div class="context field full" id="context" hidden>
+            <span>Consulta sobre <strong id="context-name"></strong></span>
+            <button type="button" class="linkbtn" id="context-change">Cambiar</button>
+            <button type="button" class="linkbtn" id="context-clear">Quitar</button>
+          </div>
+
+          <div class="field">
+            <label for="f-nombre">Nombre y apellido</label>
+            <input type="text" id="f-nombre" name="nombre" autocomplete="name" required aria-describedby="e-nombre">
+            <p class="err" id="e-nombre" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="f-empresa">Empresa</label>
+            <input type="text" id="f-empresa" name="empresa" autocomplete="organization" required aria-describedby="e-empresa">
+            <p class="err" id="e-empresa" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="f-correo">Correo laboral</label>
+            <input type="email" id="f-correo" name="correo" autocomplete="email" inputmode="email" required aria-describedby="e-correo">
+            <p class="err" id="e-correo" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="f-tel">Teléfono <span class="opt">(opcional)</span></label>
+            <input type="tel" id="f-tel" name="telefono" autocomplete="tel" inputmode="tel" aria-describedby="e-tel">
+            <p class="err" id="e-tel" aria-live="polite"></p>
+          </div>
+          <div class="field full">
+            <label for="f-interes">Familia o línea de interés <span class="opt">(opcional)</span></label>
+            <select id="f-interes" name="interes">
+              <option value="">No lo sé todavía</option>
+              <optgroup label="Familias de productos">
+                <option>Válvulas de control</option>
+                <option>Válvulas de control automatizadas</option>
+                <option>Caños y tubos</option>
+                <option>Accesorios de cañerías</option>
+                <option>Válvulas y accesorios para instrumentación</option>
+                <option>Tuberías, válvulas y accesorios sanitarios</option>
+              </optgroup>
+              <optgroup label="Líneas ATP">
+                <option>ATP CRITICAL</option>
+                <option>ATP EXACT</option>
+                <option>ATP IGNIS</option>
+                <option>ATP PURITY</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="f-detalle">Detalle del requerimiento</label>
+            <p class="hint" id="h-detalle">Pegá el listado o describilo con tus palabras: cantidades, medidas, materiales o normas que conozcas.</p>
+            <textarea id="f-detalle" name="detalle" required aria-describedby="h-detalle e-detalle"></textarea>
+            <p class="err" id="e-detalle" aria-live="polite"></p>
+          </div>
+          <div class="field full">
+            <span id="l-adjunto" style="font-weight:600;font-size:.9375rem">Adjunto <span class="opt">(opcional)</span></span>
+            <div class="file-drop" id="file-drop">
+              <div class="file-row" id="file-empty">
+                <label class="btn btn-ghost btn-sm" for="f-adjunto">Elegir archivo</label>
+                <span class="hint" id="h-adjunto">PDF, Excel, Word, CSV o imagen. Hasta 10 MB. También podés arrastrarlo acá.</span>
+              </div>
+              <input type="file" id="f-adjunto" name="adjunto" class="sr-only" accept=".pdf,.xls,.xlsx,.csv,.doc,.docx,.png,.jpg,.jpeg" aria-labelledby="l-adjunto" aria-describedby="h-adjunto e-adjunto">
+              <div class="file-row" id="file-full" hidden>
+                <div class="file-chip"><svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true"><path d="M1 1h8l4 4v10H1z M9 1v4h4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg><span class="fname" id="file-name"></span></div>
+                <button type="button" class="linkbtn" id="file-remove">Quitar archivo</button>
+              </div>
+            </div>
+            <p class="err" id="e-adjunto" aria-live="polite"></p>
+          </div>
+          <div class="field full">
+            <label class="check" for="f-consent"><input type="checkbox" id="f-consent" name="consentimiento" required aria-describedby="e-consent"> <span>Acepto que ATP Solutions use estos datos para responder a mi consulta, conforme a la Ley 25.326 de Protección de Datos Personales.</span></label>
+            <p class="err" id="e-consent" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submit">Enviar solicitud</button>
+          <span class="demo-note">Prototipo: no se envía ningún dato.</span>
+        </div>
+      </div>
+      <div class="done" id="done" hidden tabindex="-1" role="status">
+        <h3>Solicitud de demostración validada. No se enviaron datos.</h3>
+        <p>Así se vería la confirmación. En la versión en producción, la solicitud llega al equipo comercial de ATP.</p>
+        <dl id="done-summary"></dl>
+        <button type="button" class="btn btn-ghost" id="again" style="justify-self:start">Cargar otra solicitud</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer on-dark">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <span style="color:var(--ivory);font-weight:650;font-size:1.125rem">ATP Solutions S.R.L.</span>
+        <p style="margin-top:10px;max-width:42ch">Importación y distribución de soluciones para la conducción y el control de fluidos industriales.</p>
+        <p class="foot-sign">Everything Flows Well</p>
+      </div>
+      <div>
+        <ul>
+          <li><a href="#explorador">Productos</a></li>
+          <li><a href="#lineas">Líneas</a></li>
+          <li><a href="#industrias">Industrias</a></li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#cotizar">Solicitar cotización</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <span>© 2026 ATP Solutions S.R.L.</span>
+      <span>Buenos Aires · Campana · Miami · Lima</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-cta" id="mobile-cta" aria-hidden="true">
+  <a class="btn btn-primary" href="#cotizar" data-quote tabindex="-1">Solicitar cotización</a>
+</div>
+
+<script>
+document.documentElement.lang = 'es-AR';
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var mqMobile = window.matchMedia('(max-width: 860px)');
+
+  /* ---------- Explorador ---------- */
+  var btns = $$('.idx-btn');
+  function select(btn, opts) {
+    opts = opts || {};
+    var wasOpen = btn.getAttribute('aria-expanded') === 'true';
+    btns.forEach(function (b) {
+      b.setAttribute('aria-expanded', 'false');
+      document.getElementById(b.getAttribute('aria-controls')).hidden = true;
+    });
+    if (wasOpen && mqMobile.matches && !opts.force) return; // en celular se puede cerrar
+    btn.setAttribute('aria-expanded', 'true');
+    document.getElementById(btn.getAttribute('aria-controls')).hidden = false;
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { select(b); }); });
+  select($('#fb-auto'), { force: true }); // familia seleccionada al cargar
+  function selectFamilyByName(name) {
+    var b = btns.filter(function (x) { return x.dataset.family === name; })[0];
+    if (b) select(b, { force: true });
+    return b;
+  }
+
+  /* Menú de productos y menú móvil: se construyen desde el índice */
+  var megaList = $('#mega-list'), drawerFams = $('#drawer-fams');
+  btns.forEach(function (b) {
+    var name = b.dataset.family;
+    var desc = $('#' + b.getAttribute('aria-controls') + ' .idx-body p').textContent.split('. ')[0] + '.';
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#explorador" data-family-link=""><span class="mega-name"></span><span class="arrow" aria-hidden="true">→</span><span class="mega-desc"></span></a>';
+    li.querySelector('a').dataset.familyLink = name;
+    li.querySelector('.mega-name').textContent = name;
+    li.querySelector('.mega-desc').textContent = desc;
+    megaList.appendChild(li);
+    var li2 = document.createElement('li');
+    li2.innerHTML = '<a href="#explorador"></a>';
+    li2.querySelector('a').textContent = name;
+    li2.querySelector('a').dataset.familyLink = name;
+    drawerFams.appendChild(li2);
+  });
+
+  /* Mega menú */
+  var megaBtn = $('#mega-btn'), mega = $('#mega');
+  function openMega() { mega.hidden = false; megaBtn.setAttribute('aria-expanded', 'true'); }
+  function closeMega(returnFocus) { if (mega.hidden) return; mega.hidden = true; megaBtn.setAttribute('aria-expanded', 'false'); if (returnFocus) megaBtn.focus(); }
+  megaBtn.addEventListener('click', function () { mega.hidden ? openMega() : closeMega(); });
+  megaBtn.addEventListener('keydown', function (e) { if (e.key === 'ArrowDown') { e.preventDefault(); openMega(); var f = $('a', mega); f && f.focus(); } });
+  document.addEventListener('click', function (e) { if (!mega.hidden && !mega.contains(e.target) && !megaBtn.contains(e.target)) closeMega(); });
+  mega.addEventListener('focusout', function (e) { if (e.relatedTarget && !mega.contains(e.relatedTarget) && e.relatedTarget !== megaBtn) closeMega(); });
+
+  /* Drawer móvil */
+  var drawer = $('#drawer'), menuBtn = $('#menu-btn');
+  function openDrawer() { drawer.hidden = false; menuBtn.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; $('#drawer-close').focus(); }
+  function closeDrawer(returnFocus) { if (drawer.hidden) return; drawer.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; if (returnFocus) menuBtn.focus(); }
+  menuBtn.addEventListener('click', openDrawer);
+  $('#drawer-close').addEventListener('click', function () { closeDrawer(true); });
+  drawer.addEventListener('click', function (e) { if (e.target.closest('a')) closeDrawer(false); });
+  drawer.addEventListener('keydown', function (e) { // trampa de foco
+    if (e.key !== 'Tab') return;
+    var f = $$('a, button', drawer); var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!drawer.hidden) closeDrawer(true);
+    else if (!mega.hidden) closeMega(true);
+  });
+  mqMobile.addEventListener && mqMobile.addEventListener('change', function () { closeDrawer(false); closeMega(false); });
+
+  /* Enlaces a familias desde menús */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-family-link]');
+    if (a) {
+      e.preventDefault();
+      closeMega(false); closeDrawer(false);
+      var b = selectFamilyByName(a.dataset.familyLink);
+      goTo('explorador', b);
+    }
+    if (e.target.closest('[data-close-mega]')) closeMega(false);
+  });
+
+  function goTo(id, focusEl) {
+    var el = document.getElementById(id);
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var target = (focusEl && mqMobile.matches) ? focusEl : el;
+    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    if (focusEl) setTimeout(function () { focusEl.focus({ preventScroll: true }); }, reduce ? 0 : 450);
+    try { history.replaceState(null, '', '#' + id); } catch (err) {}
+  }
+
+  /* ---------- Formulario ---------- */
+  var form = $('#quote-form'), interes = $('#f-interes'), ctx = $('#context'), ctxName = $('#context-name');
+  var detalle = $('#f-detalle'), hintDet = $('#h-detalle');
+  var hints = {
+    listado: 'Pegá el listado o describilo con tus palabras: cantidades, medidas, materiales o normas que conozcas.',
+    aplicacion: 'Contanos qué fluido conducís, para qué proceso y en qué condiciones (presión, temperatura, caudal), aunque no sepas el nombre de la pieza.'
+  };
+  function setMode(m) {
+    var r = document.getElementById('modo-' + m); if (r) r.checked = true;
+    hintDet.textContent = hints[m];
+  }
+  $$('input[name="modo"]').forEach(function (r) { r.addEventListener('change', function () { setMode(r.value); }); });
+
+  function setContext(name) {
+    interes.value = name || '';
+    ctx.hidden = !name;
+    ctxName.textContent = name || '';
+  }
+  interes.addEventListener('change', function () { setContext(interes.value); });
+  $('#context-change').addEventListener('click', function () { interes.focus(); });
+  $('#context-clear').addEventListener('click', function () { setContext(''); interes.focus(); });
+
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-consult]');
+    var q = e.target.closest('[data-quote]');
+    var m = e.target.closest('[data-mode]');
+    if (c) {
+      e.preventDefault();
+      setContext(c.dataset.consult);
+      $$('.line').forEach(function (l) { l.dataset.selected = String(l.dataset.line === c.dataset.consult); });
+      goTo('cotizar', $('#f-nombre'));
+    } else if (q || m) {
+      e.preventDefault();
+      closeDrawer(false); closeMega(false);
+      if (m) setMode(m.dataset.mode);
+      goTo('cotizar', $('#f-nombre'));
+    }
+  });
+
+  /* Adjunto */
+  var file = $('#f-adjunto'), drop = $('#file-drop'), MAX = 10 * 1024 * 1024;
+  var okExt = /\.(pdf|xlsx?|csv|docx?|png|jpe?g)$/i;
+  function showFile(f) {
+    var err = $('#e-adjunto');
+    err.textContent = '';
+    if (!f) { $('#file-empty').hidden = false; $('#file-full').hidden = true; return; }
+    if (!okExt.test(f.name)) { err.textContent = 'Ese formato no se puede adjuntar. Usá PDF, Excel, Word, CSV o una imagen.'; file.value = ''; return showFile(null); }
+    if (f.size > MAX) { err.textContent = 'El archivo pesa más de 10 MB. Reducilo o compartí el detalle en el campo de texto.'; file.value = ''; return showFile(null); }
+    var kb = f.size / 1024;
+    $('#file-name').textContent = f.name + ' · ' + (kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(kb)) + ' KB');
+    $('#file-empty').hidden = true; $('#file-full').hidden = false;
+  }
+  var dropped = null;
+  file.addEventListener('change', function () { dropped = null; showFile(file.files[0]); });
+  $('#file-remove').addEventListener('click', function () { file.value = ''; dropped = null; showFile(null); $('label[for="f-adjunto"]').focus(); });
+  ['dragenter', 'dragover'].forEach(function (t) { drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('drag'); }); });
+  ['dragleave', 'drop'].forEach(function (t) { drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.remove('drag'); }); });
+  drop.addEventListener('drop', function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files[0]; if (!f) return;
+    try { var dt = new DataTransfer(); dt.items.add(f); file.files = dt.files; dropped = null; } catch (err) { dropped = f; }
+    showFile(f);
+  });
+  $('label[for="f-adjunto"]').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); file.click(); } });
+  $('label[for="f-adjunto"]').tabIndex = 0;
+
+  /* Validación */
+  var rules = {
+    'f-nombre': function (v) { return v.trim().length < 2 ? 'Escribí tu nombre y apellido.' : ''; },
+    'f-empresa': function (v) { return v.trim().length < 2 ? 'Escribí el nombre de tu empresa.' : ''; },
+    'f-correo': function (v) { return !v.trim() ? 'Escribí tu correo para que podamos responderte.' : (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? 'Revisá el correo: falta la @ o el dominio (por ejemplo, nombre@empresa.com.ar).' : ''); },
+    'f-tel': function (v) { return v.trim() && !/^[+()\d\s-]{6,20}$/.test(v.trim()) ? 'Usá solo números, espacios, guiones o el signo +.' : ''; },
+    'f-detalle': function (v) { return v.trim().length < 10 ? 'Contanos qué necesitás, aunque sea en pocas palabras (mínimo 10 caracteres).' : ''; },
+    'f-consent': function (v, el) { return !el.checked ? 'Para enviar la solicitud necesitamos tu consentimiento.' : ''; }
+  };
+  function check(id) {
+    var el = document.getElementById(id), msg = rules[id](el.value, el);
+    var err = document.getElementById('e-' + id.replace('f-', ''));
+    err.textContent = msg;
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    return !msg;
+  }
+  Object.keys(rules).forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener('blur', function () { if (el.value || el.getAttribute('aria-invalid')) check(id); });
+    el.addEventListener('input', function () { if (el.getAttribute('aria-invalid') === 'true') check(id); });
+    el.addEventListener('change', function () { if (el.type === 'checkbox') check(id); });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(rules).forEach(function (id) { if (!check(id) && !firstBad) firstBad = document.getElementById(id); });
+    if (firstBad) { firstBad.focus(); return; }
+    var f = file.files[0] || dropped;
+    var rows = [
+      ['Nombre', $('#f-nombre').value.trim()],
+      ['Empresa', $('#f-empresa').value.trim()],
+      ['Correo', $('#f-correo').value.trim()],
+      ['Interés', interes.value || 'Sin definir'],
+      ['Punto de partida', $('#modo-aplicacion').checked ? 'Aplicación por resolver' : 'Listado o especificación'],
+      ['Adjunto', f ? f.name : 'Sin adjunto']
+    ];
+    var dl = $('#done-summary'); dl.innerHTML = '';
+    rows.forEach(function (r) { var dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = r[0]; dd.textContent = r[1]; dl.appendChild(dt); dl.appendChild(dd); });
+    $('#form-body').hidden = true; $('#done').hidden = false; $('#done').focus();
+  });
+  $('#again').addEventListener('click', function () {
+    form.reset(); setContext(''); setMode('listado'); dropped = null; showFile(null);
+    Object.keys(rules).forEach(function (id) { document.getElementById(id).removeAttribute('aria-invalid'); document.getElementById('e-' + id.replace('f-', '')).textContent = ''; });
+    $('#done').hidden = true; $('#form-body').hidden = false; $('#f-nombre').focus();
+  });
+
+  /* Barra de cotización en celular: aparece después del hero y se oculta en el formulario */
+  var bar = $('#mobile-cta'), heroEl = $('.hero'), quoteEl = $('#cotizar');
+  if ('IntersectionObserver' in window) {
+    var heroVis = true, quoteVis = false;
+    function upd() { var show = !heroVis && !quoteVis; bar.classList.toggle('show', show); bar.setAttribute('aria-hidden', String(!show)); $('a', bar).tabIndex = show ? 0 : -1; }
+    new IntersectionObserver(function (es) { heroVis = es[0].isIntersecting; upd(); }).observe(heroEl);
+    new IntersectionObserver(function (es) { quoteVis = es[0].isIntersecting; upd(); }).observe(quoteEl);
+  }
+})();
+</script>
+
+</body>
+</html>
