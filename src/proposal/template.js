@@ -429,7 +429,7 @@ p + p { margin-top: 8px; }
   <h2>Un estudio con oficio,<br />desde 2012</h2>
   <div class="card firma">
     <div class="sello"><img src="${asset('src/assets/brand/alive-symbol.svg')}" alt="" /></div>
-    <div><h3>Francesco Lulli</h3><p>Fundador y director de ALIVE. Lleva tu proyecto de principio a fin, con un solo interlocutor desde la primera reunión hasta la ${marca ? 'entrega' : 'publicación'}.</p></div>
+    <div><h3>Francesco Lulli</h3><p>Fundador y director de ALIVE. Lleva tu proyecto de principio a fin, con un solo interlocutor desde el primer contacto hasta la ${marca ? 'entrega' : 'publicación'}.</p></div>
   </div>
   <h3 style="margin-top:20px">Algunos trabajos</h3>
   <div class="trabajos">
