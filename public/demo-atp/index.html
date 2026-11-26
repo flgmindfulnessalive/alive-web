@@ -185,13 +185,12 @@ p { margin: 0; }
 .line-fig { margin: -24px -20px 8px; aspect-ratio: 4 / 5; overflow: hidden; background: var(--graphite); position: relative; }
 .line-fig img { width: 100%; height: 100%; object-fit: cover; }
 .line-fig .mat { position: absolute; left: 14px; bottom: 12px; font-family: var(--mono); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ivory); padding: 4px 8px; border: 1px solid rgba(242,239,232,.3); background: rgba(21,23,26,.5); backdrop-filter: blur(6px); }
-.line-name { font-weight: 800; font-stretch: 112%; font-size: 1.375rem; letter-spacing: .04em; }
-.line-name span { display: block; width: 32px; height: 4px; margin-bottom: 14px; }
+.line-name { margin: 4px 0 2px; line-height: 0; }
+.line-logo { height: 46px; width: auto; max-width: 100%; }
 .line-when { font-weight: 600; font-size: 1.0625rem; line-height: 1.35; }
 .line-desc { color: var(--ink-2); font-size: .9375rem; }
-.line[data-selected="true"] { background: var(--paper); box-shadow: inset 0 3px 0 var(--accent); }
+.line[data-selected="true"] { background: var(--paper); box-shadow: inset 0 4px 0 var(--lc, var(--accent)); }
 .line .btn { justify-self: start; }
-.sw-critical { background: #3b3f45; } .sw-exact { background: #c9cdd1; outline: 1px solid #8a9096; } .sw-ignis { background: #a3241b; } .sw-purity { background: linear-gradient(90deg, #e9ecef, #aab1b8); }
 
 /* ---------- Industrias ---------- */
 .industries { background: var(--graphite); color: var(--ivory); position: relative; isolation: isolate; overflow: hidden; }
@@ -547,30 +546,30 @@ p { margin: 0; }
       <p>Cada línea reúne componentes para un tipo de servicio. Si sabés qué tenés que resolver, empezá por acá.</p>
     </div>
     <div class="lines-grid">
-      <article class="line" id="linea-critical" data-line="ATP CRITICAL">
+      <article class="line" id="linea-critical" data-line="ATP CRITICAL" style="--lc: #4a4b4d">
         <figure class="line-fig"><img src="img/line_critical-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Cuerpo de válvula oscuro con bridas y cara de asiento revestida en material claro."><span class="mat">Revestimiento</span></figure>
-        <h3 class="line-name"><span class="sw-critical" aria-hidden="true"></span>ATP CRITICAL</h3>
+        <h3 class="line-name"><img class="line-logo" src="img/line-critical.png" width="872" height="210" loading="lazy" decoding="async" alt="ATP Critical"></h3>
         <p class="line-when">Servicios críticos y manejo de fluidos corrosivos.</p>
         <p class="line-desc">Conviene explorarla cuando el fluido ataca los materiales habituales o cuando una falla compromete la continuidad del proceso.</p>
         <button class="btn btn-ghost btn-sm" data-consult="ATP CRITICAL">Consultar ATP CRITICAL</button>
       </article>
-      <article class="line" id="linea-exact" data-line="ATP EXACT">
+      <article class="line" id="linea-exact" data-line="ATP EXACT" style="--lc: #4fa99a">
         <figure class="line-fig"><img src="img/line_exact-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Manómetro de esfera montado sobre una válvula de aguja de instrumentación."><span class="mat">Medición</span></figure>
-        <h3 class="line-name"><span class="sw-exact" aria-hidden="true"></span>ATP EXACT</h3>
+        <h3 class="line-name"><img class="line-logo" src="img/line-exact.png" width="779" height="208" loading="lazy" decoding="async" alt="ATP Exact"></h3>
         <p class="line-when">Medición e instrumentación para monitoreo y control de procesos.</p>
         <p class="line-desc">Conviene explorarla cuando necesitás conocer y registrar lo que pasa en la línea: presión, caudal u otras variables del proceso.</p>
         <button class="btn btn-ghost btn-sm" data-consult="ATP EXACT">Consultar ATP EXACT</button>
       </article>
-      <article class="line" id="linea-ignis" data-line="ATP IGNIS">
+      <article class="line" id="linea-ignis" data-line="ATP IGNIS" style="--lc: #c4705a">
         <figure class="line-fig"><img src="img/line_ignis-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Válvula bridada con pintura roja, propia de redes contra incendio."><span class="mat">Incendio</span></figure>
-        <h3 class="line-name"><span class="sw-ignis" aria-hidden="true"></span>ATP IGNIS</h3>
+        <h3 class="line-name"><img class="line-logo" src="img/line-ignis.png" width="742" height="209" loading="lazy" decoding="async" alt="ATP Ignis"></h3>
         <p class="line-when">Materiales y componentes para redes contra incendio.</p>
         <p class="line-desc">Conviene explorarla cuando estás proyectando, ampliando o manteniendo la red de protección contra incendio de una planta.</p>
         <button class="btn btn-ghost btn-sm" data-consult="ATP IGNIS">Consultar ATP IGNIS</button>
       </article>
-      <article class="line" id="linea-purity" data-line="ATP PURITY">
+      <article class="line" id="linea-purity" data-line="ATP PURITY" style="--lc: #2ea8cf">
         <figure class="line-fig"><img src="img/line_purity-600.webp" width="600" height="750" loading="lazy" decoding="async" alt="Tubería sanitaria de acero inoxidable con abrazaderas de unión rápida y válvula mariposa."><span class="mat">Sanitario</span></figure>
-        <h3 class="line-name"><span class="sw-purity" aria-hidden="true"></span>ATP PURITY</h3>
+        <h3 class="line-name"><img class="line-logo" src="img/line-purity.png" width="798" height="209" loading="lazy" decoding="async" alt="ATP Purity"></h3>
         <p class="line-when">Componentes sanitarios para procesos alimenticios y farmacéuticos.</p>
         <p class="line-desc">Conviene explorarla cuando el producto que circula exige condiciones de higiene y una instalación que se pueda limpiar.</p>
         <button class="btn btn-ghost btn-sm" data-consult="ATP PURITY">Consultar ATP PURITY</button>
