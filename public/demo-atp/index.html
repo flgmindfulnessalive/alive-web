@@ -111,7 +111,8 @@ p { margin: 0; }
 
 /* Menú móvil */
 .drawer { position: fixed; inset: 0; z-index: 70; background: var(--paper); color: var(--ink); display: flex; flex-direction: column; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); overflow-y: auto; }
-.drawer-head { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.drawer-head { flex: none; display: flex; align-items: center; gap: 24px; height: var(--header-h); position: sticky; top: 0; z-index: 1; background: var(--paper); }
+.drawer-actions { display: flex; align-items: center; gap: 24px; margin-left: auto; }
 .drawer nav ul { list-style: none; margin: 0; padding: 0; }
 .drawer nav > ul > li { border-bottom: 1px solid var(--rule); }
 .drawer nav a { display: block; padding: 16px 0; color: var(--ink); text-decoration: none; font-size: 1.375rem; font-weight: 600; }
@@ -195,7 +196,8 @@ p { margin: 0; }
 /* ---------- Industrias ---------- */
 .industries { background: var(--graphite); color: var(--ivory); position: relative; isolation: isolate; overflow: hidden; }
 .ind-bg { position: absolute; inset: 0; z-index: -2; margin: 0; }
-.ind-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+.ind-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; opacity: 0; transition: opacity .6s ease; }
+.ind-bg img.on { opacity: 1; }
 .industries::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
   linear-gradient(180deg, rgba(21,23,26,.94) 0%, rgba(21,23,26,.6) 32%, rgba(21,23,26,.3) 62%, rgba(21,23,26,.88) 100%),
   linear-gradient(90deg, rgba(21,23,26,.2) 0%, rgba(21,23,26,0) 50%, rgba(21,23,26,.45) 100%); }
@@ -205,11 +207,16 @@ p { margin: 0; }
 .industries .eyebrow, .industries .section-head p { color: var(--ivory-dim); }
 .ind-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: stretch; min-height: 420px; }
 .ind-list { list-style: none; margin: 0; padding: 0; }
-.ind-list li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 18px 0; }
+.ind-list li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; align-items: start; padding: 16px 0; cursor: pointer; }
+.ind-thumb { width: 96px; height: 64px; object-fit: cover; border-radius: 2px; opacity: .72; outline: 1px solid rgba(242,239,232,.18); outline-offset: -1px; transition: opacity .2s; }
+.ind-list li.on .ind-thumb { opacity: 1; outline: 2px solid var(--accent-on-dark); }
+.ind-text { display: grid; gap: 4px; min-width: 0; }
+.ind-cap b { color: var(--ivory); font-weight: 500; }
 .ind-list li + li { border-top: 1px solid rgba(242,239,232,.14); }
 .ind-list h3 { font-size: 1.125rem; font-weight: 650; }
 .ind-list p { color: #dcd8cf; font-size: .9375rem; }
 .ind-list a { color: var(--accent-on-dark); text-underline-offset: 3px; font-weight: 500; }
+.ind-link { justify-self: start; white-space: nowrap; margin-top: 4px; }
 
 /* ---------- Servicios ---------- */
 .services-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1.5px solid var(--ink); }
@@ -283,6 +290,7 @@ p { margin: 0; }
 .site-footer a { color: var(--ivory); text-decoration: none; }
 .site-footer a:hover { text-decoration: underline; }
 .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.foot-logo { height: 52px; width: auto; }
 .foot-sign { font-family: var(--mono); letter-spacing: .08em; margin-top: 12px; color: var(--ivory); }
 .foot-legal { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--graphite-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: .8125rem; }
 
@@ -336,7 +344,9 @@ p { margin: 0; }
   .site-footer { padding-bottom: 96px; }
 }
 @media (max-width: 560px) {
-  .header-row { gap: 10px; }
+  .header-row, .drawer-head, .drawer-actions { gap: 10px; }
+  .ind-list li { grid-template-columns: 72px minmax(0, 1fr); gap: 14px; }
+  .ind-thumb { width: 72px; height: 54px; }
   .header-quote { padding: 0 .85rem; }
   .hero-sign .dot { display: none; }
   .logo { height: 38px; }
@@ -391,9 +401,12 @@ p { margin: 0; }
   <div class="wrap" style="display:flex;flex-direction:column;min-height:100%;width:100%">
     <div class="drawer-head">
       <span class="brand"><img class="logo" src="img/atp-logo.png" width="342" height="120" alt=""></span>
-      <button class="icon-btn" id="drawer-close" aria-label="Cerrar menú">
-        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.6"/></svg>
-      </button>
+      <div class="drawer-actions">
+        <a class="btn btn-primary btn-sm header-quote" href="#cotizar" data-quote>Cotizar</a>
+        <button class="icon-btn" id="drawer-close" aria-label="Cerrar menú">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.6"/></svg>
+        </button>
+      </div>
     </div>
     <nav aria-label="Principal (celular)">
       <ul>
@@ -568,7 +581,13 @@ p { margin: 0; }
 
 <!-- 5 · INDUSTRIAS -->
 <section class="section industries on-dark" id="industrias" aria-labelledby="h-industrias">
-  <figure class="ind-bg"><img src="img/plant-1600.webp" srcset="img/plant-900.webp 900w, img/plant-1600.webp 1600w" sizes="100vw" width="1600" height="900" loading="lazy" decoding="async" alt="Planta de proceso al atardecer: racks de cañerías, tanques de almacenamiento y columnas con plataformas, iluminados por luminarias de sodio."></figure>
+  <div class="ind-bg" aria-hidden="true">
+    <img data-ind-bg="oil" class="on" src="img/plant-1280.webp" srcset="img/plant-800.webp 800w, img/plant-1280.webp 1280w" sizes="100vw" width="1280" height="800" loading="lazy" decoding="async" alt="">
+    <img data-ind-bg="mining" class="" src="img/ind-mining-1280.webp" srcset="img/ind-mining-800.webp 800w, img/ind-mining-1280.webp 1280w" sizes="100vw" width="1280" height="800" loading="lazy" decoding="async" alt="">
+    <img data-ind-bg="energy" class="" src="img/ind-energy-1280.webp" srcset="img/ind-energy-800.webp 800w, img/ind-energy-1280.webp 1280w" sizes="100vw" width="1280" height="800" loading="lazy" decoding="async" alt="">
+    <img data-ind-bg="food" class="" src="img/ind-food-1280.webp" srcset="img/ind-food-800.webp 800w, img/ind-food-1280.webp 1280w" sizes="100vw" width="1280" height="800" loading="lazy" decoding="async" alt="">
+    <img data-ind-bg="fire" class="" src="img/ind-fire-1280.webp" srcset="img/ind-fire-800.webp 800w, img/ind-fire-1280.webp 1280w" sizes="100vw" width="1280" height="800" loading="lazy" decoding="async" alt="">
+  </div>
   <div class="wrap">
     <div class="section-head">
       <div>
@@ -578,13 +597,13 @@ p { margin: 0; }
       <p>Paradas de planta, ampliaciones y mantenimiento en industrias de proceso. Estas son algunas necesidades frecuentes y por dónde empezar.</p>
     </div>
     <div class="ind-grid">
-      <p class="ind-cap mono">Fig. 2 Planta de proceso con racks de cañerías, tanques y columnas. Render ilustrativo.</p>
+      <p class="ind-cap mono"><b>Fig. 2</b> <span id="ind-cap-text">Planta de proceso con racks de cañerías, tanques y columnas.</span> Render ilustrativo.</p>
       <div class="ind-panel"><ul class="ind-list">
-        <li><h3>Oil &amp; gas y petroquímica</h3><p>Servicios críticos y fluidos corrosivos. <a href="#linea-critical">Ver ATP CRITICAL</a></p></li>
-        <li><h3>Minería</h3><p>Manejo de fluidos corrosivos en procesos y servicios de planta. <a href="#linea-critical">Ver ATP CRITICAL</a></p></li>
-        <li><h3>Generación de energía</h3><p>Medición e instrumentación para monitorear y controlar el proceso. <a href="#linea-exact">Ver ATP EXACT</a></p></li>
-        <li><h3>Alimentos, bebidas y farma</h3><p>Selección de componentes sanitarios para procesos alimenticios y farmacéuticos. <a href="#linea-purity">Ver ATP PURITY</a></p></li>
-        <li><h3>Protección contra incendio en planta</h3><p>Materiales y componentes para la red contra incendio de cualquier instalación. <a href="#linea-ignis">Ver ATP IGNIS</a></p></li>
+        <li data-ind="oil"><img class="ind-thumb" src="img/plant-thumb.webp" width="320" height="200" loading="lazy" decoding="async" alt=""><div class="ind-text"><h3>Oil &amp; gas y petroquímica</h3><p>Servicios críticos y fluidos corrosivos.</p><a class="ind-link" href="#linea-critical">Ver ATP CRITICAL</a></div></li>
+        <li data-ind="mining"><img class="ind-thumb" src="img/ind-mining-thumb.webp" width="320" height="200" loading="lazy" decoding="async" alt=""><div class="ind-text"><h3>Minería</h3><p>Manejo de fluidos corrosivos en procesos y servicios de planta.</p><a class="ind-link" href="#linea-critical">Ver ATP CRITICAL</a></div></li>
+        <li data-ind="energy"><img class="ind-thumb" src="img/ind-energy-thumb.webp" width="320" height="200" loading="lazy" decoding="async" alt=""><div class="ind-text"><h3>Generación de energía</h3><p>Medición e instrumentación para monitorear y controlar el proceso.</p><a class="ind-link" href="#linea-exact">Ver ATP EXACT</a></div></li>
+        <li data-ind="food"><img class="ind-thumb" src="img/ind-food-thumb.webp" width="320" height="200" loading="lazy" decoding="async" alt=""><div class="ind-text"><h3>Alimentos, bebidas y farma</h3><p>Selección de componentes sanitarios para procesos alimenticios y farmacéuticos.</p><a class="ind-link" href="#linea-purity">Ver ATP PURITY</a></div></li>
+        <li data-ind="fire"><img class="ind-thumb" src="img/ind-fire-thumb.webp" width="320" height="200" loading="lazy" decoding="async" alt=""><div class="ind-text"><h3>Protección contra incendio en planta</h3><p>Materiales y componentes para la red contra incendio de cualquier instalación.</p><a class="ind-link" href="#linea-ignis">Ver ATP IGNIS</a></div></li>
       </ul></div>
     </div>
   </div>
@@ -755,7 +774,7 @@ p { margin: 0; }
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <span style="color:var(--ivory);font-weight:650;font-size:1.125rem">ATP Solutions S.R.L.</span>
+        <img class="foot-logo" src="img/atp-logo-neg.png" width="342" height="120" loading="lazy" decoding="async" alt="ATP Solutions">
         <p style="margin-top:10px;max-width:42ch">Importación y distribución de soluciones para la conducción y el control de fluidos industriales.</p>
         <p class="foot-sign">Everything Flows Well</p>
       </div>
@@ -992,6 +1011,19 @@ document.documentElement.lang = 'es-AR';
     Object.keys(rules).forEach(function (id) { document.getElementById(id).removeAttribute('aria-invalid'); document.getElementById('e-' + id.replace('f-', '')).textContent = ''; });
     $('#done').hidden = true; $('#form-body').hidden = false; $('#f-nombre').focus();
   });
+
+  /* Industrias: cada sector cambia la fotografía de fondo (decorativa) */
+  var indCaps = {"oil": "Planta de proceso con racks de cañerías, tanques y columnas.", "mining": "Cañerías de conducción sobre soportes en un yacimiento.", "energy": "Central con torres de enfriamiento y racks de cañerías.", "food": "Sala de proceso con tanques de acero inoxidable y cañerías sanitarias.", "fire": "Colector de red contra incendio con válvulas de bloqueo."};
+  var indItems = $$('.ind-list li'), indBgs = $$('[data-ind-bg]');
+  function setInd(k) {
+    indItems.forEach(function (li) { li.classList.toggle('on', li.dataset.ind === k); });
+    indBgs.forEach(function (im) { im.classList.toggle('on', im.dataset.indBg === k); });
+    $('#ind-cap-text').textContent = indCaps[k];
+  }
+  indItems.forEach(function (li) {
+    ['pointerenter', 'focusin', 'click'].forEach(function (t) { li.addEventListener(t, function () { setInd(li.dataset.ind); }); });
+  });
+  setInd('oil');
 
   /* Barra de cotización en celular: aparece después del hero y se oculta en el formulario */
   var bar = $('#mobile-cta'), heroEl = $('.hero'), quoteEl = $('#cotizar');
