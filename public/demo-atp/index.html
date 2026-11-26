@@ -1015,20 +1015,21 @@ document.documentElement.lang = 'es-AR';
     $('#done').hidden = true; $('#form-body').hidden = false; $('#f-nombre').focus();
   });
 
-  /* Video del héroe: solo en escritorio, sin movimiento reducido ni ahorro de datos, después de la carga */
+  /* Video del héroe: versión vertical en celular y horizontal en escritorio; sin movimiento reducido ni ahorro de datos; después de la carga */
   var hv = $('#hero-video'), tg = $('#video-toggle'), userPaused = false;
   var PLAY = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z" fill="currentColor"/></svg><span>Reproducir video</span>';
   var PAUSE = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z" fill="currentColor"/></svg><span>Pausar video</span>';
   function canVideo() {
-    return window.matchMedia('(min-width: 861px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData);
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData);
   }
   function startVideo() {
     if (!canVideo() || hv.dataset.on) return;
     hv.dataset.on = '1';
-    var src = document.createElement('source'); src.src = 'img/hero-video-720.mp4'; src.type = 'video/mp4';
+    var src = document.createElement('source'); src.src = mqMobile.matches ? 'img/hero-video-m.mp4' : 'img/hero-video-720.mp4'; src.type = 'video/mp4';
     hv.appendChild(src); hv.load();
-    var pr = hv.play(); if (pr && pr.catch) pr.catch(function () {});
     tg.hidden = false;
+    var pr = hv.play();
+    if (pr && pr.catch) pr.catch(function () { userPaused = true; tg.innerHTML = PLAY; tg.setAttribute('aria-pressed', 'true'); });
   }
   tg.addEventListener('click', function () {
     if (hv.paused) { userPaused = false; hv.play(); tg.innerHTML = PAUSE; tg.setAttribute('aria-pressed', 'false'); }
