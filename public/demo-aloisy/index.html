@@ -21,7 +21,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/sora-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="img/dra-retrato-1500.webp" as="image" imagesrcset="img/dra-retrato-760.webp 760w, img/dra-retrato-1500.webp 1500w" imagesizes="(max-width: 920px) 90vw, 540px">
+<link rel="preload" href="img/f-energia.webp" as="image">
 
 <!-- Origen: prototipo de Home (v2, dirección moderna) para la Dra. Aloisy Silva, ALIVE, nov 2026.
      Lo resaltado como «por confirmar» es dato pendiente. No hay cifras, testimonios ni credenciales inventadas. -->
@@ -58,7 +58,8 @@ p{margin:0}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 
 /* aviso de prototipo */
-.proto{background:var(--tinta);color:#EDE6EE;font-size:13px;text-align:center;padding-block:9px}
+.proto{background:var(--tinta);color:#EDE6EE;font-size:13px;text-align:center;padding-block:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:380px){.proto{font-size:12px}}
 .proto b{color:#FF9BBE;font-weight:600}
 
 /* cabecera */
@@ -112,8 +113,9 @@ p{margin:0}
 .datos span{display:flex;align-items:center;gap:8px}
 .datos span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--frambuesa)}
 
-.visual{position:relative;border-radius:var(--r-l);background:radial-gradient(70% 55% at 50% 38%,#4A2541 0%,#2A1A2A 55%,#1F1622 100%);border:1px solid rgba(255,255,255,.08);min-height:600px;overflow:hidden;display:grid;place-items:center}
+.visual{position:relative;border-radius:var(--r-l);background:#2A2430;min-height:600px;overflow:hidden;display:grid;place-items:center}
 .visual{place-items:end center}
+.foto-hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:58% 40%}
 .anillo-fondo{position:absolute;top:7%;left:50%;transform:translateX(-50%);width:min(94%,540px);aspect-ratio:1}
 .retrato-hero{position:relative;width:min(90%,540px);height:auto;display:block}
 .visual .foto{position:absolute;z-index:2;inset:auto 20px 20px 20px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
@@ -145,7 +147,7 @@ p{margin:0}
 @media (max-width:820px){.cab{grid-template-columns:1fr}.sec{padding-block:76px}}
 
 /* mosaico */
-.mosaico{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(230px,auto);gap:16px}
+.mosaico{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .m{border-radius:var(--r-m);padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:22px;text-decoration:none;color:var(--tinta);transition:transform .25s ease;min-width:0}
 .m:hover{transform:translateY(-4px)}
 .m h3{font-size:clamp(24px,2.3vw,30px);margin-bottom:10px}
@@ -160,7 +162,7 @@ p{margin:0}
 .m-1 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .m-1 .chips span{border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 13px;font-size:14px;color:#EDE6EE}
 .m-2{background:var(--lila)}.m-3{background:var(--salvia)}.m-4{background:var(--arena)}.m-5{background:var(--rubor)}
-.m-6{grid-column:1/-1;flex-direction:row;align-items:center;background:var(--blanco);border:1px solid var(--linea)}
+/*mosaico-fotos*/.m-6{grid-column:1/-1;flex-direction:row;align-items:center;background:var(--blanco);border:1px solid var(--linea)}
 @media (max-width:1000px){.mosaico{grid-template-columns:1fr 1fr}.m-1,.m-6{grid-column:span 2}.m-1{grid-row:auto}}
 @media (max-width:620px){.mosaico{grid-template-columns:1fr}.m-1,.m-6{grid-column:auto}.m{min-height:0}.m-6{flex-direction:column;align-items:stretch}}
 
@@ -189,7 +191,7 @@ p{margin:0}
 /* sobre */
 .sobre{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(30px,5vw,80px);align-items:center}
 .retrato{border-radius:var(--r-l);aspect-ratio:4/5;background:var(--lila);position:relative;overflow:hidden;display:grid;place-items:center;max-width:100%}
-.retrato{background:var(--tinta)}.retrato img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.retrato{background:var(--arena)}.retrato img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 50%}
 .retrato .ph-nota{top:auto;bottom:20px;left:20px}
 .sobre h2{font-size:clamp(40px,5vw,68px);margin-bottom:24px}
 .sobre .lead{font-size:clamp(20px,2vw,25px);line-height:1.4;font-family:var(--display);font-weight:500;letter-spacing:-.02em;margin-bottom:22px}
@@ -256,6 +258,23 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
 /* anillo del ciclo */
 .anillo .orbita{transform-origin:200px 200px;animation:girar 28s linear infinite}
 @keyframes girar{to{transform:rotate(360deg)}}
+
+.m-1{position:relative;overflow:hidden;isolation:isolate;min-height:520px}
+.m-1 .bgf{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;z-index:-2}
+.m-1::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(26,20,32,0) 15%,rgba(26,20,32,.7) 45%,rgba(26,20,32,.94) 75%)}
+.m-1>div:first-of-type{margin-top:auto}
+.m .mf{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:16px;display:block;margin-bottom:4px}
+.m-2,.m-3,.m-4,.m-5{background:var(--blanco);border:1px solid var(--linea);padding:12px 12px 22px}
+.m-2>div,.m-3>div,.m-4>div,.m-5>div{padding-inline:12px}
+.m-6{padding:12px 28px 12px 12px;gap:28px}
+.m-6 .mf{width:min(34%,320px);height:auto;aspect-ratio:16/10;margin:0;flex:none}
+@media (max-width:620px){.m-6{padding:12px 12px 22px}.m-6 .mf{width:100%}.m-6>div{padding-inline:12px}.m-1{min-height:600px}.m-1 .bgf{object-position:50% 0}}
+.modf{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:20px;display:block}
+.cierre .caja{position:relative;isolation:isolate;grid-template-columns:1fr}
+.cierre .cf{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 35%;z-index:-2}
+.cierre .caja::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(26,20,32,.92) 0%,rgba(26,20,32,.75) 45%,rgba(26,20,32,.15) 100%)}
+.cierre .caja>div{max-width:640px}
+@media (max-width:820px){.cierre .caja::before{background:linear-gradient(180deg,rgba(26,20,32,.35) 0%,rgba(26,20,32,.9) 55%)}.cierre .caja{padding-top:220px}}
 </style>
 </head>
 <body>
@@ -266,7 +285,7 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
   <symbol id="fl" viewBox="0 0 20 20"><path d="M5 15 15 5M7 5h8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 
-<div class="proto"><div class="in"><b>Demo de diseño</b> preparado por ALIVE para revisión. No es el sitio oficial; los botones aún no envían mensajes.</div></div>
+<div class="proto"><div class="in"><b>Demo de diseño</b> preparado por ALIVE para revisión.</div></div>
 
 <header class="nav">
   <div class="in"><div class="bar">
@@ -301,8 +320,7 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
       <div class="datos"><span>Presencial en CEGEMA, Trujillo</span><span>Virtual en todo el Perú</span></div>
     </div>
     <div class="visual">
-      <svg class="anillo anillo-fondo" data-anillo data-oscuro data-sin-texto viewBox="0 0 400 400" aria-hidden="true"></svg>
-      <img class="retrato-hero" src="img/dra-retrato-1500.webp" srcset="img/dra-retrato-760.webp 760w, img/dra-retrato-1500.webp 1500w" sizes="(max-width: 920px) 90vw, 540px" fetchpriority="high" width="1500" height="1565" alt="Dra. Aloisy Silva, sonriendo">
+      <img class="foto-hero" src="img/f-energia.webp" width="1600" height="1067" alt="Mujer sonriente con los brazos en alto en un campo de girasoles">
       <div class="tarjeta t-virtual"><b>Consulta virtual</b><small>Desde cualquier lugar del Perú</small></div>
       <div class="foto">
         <div class="tarjeta t-cita"><span class="ic"><svg aria-hidden="true"><use href="#wa"/></svg></span><div><b>Evaluación inicial</b><small>Presencial o virtual · por WhatsApp</small></div></div>
@@ -323,16 +341,16 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
       <p>Buscamos la causa de lo que sientes y armamos un plan contigo, con exámenes y seguimiento.</p>
     </div>
     <div class="mosaico">
-      <a class="m m-1" href="#agendar">
-        <div><h3>Hormonas y menopausia</h3><p>Sofocos, sueño, ánimo, peso y libido. Te explicamos qué pasa en tu cuerpo y cuáles son tus opciones de tratamiento.</p>
+      <a class="m m-1" href="#agendar"><img class="bgf" src="img/f-hormonas.webp" width="1400" height="934" alt="" loading="lazy">
+        <div class="sobre-f"><h3>Hormonas y menopausia</h3><p>Sofocos, sueño, ánimo, peso y libido. Te explicamos qué pasa en tu cuerpo y cuáles son tus opciones de tratamiento.</p>
           <div class="chips"><span>Perimenopausia</span><span>Menopausia</span><span>Terapia hormonal</span><span>Seguimiento</span></div></div>
-        <div class="pie">Agendar evaluación<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div>
+        <div class="pie sobre-f">Agendar evaluación<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div>
       </a>
-      <a class="m m-2" href="#agendar"><div><h3>Ginecología funcional</h3><p>Ciclos irregulares, SOP, dolor menstrual y salud íntima.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
-      <a class="m m-3" href="#agendar"><div><h3>Metabolismo</h3><p>Resistencia a la insulina, tiroides, energía y peso.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
-      <a class="m m-4" href="#agendar"><div><h3>Longevidad y antiedad</h3><p>Prevención y hábitos para vivir más años con bienestar.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
-      <a class="m m-5" href="#agendar"><div><h3>Ginecología regenerativa</h3><p>Tratamientos para la salud íntima, siempre tras una evaluación.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
-      <a class="m m-6" href="#agendar"><div style="min-width:0"><h3>Láser ginecológico</h3><p>Procedimientos indicados según tu caso. <span class="tbc">Equipos por confirmar</span></p></div><div class="pie" style="gap:16px">Conocer más<span class="flecha" style="background:var(--porcelana)"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
+      <a class="m m-2" href="#agendar"><img class="mf" src="img/f-consulta.webp" width="1000" height="667" alt="Médica conversando con una paciente durante la consulta" loading="lazy"><div><h3>Ginecología funcional</h3><p>Ciclos irregulares, SOP, dolor menstrual y salud íntima.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
+      <a class="m m-3" href="#agendar"><img class="mf" src="img/f-analisis.webp" width="1000" height="667" alt="Dos tubos de análisis de sangre" loading="lazy"><div><h3>Metabolismo</h3><p>Resistencia a la insulina, tiroides, energía y peso.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
+      <a class="m m-4" href="#agendar"><img class="mf" src="img/f-longevidad.webp" width="900" height="1350" alt="Mujer meditando en postura de yoga" loading="lazy"><div><h3>Longevidad y antiedad</h3><p>Prevención y hábitos para vivir más años con bienestar.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
+      <a class="m m-5" href="#agendar"><img class="mf" src="img/f-regenerativa.webp" width="1000" height="667" alt="Mujer relajada durante un tratamiento" loading="lazy"><div><h3>Ginecología regenerativa</h3><p>Tratamientos para la salud íntima, siempre tras una evaluación.</p></div><div class="pie">Conocer más<span class="flecha"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
+      <a class="m m-6" href="#agendar"><img class="mf" src="img/f-laser.webp" width="900" height="1350" alt="Estetoscopio con un corazón rojo" loading="lazy"><div style="min-width:0"><h3>Láser ginecológico</h3><p>Procedimientos indicados según tu caso. <span class="tbc">Equipos por confirmar</span></p></div><div class="pie" style="gap:16px">Conocer más<span class="flecha" style="background:var(--porcelana)"><svg aria-hidden="true"><use href="#fl"/></svg></span></div></a>
     </div>
   </div>
 </section>
@@ -369,7 +387,7 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
 
 <section class="sec" id="sobre" aria-labelledby="t-sobre">
   <div class="in sobre">
-    <div class="retrato"><img src="img/dra-bata.webp" width="1200" height="1500" alt="La Dra. Aloisy Silva con bata médica" loading="lazy"></div>
+    <div class="retrato"><img src="img/dra-consultorio.webp" width="1200" height="1200" alt="La Dra. Aloisy Silva en la recepción de su consultorio" loading="lazy"></div>
     <div>
       <p class="eti">Sobre la Dra.</p>
       <h2 id="t-sobre">Dra. Aloisy Silva</h2>
@@ -386,13 +404,13 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
   <div class="in">
     <div class="cab"><div><p class="eti">Modalidades</p><h2 id="t-mod">En consultorio o desde tu casa.</h2></div><p>La misma atención, en el formato que te quede mejor.</p></div>
     <div class="mods">
-      <div class="mod mod-p">
+      <div class="mod mod-p"><img class="modf" src="img/f-presencial.webp" width="1200" height="801" alt="Toma de presión arterial durante una consulta" loading="lazy">
         <span class="tag">Presencial</span><h3>CEGEMA, Trujillo</h3>
         <p>Evaluación completa con examen y procedimientos cuando se necesitan.</p>
         <ul><li>Evaluación ginecológica completa</li><li>Procedimientos en consultorio</li><li><span><span class="tbc">Dirección y horario por confirmar</span></span></li></ul>
         <a class="btn btn-t" href="#agendar">Agendar presencial</a>
       </div>
-      <div class="mod mod-v">
+      <div class="mod mod-v"><img class="modf" src="img/f-virtual.webp" width="1200" height="800" alt="Paciente en una videoconsulta con su médico desde la laptop" loading="lazy">
         <span class="tag">Virtual</span><h3>Desde cualquier lugar del Perú</h3>
         <p>Videoconsulta para revisar síntomas, exámenes y tratamientos.</p>
         <ul><li>Revisión de exámenes y plan de tratamiento</li><li>Seguimiento hormonal y metabólico</li><li>Si necesitas examen físico, te lo decimos antes</li></ul>
@@ -426,13 +444,12 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
 </section>
 
 <section class="cierre" id="agendar" aria-labelledby="t-cierre">
-  <div class="in"><div class="caja">
+  <div class="in"><div class="caja"><img class="cf" src="img/f-cierre.webp" width="1800" height="1235" alt="" loading="lazy">
     <div>
       <h2 id="t-cierre">Sentirte bien en cada etapa <span class="f">empieza con una conversación.</span></h2>
       <p>Escríbenos y coordinamos tu evaluación inicial, en Trujillo o por videoconsulta.</p>
       <div class="ctas"><a class="btn btn-f" href="#agendar"><svg aria-hidden="true"><use href="#wa"/></svg>Escribir por WhatsApp</a><a class="btn" style="background:#fff;color:var(--tinta)" href="#agendar">Dejar mis datos</a></div>
     </div>
-    <svg class="anillo" data-anillo data-oscuro viewBox="0 0 400 400" aria-hidden="true"></svg>
   </div></div>
 </section>
 </main>
