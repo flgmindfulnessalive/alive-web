@@ -276,7 +276,9 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
 .cierre .caja>div{max-width:640px}
 @media (max-width:820px){.cierre .caja::before{background:linear-gradient(180deg,rgba(26,20,32,.35) 0%,rgba(26,20,32,.9) 55%)}.cierre .caja{padding-top:220px}}
 .hero .pill{padding:9px 16px;font:600 12px/1 var(--texto);letter-spacing:.09em;text-transform:uppercase;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:400px){.hero .pill{font-size:11px;letter-spacing:.06em;padding:8px 13px}}
+@media (max-width:480px){.hero .pill{font-size:clamp(9px,2.75vw,12px);letter-spacing:.05em;padding:8px 12px}}
+html,body{overflow-x:clip}
+.hero .g>*,.in>*{min-width:0}
 </style>
 </head>
 <body>
