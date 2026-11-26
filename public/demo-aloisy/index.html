@@ -19,7 +19,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" href="fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/sora-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="img/dra-retrato-1500.webp" as="image" imagesrcset="img/dra-retrato-760.webp 760w, img/dra-retrato-1500.webp 1500w" imagesizes="(max-width: 920px) 90vw, 540px">
 
@@ -27,11 +27,11 @@
      Lo resaltado como «por confirmar» es dato pendiente. No hay cifras, testimonios ni credenciales inventadas. -->
 <style>
 html,body{margin:0}
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-grotesque-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-grotesque-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-grotesque-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-grotesque-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2");font-weight:800;font-display:swap}
+@font-face{font-family:"Sora";src:url(fonts/sora-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Sora";src:url(fonts/sora-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Sora";src:url(fonts/sora-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Sora";src:url(fonts/sora-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Sora";src:url(fonts/sora-latin-800-normal.woff2) format("woff2");font-weight:800;font-display:swap}
 @font-face{font-family:"Instrument Sans";src:url(fonts/instrument-sans-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Instrument Sans";src:url(fonts/instrument-sans-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
 @font-face{font-family:"Instrument Sans";src:url(fonts/instrument-sans-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
@@ -40,7 +40,7 @@ html,body{margin:0}
   color-scheme:light;
   --porcelana:#F5F3F1; --blanco:#FFFFFF; --tinta:#1A1420; --tinta-2:#4F4655; --linea:#E6E1DE;
   --frambuesa:#C42D63; --frambuesa-osc:#A3204F; --rubor:#F9E1E8; --lila:#ECE6F7; --salvia:#E1EBE3; --arena:#F3EADF;
-  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --display:"Sora",ui-sans-serif,system-ui,sans-serif;
   --texto:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;
   --r-l:32px; --r-m:22px; --ancho:1240px;
   --gutter-l:max(20px, env(safe-area-inset-left, 0px)); --gutter-r:max(20px, env(safe-area-inset-right, 0px));
@@ -51,7 +51,7 @@ body{background:var(--porcelana);color:var(--tinta);font:17px/1.6 var(--texto);-
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--tinta)}
 a{color:inherit}
 .in{max-width:var(--ancho);margin:0 auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
-h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.035em;line-height:1;text-wrap:balance;font-weight:700}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.03em;line-height:1.04;text-wrap:balance;font-weight:700}
 p{margin:0}
 .tbc{background:#FFF1C2;color:#5A4300;border-radius:6px;padding:1px 6px;font-size:.92em;white-space:nowrap}
 :focus-visible{outline:3px solid var(--frambuesa);outline-offset:3px;border-radius:8px}
@@ -63,7 +63,7 @@ p{margin:0}
 
 /* cabecera */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;padding-block:14px}
-.nav .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--linea);border-radius:999px;padding:8px 8px 8px 20px}
+.nav .in{position:relative}.nav .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--linea);border-radius:999px;padding:8px 8px 8px 20px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--tinta)}
 .logo svg{width:46px;height:38px;flex:none}
 .logo .w{font:700 21px/1 var(--display);letter-spacing:-.04em;white-space:nowrap}
@@ -71,7 +71,17 @@ p{margin:0}
 .nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
 .nav ul a{display:block;text-decoration:none;font-size:15px;font-weight:500;padding:10px 14px;border-radius:999px;color:var(--tinta-2)}
 .nav ul a:hover{background:var(--porcelana);color:var(--tinta)}
-@media (max-width:1000px){.nav ul{display:none}}
+.menu-btn{display:none;width:48px;height:48px;border-radius:50%;border:0;background:var(--tinta);color:#fff;cursor:pointer;place-items:center;flex:none}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:18px;height:2px;border-radius:2px;background:currentColor;position:relative;transition:transform .25s,background .25s}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0}.menu-btn span::before{top:-6px}.menu-btn span::after{top:6px}
+.menu-btn[aria-expanded="true"] span{background:transparent}.menu-btn[aria-expanded="true"] span::before{transform:translateY(6px) rotate(45deg)}.menu-btn[aria-expanded="true"] span::after{transform:translateY(-6px) rotate(-45deg)}
+.panel{display:none}
+@media (max-width:1000px){.nav ul{display:none}.nav .bar>.btn{display:none}.menu-btn{display:grid}
+ .panel{display:block;position:absolute;left:var(--gutter-l);right:var(--gutter-r);top:calc(100% + 4px);background:var(--blanco);border:1px solid var(--linea);border-radius:24px;padding:10px;box-shadow:0 24px 50px -20px rgba(26,20,32,.35)}
+ .panel[hidden]{display:none}
+ .panel a{display:block;padding:14px 16px;border-radius:14px;text-decoration:none;font:600 18px/1.2 var(--display);letter-spacing:-.02em}
+ .panel a:hover{background:var(--porcelana)}
+ .panel .btn{display:flex;margin-top:8px;font-family:var(--texto);font-size:16px;color:#fff}}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:600 16px/1 var(--texto);padding:16px 24px;border-radius:999px;text-decoration:none;border:0;cursor:pointer;transition:transform .2s ease,background .2s ease}
 .btn:hover{transform:translateY(-2px)}
@@ -80,28 +90,34 @@ p{margin:0}
 .btn-t{background:var(--tinta);color:#fff}
 .btn-l{background:transparent;color:var(--tinta);box-shadow:inset 0 0 0 1.5px var(--tinta)}
 .nav .btn{padding:13px 20px;font-size:15px}
-@media (max-width:480px){.nav .btn .t{display:none}.nav .btn{padding:12px}.logo .w{font-size:18px}}
+@media (max-width:480px){.logo .w{font-size:18px}}
 
 /* hero */
-.hero{padding-block:36px 40px}
+.hero{background:var(--tinta);color:#fff;margin-top:-96px;padding-block:128px 56px}
+.hero h1{color:#fff}.hero h1 .f{color:#FF7FA8}
+.hero .txt .lead{color:#D9D0DC}
+.hero .pill{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#E6DCE8}
+.hero .pill i{background:rgba(255,127,168,.18);color:#FF7FA8}
+.hero .btn-l{color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7)}
+.hero .datos{color:#CFC5D2}.hero .datos span::before{background:#FF7FA8}
 .hero .g{display:grid;grid-template-columns:1.08fr .92fr;gap:28px;align-items:stretch}
 .hero .txt{display:flex;flex-direction:column;justify-content:center;padding-block:20px}
 .pill{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--blanco);border:1px solid var(--linea);border-radius:999px;padding:7px 14px 7px 8px;font-size:14px;font-weight:500;color:var(--tinta-2)}
 .pill i{width:22px;height:22px;border-radius:50%;background:var(--rubor);display:grid;place-items:center;font-style:normal;color:var(--frambuesa);font-size:12px}
-.hero h1{font-size:clamp(48px,7.4vw,104px);margin:26px 0 26px;font-weight:800;letter-spacing:-.05em;line-height:.93}
-.hero h1 .f{color:var(--frambuesa)}
+.hero h1{font-size:clamp(34px,9vw,86px);margin:26px 0 26px;font-weight:700;letter-spacing:-.045em;line-height:1}
+
 .hero .lead{font-size:clamp(17px,1.5vw,20px);color:var(--tinta-2);max-width:34em;margin-bottom:34px}
 .ctas{display:flex;flex-wrap:wrap;gap:12px}
 .datos{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:38px;font-size:15px;color:var(--tinta-2)}
 .datos span{display:flex;align-items:center;gap:8px}
 .datos span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--frambuesa)}
 
-.visual{position:relative;border-radius:var(--r-l);background:var(--rubor);min-height:600px;overflow:hidden;display:grid;place-items:center}
+.visual{position:relative;border-radius:var(--r-l);background:radial-gradient(70% 55% at 50% 38%,#4A2541 0%,#2A1A2A 55%,#1F1622 100%);border:1px solid rgba(255,255,255,.08);min-height:600px;overflow:hidden;display:grid;place-items:center}
 .visual{place-items:end center}
 .anillo-fondo{position:absolute;top:7%;left:50%;transform:translateX(-50%);width:min(94%,540px);aspect-ratio:1}
-.retrato-hero{position:relative;width:min(90%,540px);height:auto;display:block;filter:drop-shadow(0 30px 40px rgba(122,24,64,.18))}
+.retrato-hero{position:relative;width:min(90%,540px);height:auto;display:block}
 .visual .foto{position:absolute;z-index:2;inset:auto 20px 20px 20px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
-.tarjeta{background:var(--blanco);border-radius:20px;padding:16px 18px;box-shadow:0 18px 40px -22px rgba(26,20,32,.35);font-size:14px;min-width:0}
+.tarjeta{color:var(--tinta);background:var(--blanco);border-radius:20px;padding:16px 18px;box-shadow:0 18px 40px -22px rgba(26,20,32,.35);font-size:14px;min-width:0}
 .tarjeta b{display:block;font:700 17px/1.2 var(--display);letter-spacing:-.02em;margin-bottom:3px}
 .tarjeta small{color:var(--tinta-2);font-size:13.5px}
 .t-cita{display:flex;align-items:center;gap:14px}
@@ -110,8 +126,8 @@ p{margin:0}
 .t-virtual{position:absolute;z-index:2;top:22px;right:22px;background:var(--tinta);color:#fff}
 .t-virtual small{color:#D9CFDB}
 .ph-nota{position:absolute;top:22px;left:22px;font-size:12.5px;color:var(--tinta-2);background:rgba(255,255,255,.7);border-radius:999px;padding:6px 12px}
-@media (max-width:920px){.hero .g{grid-template-columns:1fr}.visual{min-height:520px}}
-@media (max-width:480px){.visual{min-height:440px}.t-virtual{display:none}}
+@media (max-width:920px){.hero .g{grid-template-columns:1fr}.visual{min-height:480px;order:-1}.hero{padding-block:112px 48px}.hero .txt{padding-block:0}}
+@media (max-width:480px){.visual{min-height:400px}.t-virtual,.visual .foto{display:none}.hero h1{margin:18px 0 18px}}
 
 /* cinta */
 .cinta{overflow:hidden;border-block:1px solid var(--linea);background:var(--blanco);padding-block:20px}
@@ -173,7 +189,7 @@ p{margin:0}
 /* sobre */
 .sobre{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(30px,5vw,80px);align-items:center}
 .retrato{border-radius:var(--r-l);aspect-ratio:4/5;background:var(--lila);position:relative;overflow:hidden;display:grid;place-items:center;max-width:100%}
-.retrato img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:28% 50%}
+.retrato{background:var(--tinta)}.retrato img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
 .retrato .ph-nota{top:auto;bottom:20px;left:20px}
 .sobre h2{font-size:clamp(40px,5vw,68px);margin-bottom:24px}
 .sobre .lead{font-size:clamp(20px,2vw,25px);line-height:1.4;font-family:var(--display);font-weight:500;letter-spacing:-.02em;margin-bottom:22px}
@@ -263,7 +279,12 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
       <li><a href="#preguntas">Preguntas</a></li>
     </ul></nav>
     <a class="btn btn-f" href="#agendar"><svg aria-hidden="true"><use href="#wa"/></svg><span class="t">Agendar cita</span></a>
-  </div></div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú"><span></span></button>
+  </div>
+  <nav class="panel" id="menu-movil" aria-label="Menú" hidden>
+    <a href="#areas">Tratamientos</a><a href="#etapas">Etapas</a><a href="#como">Cómo funciona</a><a href="#sobre">Sobre la Dra.</a><a href="#preguntas">Preguntas</a>
+    <a class="btn btn-f" href="#agendar"><svg aria-hidden="true"><use href="#wa"/></svg>Agendar por WhatsApp</a>
+  </nav></div>
 </header>
 
 <main id="inicio">
@@ -280,8 +301,8 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
       <div class="datos"><span>Presencial en CEGEMA, Trujillo</span><span>Virtual en todo el Perú</span></div>
     </div>
     <div class="visual">
-      <svg class="anillo anillo-fondo" data-anillo data-sin-texto viewBox="0 0 400 400" aria-hidden="true"></svg>
-      <img class="retrato-hero" src="img/dra-retrato-1500.webp" srcset="img/dra-retrato-760.webp 760w, img/dra-retrato-1500.webp 1500w" sizes="(max-width: 920px) 90vw, 540px" fetchpriority="high" width="1500" height="1557" alt="Dra. Aloisy Silva, sonriendo">
+      <svg class="anillo anillo-fondo" data-anillo data-oscuro data-sin-texto viewBox="0 0 400 400" aria-hidden="true"></svg>
+      <img class="retrato-hero" src="img/dra-retrato-1500.webp" srcset="img/dra-retrato-760.webp 760w, img/dra-retrato-1500.webp 1500w" sizes="(max-width: 920px) 90vw, 540px" fetchpriority="high" width="1500" height="1565" alt="Dra. Aloisy Silva, sonriendo">
       <div class="tarjeta t-virtual"><b>Consulta virtual</b><small>Desde cualquier lugar del Perú</small></div>
       <div class="foto">
         <div class="tarjeta t-cita"><span class="ic"><svg aria-hidden="true"><use href="#wa"/></svg></span><div><b>Evaluación inicial</b><small>Presencial o virtual · por WhatsApp</small></div></div>
@@ -348,7 +369,7 @@ footer .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px
 
 <section class="sec" id="sobre" aria-labelledby="t-sobre">
   <div class="in sobre">
-    <div class="retrato"><img src="img/dra-consultorio.webp" width="1200" height="1200" alt="La Dra. Aloisy Silva en la recepción de su consultorio" loading="lazy"></div>
+    <div class="retrato"><img src="img/dra-bata.webp" width="1200" height="1500" alt="La Dra. Aloisy Silva con bata médica" loading="lazy"></div>
     <div>
       <p class="eti">Sobre la Dra.</p>
       <h2 id="t-sobre">Dra. Aloisy Silva</h2>
