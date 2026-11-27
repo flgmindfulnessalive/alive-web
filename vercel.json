@@ -327,6 +327,11 @@
       "permanent": false
     },
     {
+      "source": "/demo-aloisy",
+      "destination": "/demo-aloisy/",
+      "permanent": false
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
